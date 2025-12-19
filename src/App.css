@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
+
+
+:root {
+  --background-color: #ffffff;
+  --text-color: #1e293b;
+  --primary-color: #17C5CF;
+  --secondary-background: #f9f9f9;
+  --border-color: #e0e0e0;
+  --header-background: #ffffffb0;
+  --header-border: #eaeaea;
+  --sidebar-background: #f9f9f9;
+  --sidebar-border: #e0e0e0;
+  --chat-bubble-user: #17C5CF;
+  --chat-bubble-ai: #f0f0f0;
+  --chat-text-user: #2a2a2a;
+  --chat-text-ai: #303741;
+  --hero-title-gradient-start: rgba(31, 38, 46, 1);
+  --hero-title-gradient-end: rgba(31, 38, 46, 0.7);
+  --hero-subtitle-color: #666;
+  --input-background: #ffffff;
+  --input-border: #e0e0e0;
+  --input-placeholder: #a0a0a0;
+  --suggestion-button-bg: rgba(23,197, 207, 0.1);
+  --suggestion-button-border: rgba(23,197, 207, 0.3);
+  --suggestion-button-text: #17C5CF;
+  --settings-activetab-bg: #eeecec;
+  --title-text-color: #2a2a2a;
+}
+
+[data-theme="dark"] {
+  --background-color: #1a202c;
+  --text-color: #e2e8f0;
+  --primary-color: #00a3b2;
+  --secondary-background: #2d3748;
+  --border-color: #4a5568;
+  --header-background: #1a202ca2;
+  --header-border: #343434;
+  --sidebar-background: #161920;
+  --sidebar-border: #4a5568;
+  --chat-bubble-user: #00a3b2;
+  --chat-bubble-ai: #4a5568;
+  --chat-text-user: #ffffff;
+  --chat-text-ai: #e2e8f0;
+  --hero-title-gradient-start: rgba(226, 232, 240, 1);
+  --hero-title-gradient-end: rgba(226, 232, 240, 0.7);
+  --hero-subtitle-color: #a0aec0;
+  --input-background: #2d3748;
+  --input-border: #4a5568;
+  --input-placeholder: #a0aec0;
+  --suggestion-button-bg: rgba(0,163,178, 0.1);
+  --suggestion-button-border: rgba(0,163,178, 0.3);
+  --suggestion-button-text: #00a3b2;
+  --settings-activetab-bg: #4a5568;
+  --title-text-color: #e2e8f0;
+}
+
+html, body {
+  overflow-x: hidden;
+  height: 100%;
+}
+
+body {
+  font-family: "Google Sans Flex", sans-serif;
+  margin: 0;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

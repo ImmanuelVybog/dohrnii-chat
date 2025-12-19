@@ -1,0 +1,59 @@
+.question-input-form {
+  display: flex;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 40px;
+  width: 750px;
+  background: var(--background-color);
+}
+
+.question-input-field {
+  color: var(--text-color);
+  flex-grow: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  font-family: "Google Sans Flex", sans-serif;
+  font-size: 16px;
+}
+
+.question-input-field:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.question-input-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 100px;
+}
+
+.question-input-button:hover {
+  background-color: #0c969e;
+}
+
+/* Fade-in letter effect */
+.animated-placeholder::placeholder {
+  color: #777;
+  opacity: 1;
+  transition: opacity 1s ease-in;
+}
+
+/* Blinking caret at the end */
+.animated-placeholder::placeholder {
+  animation: caretBlink 0.7s infinite;
+  padding-right: 4px;
+}
+
+@keyframes caretBlink {
+  0% { border-color: transparent; }
+  50% { border-color: #999; }
+  100% { border-color: transparent; }
+}
