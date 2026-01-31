@@ -32,7 +32,6 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
   const navigate = useNavigate();
   const { theme } = useTheme();
   const [chatMessages, setChatMessages] = useState([]);
-  const [conversationHistory, setConversationHistory] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [user, setUser] = useState(null);

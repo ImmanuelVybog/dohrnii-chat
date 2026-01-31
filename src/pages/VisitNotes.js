@@ -105,13 +105,6 @@ const VisitNotes = ({ openConfirmationModal, isPatientContextActiveInSession, is
     alert('Note copied to clipboard!');
   };
 
-  const handleUsePatientContext = () => {
-    if (isPatientContextActiveInSession) {
-      openConfirmationModal(null, false);
-    } else {
-      handleToggleSidebar();
-    }
-  };
 
   return (
     <div className="visit-notes-container">
