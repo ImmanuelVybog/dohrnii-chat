@@ -1,0 +1,35 @@
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #6c757d;
+  background-color: #f8f9fa;
+  border: 1px dashed #dee2e6;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.empty-state-icon {
+  font-size: 3em;
+  margin-bottom: 15px;
+  color: #adb5bd;
+}
+
+.empty-state-message {
+  font-size: 1.1em;
+  margin: 0;
+}
+
+/* Dark mode styles */
+.dark-mode .empty-state-container {
+  background-color: #333;
+  border-color: #555;
+  color: #bbb;
+}
+
+.dark-mode .empty-state-icon {
+  color: #888;
+}

@@ -220,6 +220,7 @@
 }
 
 .setting-selector {
+  font-family: "Google Sans Flex", sans-serif;
   padding: 8px;
   border-radius: 12px;
   border: 1px solid #ccc;

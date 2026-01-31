@@ -5,6 +5,9 @@
   --background-color: #ffffff;
   --text-color: #1e293b;
   --primary-color: #17C5CF;
+  --primary-hover-color: #13a9b0;
+  --accent-color: #17C5CF;
+  --accent-hover-color: #13a9b0;
   --secondary-background: #f9f9f9;
   --border-color: #e0e0e0;
   --header-background: #ffffffb0;
@@ -26,12 +29,72 @@
   --suggestion-button-text: #17C5CF;
   --settings-activetab-bg: #eeecec;
   --title-text-color: #2a2a2a;
+  --shadow-soft: 0 2px 8px -2px hsl(210 25% 15% / .06), 0 4px 16px -4px hsl(210 25% 15% / .08);
+  --shadow-card: 0 1px 3px hsl(210 25% 15% / .04), 0 4px 12px -2px hsl(210 25% 15% / .06);
+  --shadow-elevated: 0 4px 16px -4px hsl(210 25% 15% / .1), 0 8px 32px -8px hsl(210 25% 15% / .12);
+  --shadow-glow: 0 0 24px hsl(174 62% 47% / .15);
+  --citations-section-bg: #f8f9fa;
+  --citations-section-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  --citations-title-color: #343a40;
+  --citations-title-icon-color: #6c757d;
+  --citation-card-bg: #ffffff;
+  --citation-card-border: #e9ecef;
+  --citation-card-hover-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  --citation-card-hover-border: #adb5bd;
+  --citation-number-color: #17C5CF;
+  --citation-title-color: #17C5CF;
+  --citation-title-hover-color: #13a9b0;
+  --citation-meta-color: #6c757d;
+  --citation-tag-bg: #e9ecef;
+  --citation-tag-color: #495057;
+  --general-chat-info-bg: #f8f9fa;
+  --general-chat-info-border: #e9ecef;
+  --general-chat-helper-text-color: #343a40;
+  --general-chat-no-context-color: #6c757d;
+  --patient-pill-bg: #17C5CF;
+  --patient-pill-text: #ffffff;
+  --patient-pill-border: #17C5CF;
+  --patient-action-button-bg: #f0f0f0;
+  --patient-action-button-text: #343a40;
+  --patient-action-button-border: #e0e0e0;
+  --patient-action-button-hover-bg: #e9ecef;
+  --patient-action-button-hover-border: #17C5CF;
+  --temporary-context-bg: #fffbe6;
+  --temporary-context-border: #ffe0b2;
+  --temporary-pill-bg: #ffc107;
+  --temporary-pill-text: #333333;
+  --temporary-action-button-bg: #f0f0f0;
+  --temporary-action-button-text: #343a40;
+  --temporary-action-button-border: #e0e0e0;
+  --temporary-action-button-hover-bg: #e9ecef;
+  --temporary-action-button-hover-border: #ffc107;
+  --temporary-action-use-once-bg: #28a745;
+  --temporary-action-use-once-text: #ffffff;
+  --temporary-action-use-once-border: #28a745;
+  --temporary-action-use-once-hover-bg: #218838;
+  --temporary-action-use-once-hover-border: #218838;
+  --temporary-action-save-bg: #007bff;
+  --temporary-action-save-text: #ffffff;
+  --temporary-action-save-border: #007bff;
+  --temporary-action-save-hover-bg: #0056b3;
+  --temporary-action-save-hover-border: #0056b3;
+  --temporary-action-cancel-bg: #dc3545;
+  --temporary-action-cancel-text: #ffffff;
+  --temporary-action-cancel-border: #dc3545;
+  --temporary-action-cancel-hover-bg: #c82333;
+  --temporary-action-cancel-hover-border: #c82333;
+  --disclaimer-bg: #2d3748;
+  --disclaimer-border: #4a5568;
+
 }
 
 [data-theme="dark"] {
   --background-color: #1a202c;
   --text-color: #e2e8f0;
   --primary-color: #00a3b2;
+  --primary-hover-color: #008a99;
+  --accent-color: #00a3b2;
+  --accent-hover-color: #008a99;
   --secondary-background: #2d3748;
   --border-color: #4a5568;
   --header-background: #1a202ca2;
@@ -53,6 +116,60 @@
   --suggestion-button-text: #00a3b2;
   --settings-activetab-bg: #4a5568;
   --title-text-color: #e2e8f0;
+  --shadow-soft: 0 2px 8px -2px hsl(210 25% 15% / .06), 0 4px 16px -4px hsl(210 25% 15% / .08);
+  --shadow-card: 0 1px 3px hsl(210 25% 15% / .04), 0 4px 12px -2px hsl(210 25% 15% / .06);
+  --shadow-elevated: 0 4px 16px -4px hsl(210 25% 15% / .1), 0 8px 32px -8px hsl(210 25% 15% / .12);
+  --shadow-glow: 0 0 24px hsl(174 62% 47% / .15);
+  --citations-section-bg: #2a2a2a;
+  --citations-section-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  --citations-title-color: #e0e0e0;
+  --citations-title-icon-color: #bbbbbb;
+  --citation-card-bg: #333333;
+  --citation-card-border: #444444;
+  --citation-card-hover-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  --citation-card-hover-border: #555555;
+  --citation-number-color: #90caf9;
+  --citation-title-color: #90caf9;
+  --citation-title-hover-color: #a7d9ff;
+  --citation-meta-color: #b0b0b0;
+  --citation-tag-bg: #4a4a4a;
+  --citation-tag-color: #e0e0e0;
+  --general-chat-info-bg: #2d3748;
+  --general-chat-info-border: #4a5568;
+  --general-chat-helper-text-color: #e2e8f0;
+  --general-chat-no-context-color: #a0aec0;
+  --patient-pill-bg: #00a3b2;
+  --patient-pill-text: #ffffff;
+  --patient-pill-border: #00a3b2;
+  --patient-action-button-bg: #2d3748;
+  --patient-action-button-text: #e2e8f0;
+  --patient-action-button-border: #4a5568;
+  --patient-action-button-hover-bg: #4a5568;
+  --patient-action-button-hover-border: #00a3b2;
+  --temporary-context-bg: #4a4a33;
+  --temporary-context-border: #664422;
+  --temporary-pill-bg: #ffc107;
+  --temporary-pill-text: #1a202c;
+  --temporary-action-button-bg: #2d3748;
+  --temporary-action-button-text: #e2e8f0;
+  --temporary-action-button-border: #4a5568;
+  --temporary-action-button-hover-bg: #4a5568;
+  --temporary-action-button-hover-border: #ffc107;
+  --temporary-action-use-once-bg: #28a745;
+  --temporary-action-use-once-text: #ffffff;
+  --temporary-action-use-once-border: #28a745;
+  --temporary-action-use-once-hover-bg: #218838;
+  --temporary-action-use-once-hover-border: #218838;
+  --temporary-action-save-bg: #007bff;
+  --temporary-action-save-text: #ffffff;
+  --temporary-action-save-border: #007bff;
+  --temporary-action-save-hover-bg: #0056b3;
+  --temporary-action-save-hover-border: #0056b3;
+  --temporary-action-cancel-bg: #dc3545;
+  --temporary-action-cancel-text: #ffffff;
+  --temporary-action-cancel-border: #dc3545;
+  --temporary-action-cancel-hover-bg: #c82333;
+  --temporary-action-cancel-hover-border: #c82333;
 }
 
 html, body {
@@ -67,6 +184,24 @@ body {
 
 .App {
   text-align: center;
+  height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+  text-align: left;
+}
+
+.main-content.sidebar-closed {
+  margin-left: 60px;
+  width: calc(100% - 60px);
+}
+
+.main-content.patient-sidebar-open {
+  margin-left: 250px;
+  width: calc(100% - 250px);
 }
 
 .App-logo {
@@ -102,4 +237,21 @@ body {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Override browser default styles for input fields */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px var(--input-background) inset !important;
+    -webkit-text-fill-color: var(--text-color) !important;
+    background-color: var(--input-background) !important;
+}
+
+input:focus,
+input:active {
+    background-color: var(--input-background);
+    outline: none;
+    box-shadow: none;
 }

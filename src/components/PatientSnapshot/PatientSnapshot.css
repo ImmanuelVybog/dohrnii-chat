@@ -1,0 +1,108 @@
+/* src/components/PatientSnapshot/PatientSnapshot.css */
+.patient-snapshot-container {
+  margin-bottom: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.patient-snapshot-content {
+  padding: 15px;
+  background-color: var(--background-color);
+  border-top: 1px solid var(--border-color);
+}
+
+.patient-snapshot-content .helper-text {
+  font-size: 0.9em;
+  color: var(--text-color-light);
+  margin-bottom: 15px;
+}
+
+.patient-snapshot-content .last-updated {
+  font-size: 0.85em;
+  color: var(--text-color-light);
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.snapshot-section {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed var(--border-color-light);
+}
+
+.snapshot-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.snapshot-section h3 {
+  font-size: 1.1em;
+  color: var(--text-color);
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.form-field {
+  margin-bottom: 15px;
+}
+
+.form-field label {
+  display: block;
+  font-size: 0.9em;
+  color: var(--text-color-light);
+  margin-bottom: 5px;
+}
+
+.form-field input[type="number"],
+.form-field input[type="text"] {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--input-background);
+  color: var(--text-color);
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+.form-field input[type="number"]:focus,
+.form-field input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(23, 197, 207, 0.2);
+}
+
+/* Dark mode adjustments */
+.dark-mode .patient-snapshot-content {
+  background-color: var(--dark-background-color);
+  border-top-color: var(--dark-border-color);
+}
+
+.dark-mode .patient-snapshot-content .helper-text,
+.dark-mode .patient-snapshot-content .last-updated,
+.dark-mode .form-field label {
+  color: var(--dark-text-color-light);
+}
+
+.dark-mode .snapshot-section h3 {
+  color: var(--dark-text-color);
+}
+
+.dark-mode .form-field input[type="number"],
+.dark-mode .form-field input[type="text"] {
+  border-color: var(--dark-border-color);
+  background-color: var(--dark-input-background);
+  color: var(--dark-text-color);
+}
+
+.dark-mode .form-field input[type="number"]:focus,
+.dark-mode .form-field input[type="text"]:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(23, 197, 207, 0.3);
+}
+
+.dark-mode .snapshot-section {
+  border-bottom: 1px dashed var(--dark-border-color-light);
+}

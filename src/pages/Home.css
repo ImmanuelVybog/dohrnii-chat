@@ -14,12 +14,11 @@ body {
   display: flex;
   flex-grow: 1;
   transition: margin-left 0.3s ease-in-out;
-  /* background: radial-gradient(circle at bottom right, rgb(99 211 219 / 29%) 0%, rgb(111 199 205 / 4%) 50%, rgba(255, 255, 255, 0) 100%); */
 }
 
 .main-content-area.sidebar-open {
-  margin-left: 250px; /* Width of open sidebar */
-}
+  margin-left: 250px; /* Adjust for sidebar width */
+} /* background: radial-gradient(circle at bottom right, rgb(99 211 219 / 29%) 0%, rgb(111 199 205 / 4%) 50%, rgba(255, 255, 255, 0) 100%); */
 
 
 
@@ -44,10 +43,102 @@ body {
   scrollbar-width: none;
 }
 
-.ai-references a {
-  color: var(--primary-color);
-  text-decoration: none;
+.citations-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--citations-title-color);
+  margin-bottom: 1.5rem;
+  gap: 0.5rem;
 }
+
+.citations-title svg {
+  margin-right: 0.5rem;
+  color: var(--citations-title-icon-color);
+}
+
+.citations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.citation-card {
+  background-color: var(--citation-card-bg);
+  border: 1px solid var(--citation-card-border);
+  border-radius: 1rem;
+  padding: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.citation-card:hover {
+  box-shadow: var(--citation-card-hover-shadow);
+  border-color: var(--citation-card-hover-border);
+}
+
+.citation-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.citation-number {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--citation-number-color);
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.citation-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--citation-title-color);
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.citation-title:hover {
+  text-decoration: underline;
+  color: var(--citation-title-hover-color);
+}
+
+.citation-meta,
+.citation-journal-year {
+  font-size: 0.9rem;
+  color: var(--citation-meta-color);
+  margin-left: calc(1rem + 0.5rem); /* Align with title after number */
+  line-height: 1.3;
+}
+
+.citation-journal-year {
+  margin-top: 0.2rem;
+}
+
+.citation-tags {
+  margin-top: 0.8rem;
+  margin-left: calc(1rem + 0.5rem); /* Align with title after number */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.citation-tag {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  background-color: var(--suggestion-button-bg);
+  border: 1px solid var(--suggestion-button-border);
+  color: var(--suggestion-button-text);
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: "Google Sans Flex", sans-serif;
+  transition: all 0.2s ease-in-out;
+}
+
+
 
 .user-message {
   align-self: flex-start;
@@ -102,7 +193,7 @@ body {
   right: 0;
   background-color: var(--background-color);
   padding: 1rem;
-  z-index: 1000;
+  z-index: 998;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -113,7 +204,7 @@ body {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
   justify-content: center;
   padding: 0;
   position: relative;
@@ -129,7 +220,7 @@ body {
 .hero-icon {
   width: 80px;
   height: 80px;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .hero-title {
@@ -140,17 +231,32 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
+  margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   letter-spacing: -0.5px;
 }
 
 
 .hero-subtitle {
-  font-size: 1.1rem;
-  color: var(--hero-subtitle-color);
-  max-width: 600px;
-  line-height: 1.5;
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
 }
+
+.disclaimer {
+  font-size: 0.9rem;
+  color: var(--secondary-text-color);
+  margin-top: 1rem;
+  padding: 0.8rem 1.2rem;
+  background-color: var(--disclaimer-bg);
+  border-left: 4px solid var(--disclaimer-border);
+  border-radius: 4px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.4;
+}
+
 
 .question-form {
   display: flex;
@@ -248,4 +354,263 @@ body {
   .suggestion-button {
     width: 80%;
   }
+}
+
+/* Explore Section Styles */
+.explore-section {
+  width: 100%;
+  max-width: 900px;
+  margin-top: 2rem;
+  text-align: center;
+  padding: 20px;
+}
+
+.explore-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.explore-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  justify-content: center;
+}
+
+.explore-card {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+    border-radius: calc(0.75rem + 8px);
+    background-color: var(--background-color);
+    padding: 1.5rem;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: .3s;
+    transition-timing-function: cubic-bezier(0, 0, .2, 1);
+    animation-duration: .3s;
+    animation-timing-function: cubic-bezier(0, 0, .2, 1);
+    box-shadow: var(--shadow-soft);
+}
+
+.explore-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.explore-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.explore-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e9f7f5;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.explore-card-icon img {
+  width: 24px;
+  height: 24px;
+}
+
+.explore-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.explore-card-description {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: hsl(210 15% 50%);
+  margin: 0;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .explore-section {
+    padding: 10px;
+  }
+
+  .explore-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* General Chat Context Info Styles */
+.general-chat-context-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--general-chat-info-bg);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  text-align: center;
+  border: 1px solid var(--general-chat-info-border);
+}
+
+.general-chat-helper-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--general-chat-helper-text-color);
+  margin-bottom: 0.25rem;
+}
+
+.general-chat-no-context {
+  font-size: 0.9rem;
+  color: var(--general-chat-no-context-color);
+  margin-bottom: 1rem;
+}
+
+.attach-patient-context-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.attach-patient-context-button:hover {
+  background-color: var(--primary-color-dark);
+}
+
+/* Patient-Aware Chat Context Styles */
+.patient-context-pill-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.patient-context-pill {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.patient-context-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.patient-context-action-button {
+  background-color: var(--secondary-background);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.patient-context-action-button:hover {
+  background-color: var(--border-color);
+  border-color: var(--primary-color);
+}
+
+/* Temporary Patient Context Styles */
+.temporary-patient-context-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: var(--temporary-context-bg);
+  border: 1px solid var(--temporary-context-border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.temporary-patient-pill {
+  background-color: var(--temporary-pill-bg);
+  color: var(--temporary-pill-text);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.temporary-patient-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 0.5rem;
+}
+
+.temporary-patient-action-button {
+  background-color: var(--temporary-action-button-bg);
+  color: var(--temporary-action-button-text);
+  border: 1px solid var(--temporary-action-button-border);
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.temporary-patient-action-button:hover {
+  background-color: var(--temporary-action-button-hover-bg);
+  border-color: var(--temporary-action-button-hover-border);
+}
+
+.temporary-patient-action-button.use-once {
+  background-color: var(--temporary-action-use-once-bg);
+  color: var(--temporary-action-use-once-text);
+  border-color: var(--temporary-action-use-once-border);
+}
+
+.temporary-patient-action-button.use-once:hover {
+  background-color: var(--temporary-action-use-once-hover-bg);
+  border-color: var(--temporary-action-use-once-hover-border);
+}
+
+.temporary-patient-action-button.save-as-patient {
+  background-color: var(--temporary-action-save-bg);
+  color: var(--temporary-action-save-text);
+  border-color: var(--temporary-action-save-border);
+}
+
+.temporary-patient-action-button.save-as-patient:hover {
+  background-color: var(--temporary-action-save-hover-bg);
+  border-color: var(--temporary-action-save-hover-border);
+}
+
+.temporary-patient-action-button.cancel {
+  background-color: var(--temporary-action-cancel-bg);
+  color: var(--temporary-action-cancel-text);
+  border-color: var(--temporary-action-cancel-border);
+}
+
+.temporary-patient-action-button.cancel:hover {
+  background-color: var(--temporary-action-cancel-hover-bg);
+  border-color: var(--temporary-action-cancel-hover-border);
 }

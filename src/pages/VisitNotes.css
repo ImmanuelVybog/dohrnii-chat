@@ -1,0 +1,185 @@
+.visit-notes-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.note-type-selector {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.note-type-button {
+  font-family: 'Google Sans Flex', sans-serif;
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+
+.note-type-button:hover {
+  background-color: #d0d0d0;
+}
+
+.note-type-button.active {
+  font-family: 'Google Sans Flex', sans-serif;
+  background-color: #17c5cf;
+  color: white;
+  border-color: #17c5cf;
+}
+
+.note-type-button.active:hover {
+  background-color: #13a9b0;
+}
+
+.form-section {
+  border-radius: calc(0.75rem + 8px);
+  border: 1px solid rgb(231 236 239);
+  background-color: var(--card);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.form-section h2 {
+  font-family: 'Google Sans Flex', sans-serif;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.visit-input-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 1em;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  resize: vertical;
+  font-family: 'Google Sans Flex', sans-serif;
+}
+
+.microphone-button {
+  font-family: 'Google Sans Flex', sans-serif;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: not-allowed;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.icd10-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  box-sizing: border-box;
+  font-family: 'Google Sans Flex', sans-serif;
+}
+
+.generated-note-section {
+  margin-top: 30px;
+}
+
+.generated-note-section h2 {
+  color: #17c5cf;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.note-output-group {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.note-output-group h3 {
+  margin-top: 0;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.editable-note-output {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95em;
+  box-sizing: border-box;
+  resize: vertical;
+  background-color: #fff;
+  color: #333;
+  font-family: 'Google Sans Flex', sans-serif;
+}
+
+/* Dark mode styles */
+.dark-mode .visit-notes-container h1,
+.dark-mode .generated-note-section h2 {
+  color: #4dd0e1;
+}
+
+.dark-mode .note-type-button {
+  font-family: 'Google Sans Flex', sans-serif;
+  background-color: #555;
+  border-color: #666;
+  color: #eee;
+}
+
+.dark-mode .note-type-button:hover {
+  background-color: #666;
+}
+
+.dark-mode .note-type-button.active {
+  background-color: #17c5cf;
+  border-color: #17c5cf;
+  color: white;
+}
+
+.dark-mode .form-section {
+  background-color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .form-section h2 {
+  color: #eee;
+  border-bottom-color: #444;
+}
+
+.dark-mode .visit-input-textarea,
+.dark-mode .icd10-input {
+  background-color: #444;
+  border-color: #555;
+  color: #eee;
+}
+
+.dark-mode .microphone-button {
+  background-color: #444;
+  border-color: #555;
+  color: #bbb;
+}
+
+.dark-mode .note-output-group {
+  background-color: #3a3a3a;
+  border-color: #444;
+}
+
+.dark-mode .note-output-group h3 {
+  color: #ccc;
+}
+
+.dark-mode .editable-note-output {
+  background-color: #444;
+  border-color: #555;
+  color: #eee;
+}

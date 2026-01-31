@@ -1,0 +1,35 @@
+.primary-action-button {
+  font-family: "Google Sans Flex", sans-serif;
+  font-weight: 500;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: fit-content;
+}
+
+.primary-action-button:hover {
+  background-color: #6fc3b2;
+}
+
+.primary-action-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Dark mode styles */
+.dark-mode .primary-action-button {
+  background-color: var(--primary-color);
+}
+
+.dark-mode .primary-action-button:hover {
+  background-color: #6fc3b2;
+}
+
+.dark-mode .primary-action-button:disabled {
+  background-color: #555555;
+}

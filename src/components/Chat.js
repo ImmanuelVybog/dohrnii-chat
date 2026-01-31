@@ -3,8 +3,10 @@ import './Chat.css';
 import QuestionInput from './QuestionInput';
 import AnswerBubble from './AnswerBubble';
 import { generateAnswer } from '../services/api';
+import { usePatientContext } from '../context/PatientContext';
 
 const Chat = ({ user }) => {
+  const { selectedPatient } = usePatientContext();
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [questionHistory, setQuestionHistory] = useState([]);
@@ -33,7 +35,7 @@ const Chat = ({ user }) => {
     setIsLoading(true);
 
     try {
-      const response = await generateAnswer(question);
+      const response = await generateAnswer(question, selectedPatient);
       
       const answerMessage = {
         id: Date.now() + 1,

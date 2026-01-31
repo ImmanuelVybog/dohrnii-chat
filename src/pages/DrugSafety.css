@@ -1,0 +1,47 @@
+.drug-safety-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.form-section {
+  border-radius: calc(0.75rem + 8px);
+  border: 1px solid rgb(231 236 239);
+  background-color: var(--card);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.form-section h2 {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.interaction-results-section {
+  margin-top: 30px;
+}
+
+.interaction-results-section h2 {
+  color: #17c5cf;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Dark mode styles */
+.dark-mode .drug-safety-container h1,
+.dark-mode .interaction-results-section h2 {
+  color: #4dd0e1; /* Lighter teal for dark mode */
+}
+
+.dark-mode .form-section {
+  background-color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .form-section h2 {
+  color: #eee;
+  border-bottom-color: #444;
+}

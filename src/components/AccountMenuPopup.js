@@ -19,11 +19,13 @@ const AccountMenuPopup = ({ isOpen, onClose, onOpenAccountPopup, user, onLogout 
           </div>
         </div>
         <div className="menu-section">
-          <button className="menu-item" onClick={onOpenAccountPopup}>
-            <img src={settingsIcon} alt="Settings" className="menu-icon" /> Settings
+          <button className="menu-item account-btn" onClick={onOpenAccountPopup}>
+            <img src={settingsIcon} alt="Settings" className="account-icon" />
+            <span>Settings</span>
           </button>
-          <button className="menu-item" onClick={onLogout}>
-            <img src={logoutIcon} alt="Log out" className="menu-icon" /> Log out
+          <button className="menu-item account-btn" onClick={onLogout}>
+            <img src={logoutIcon} alt="Log out" className="account-icon" />
+            <span>Log out</span>
           </button>
         </div>
       </div>

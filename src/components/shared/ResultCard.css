@@ -1,0 +1,116 @@
+.result-card {
+  background-color: #fff;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+/* .result-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  position: relative;
+} */
+
+.result-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.result-card-low .result-card-title {
+  color: #28a745; /* Green */
+}
+
+.result-card-medium .result-card-title {
+  color: #ffc107; /* Yellow */
+}
+
+.result-card-high .result-card-title {
+  color: #dc3545; /* Red */
+}
+
+.result-card-content p {
+  margin-bottom: 8px;
+}
+
+.result-card-content p:last-child {
+  margin-bottom: 0;
+}
+
+.result-card-content strong {
+  font-weight: 600;
+  color: #333;
+}
+
+.result-card-content ul {
+  list-style-type: disc;
+  padding-left: 25px;
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+
+.result-card-content li {
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+.result-card-low {
+  padding: 1rem;
+  border-radius: 1rem;
+  border-left: 5px solid #28a745;
+  border-right: 1px solid #28a745;
+  border-top: 1px solid #28a745;
+  border-bottom: 1px solid #28a745;
+}
+
+.result-card-medium {
+  padding: 1rem;
+  border-radius: 1rem;
+  border-left: 5px solid #ffc107;
+  border-right: 1px solid #ffc107;
+  border-top: 1px solid #ffc107;
+  border-bottom: 1px solid #ffc107;
+}
+
+.result-card-high {
+  padding: 1rem;
+  border-radius: 1rem;
+  border-left: 5px solid #dc3545;
+  border-right: 1px solid #dc3545;
+  border-top: 1px solid #dc3545;
+  border-bottom: 1px solid #dc3545;
+}
+
+.result-card-red-flag {
+  border-color: #dc3545; /* Red for red flag */
+}
+
+.red-flag-indicator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #dc3545;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+/* Dark mode styles */
+.dark-mode .result-card {
+  background-color: #222;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .result-card-title {
+  color: #eee;
+}
+
+.dark-mode .result-card-content {
+  color: #ddd;
+}

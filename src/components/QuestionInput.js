@@ -1,21 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import './QuestionInput.css';
+import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPatientSelector';
 
-const QuestionInput = ({ onQuestionSubmit, currentQuestion, setCurrentQuestion, isChatMode }) => {
+const QuestionInput = ({ onQuestionSubmit, currentQuestion, setCurrentQuestion, isChatMode, onExcludeContextChange, excludeContext, openConfirmationModal, isPatientContextActiveInSession, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, activatePatientContextInSession, deactivatePatientContextInSession, handleToggleSidebar }) => {
   const question = currentQuestion;
   const setQuestion = setCurrentQuestion;
+
+  const handleExcludeContextChange = (e) => {
+    onExcludeContextChange(e.target.checked);
+  };
 
   // The fixed prefix text
   const prefix = "Ask Dohrnii ";
 
   // Questions to animate
-  const suggestions = [
+  const suggestions = useMemo(() => [
     "what is causing my headache?",
     "how to reduce stress?",
     "why am I feeling tired?",
     "what foods improve immunity?",
     "should I see a doctor?"
-  ];
+  ], []);
 
   const [animatedText, setAnimatedText] = useState("");
   const [index, setIndex] = useState(0);
@@ -55,7 +60,7 @@ const QuestionInput = ({ onQuestionSubmit, currentQuestion, setCurrentQuestion, 
     }
 
     return () => clearTimeout(timer);
-  }, [char, typing, index]);
+  }, [char, typing, index, suggestions]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -66,16 +71,43 @@ const QuestionInput = ({ onQuestionSubmit, currentQuestion, setCurrentQuestion, 
   };
 
   return (
-    <form className="question-input-form" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={question}
-        onChange={(e) => setQuestion(e.target.value)}
-        placeholder={isChatMode ? "Ask Dohrnii anything" : prefix + animatedText}
-        className={`question-input-field ${isChatMode ? '' : 'animated-placeholder'}`}
-      />
-      <button type="submit" className="question-input-button">Ask</button>
-    </form>
+    <div className="question-input-container">
+      <form className="question-input-form" onSubmit={handleSubmit}>
+        <div className="question-input-field-container">
+          <input
+            type="text"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            placeholder={isChatMode ? "Ask Dohrnii anything" : prefix + animatedText}
+            className={`question-input-field ${isChatMode ? '' : 'animated-placeholder'}`}
+          />
+        </div>
+        <div className="question-input-button-container">
+          <GlobalPatientSelector
+          isConfirmationModalOpen={isConfirmationModalOpen}
+          patientToConfirmId={patientToConfirmId}
+          isConfirmingNewPatient={isConfirmingNewPatient}
+          openConfirmationModal={openConfirmationModal}
+          closeConfirmationModal={closeConfirmationModal}
+          isPatientContextActiveInSession={isPatientContextActiveInSession}
+          activatePatientContextInSession={activatePatientContextInSession}
+          deactivatePatientContextInSession={deactivatePatientContextInSession}
+          />
+          <button type="submit" className="question-input-button">Ask Dohrnii</button>
+        </div>
+      </form>
+      {isChatMode && (
+        <div className="exclude-context-checkbox">
+          <input
+            type="checkbox"
+            id="excludeContext"
+            checked={excludeContext}
+            onChange={handleExcludeContextChange}
+          />
+          <label htmlFor="excludeContext">Exclude patient context for this message</label>
+        </div>
+      )}
+    </div>
   );
 };
 

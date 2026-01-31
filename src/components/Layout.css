@@ -1,0 +1,21 @@
+.App {
+  display: flex;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px; /* Adjust as needed */
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.main-content.sidebar-open {
+  margin-left: 250px; /* Same as sidebar width */
+}
+
+.main-content.sidebar-closed {
+  margin-left: 60px; /* Same as closed sidebar width */
+}
+
+.main-content.patient-sidebar-open {
+  margin-right: 300px; /* Same as patient sidebar width */
+}

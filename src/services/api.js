@@ -97,15 +97,20 @@ const insufficientEvidenceResponses = [
   "This question requires more specific clinical context or may involve emerging research without established guidelines."
 ];
 
-export const generateAnswer = async (question) => {
+export const generateAnswer = async (question, selectedPatient) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 2000));
   
   const lowerQuestion = question.toLowerCase();
+
+  let contextualQuestion = question;
+  if (selectedPatient) {
+    contextualQuestion = `Patient: ${selectedPatient.name}, Age: ${selectedPatient.age}, Gender: ${selectedPatient.gender}, Conditions: ${selectedPatient.conditions.join(', ')}. Question: ${question}`;
+  }
   
   // Check for matches in knowledge base
   for (const [key, data] of Object.entries(medicalKnowledgeBase)) {
-    if (lowerQuestion.includes(key)) {
+    if (contextualQuestion.toLowerCase().includes(key)) {
       return {
         answer: data.answer,
         hasSufficientEvidence: data.hasSufficientEvidence,

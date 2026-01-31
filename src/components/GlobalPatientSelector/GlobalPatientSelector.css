@@ -1,0 +1,224 @@
+.global-patient-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.active-patient-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.active-patient-display {
+  background: none;
+  color: var(--text-color); /* Use a variable for text color */
+  border: 1px solid var(--border-color); /* Use a variable for border color */
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease;
+  font-family: "Google Sans Flex", sans-serif;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 1rem;
+  color: var(--primary-color);
+}
+
+.active-patient-display:hover {
+  background-color: var(--hover-color);
+}
+
+.detach-patient-btn {
+  font-family: "Google Sans Flex", sans-serif;
+  background-color: transparent;
+  border: 1px solid var(--hero-subtitle-color);
+  color: var(--hero-subtitle-color);
+  padding: 8px 15px;
+  border-radius: 10rem;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-arrow {
+  font-size: 0.7em;
+}
+
+.patient-selector-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 250px;
+  z-index: 1000;
+  padding: 10px;
+  margin-top: 5px;
+  font-family: "Google Sans Flex", sans-serif;
+  color: var(--primary-color);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.patient-selector-dropdown button:hover {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.patient-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.patient-item {
+  padding: 8px 10px;
+  cursor: pointer;
+  color: var(--text-color);
+  transition: background-color 0.2s ease;
+}
+
+.patient-item:hover {
+  background-color: var(--hover-color);
+}
+
+.patient-item.active {
+  background-color: var(--selected-item-background); /* Style for active patient in list */
+  font-weight: bold;
+}
+
+.patient-item.no-patients {
+  text-align: center;
+  color: var(--text-color-light);
+  padding: 10px;
+}
+
+.create-new-patient-btn {
+  font-family: "Google Sans Flex", sans-serif;
+  width: 100%;
+  padding: 10px;
+  background-color: var(--accent-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+
+.create-new-patient-btn:hover {
+  background-color: var(--accent-hover-color);
+}
+
+.use-patient-context-cta {
+  font-family: "Google Sans Flex", sans-serif;
+  background-color: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 8px 15px;
+  border-radius: 10rem;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease;
+}
+
+.use-patient-context-cta:hover {
+  background-color: var(--accent-hover-color);
+}
+
+/* Modal Styles */
+.create-patient-modal-overlay {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  top: 100%;
+  right: 0;
+  margin-top: 5px;
+}
+
+.create-patient-modal {
+  background-color: var(--background-color);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.113);
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.create-patient-modal h2 {
+  color: var(--text-color);
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.create-patient-modal input[type="text"],
+.create-patient-modal input[type="number"],
+.create-patient-modal select {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--input-background);
+  color: var(--text-color);
+  font-size: 1em;
+}
+
+.create-patient-modal input::placeholder {
+  color: var(--text-color-light);
+}
+
+.create-patient-modal select {
+  appearance: none; /* Remove default select arrow */
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2C197.9L146.2%2C57.1L5.4%2C197.9h281.6z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 10px top 50%;
+  background-size: 12px;
+  padding-right: 30px; /* Make space for the arrow */
+}
+
+.create-patient-modal .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.create-patient-modal .modal-actions button {
+  font-family: "Google Sans Flex", sans-serif;
+  padding: 8px 15px;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease;
+}
+
+.create-patient-modal .modal-actions button:first-child { /* Create button */
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+}
+
+.create-patient-modal .modal-actions button:first-child:hover {
+  background-color: var(--accent-hover-color);
+}
+
+.create-patient-modal .modal-actions button:last-child { /* Cancel button */
+  background-color: var(--button-background);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.create-patient-modal .modal-actions button:last-child:hover {
+  background-color: var(--hover-color);
+}

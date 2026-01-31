@@ -1,0 +1,63 @@
+.tag-input-container {
+  margin-bottom: 15px;
+}
+
+.tag-input-label {
+  line-height: 1;
+  font-weight: 500;
+  font-size: .875rem;
+  display: block;
+  margin-bottom: 12px;
+  color: #555;
+}
+
+.tag-input-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 12px;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  padding: 3px 7px;
+  margin: 2px;
+  font-size: 0.9em;
+}
+
+.tag-remove-button {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  margin-left: 5px;
+  font-weight: bold;
+}
+
+.tag-input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 5px;
+  margin: 2px;
+}
+
+.tag-add-button {
+  font-family: "Google Sans Flex", sans-serif;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.tag-add-button:hover {
+  background-color: #6fc3b2;
+}
