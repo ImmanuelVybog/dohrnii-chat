@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import './Home.css';
 import QuestionInput from '../components/QuestionInput';
-import Login from '../components/Login';
 import AccountPopup from '../components/AccountPopup';
 import dohrniiHeroIcon from '../assets/images/Dohrnii Home Chat Icon.svg';
 import clinicalReasoningIcon from '../assets/images/clinical-reasoning-icon.svg';
