@@ -4,14 +4,12 @@ import AccountPopup from './AccountPopup';
 import { ThemeProvider } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { usePatientContext } from '../context/PatientContext';
-import GlobalPatientSelector from './GlobalPatientSelector/GlobalPatientSelector';
 import './Layout.css';
 
 const Layout = ({ children, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, openConfirmationModal, closeConfirmationModal, isPatientContextActiveInSession, activatePatientContextInSession, deactivatePatientContextInSession, isSidebarOpen, handleToggleSidebar }) => {
   const [isAccountPopupOpen, setIsAccountPopupOpen] = useState(false);
   const user = { name: 'Dr. John Doe', username: 'dr.johndoe' }; // Mock user
   const navigate = useNavigate();
-  const { selectedPatient, onUpdatePatient } = usePatientContext();
 
   const handleOpenAccountPopup = () => {
     setIsAccountPopupOpen(true);

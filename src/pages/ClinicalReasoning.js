@@ -110,13 +110,6 @@ const clinicalScenarios = [
 const ClinicalReasoning = ({ openConfirmationModal, isPatientContextActiveInSession, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, activatePatientContextInSession, deactivatePatientContextInSession, handleToggleSidebar, }) => {
   const { selectedPatient } = usePatientContext();
 
-  const handleUsePatientContext = () => {
-    if (isPatientContextActiveInSession) {
-      openConfirmationModal(null, false);
-    } else {
-      handleToggleSidebar();
-    }
-  };
   const [age, setAge] = useState('');
   const [sex, setSex] = useState('');
   const [chiefComplaint, setChiefComplaint] = useState('');
@@ -129,10 +122,9 @@ const ClinicalReasoning = ({ openConfirmationModal, isPatientContextActiveInSess
   const [clinicalQuestion, setClinicalQuestion] = useState('');
   const [aiResponse, setAiResponse] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [autoFilledFields, setAutoFilledFields] = useState({});
   const [selectedScenario, setSelectedScenario] = useState(null);
-  const [usePatientContextToggle, setUsePatientContextToggle] = useState(true); // New state for patient context toggle
+  const [usePatientContextToggle, setUsePatientContextToggle] = useState(true);
 
   useEffect(() => {
     if (selectedPatient) {
@@ -233,7 +225,6 @@ const ClinicalReasoning = ({ openConfirmationModal, isPatientContextActiveInSess
 
   const handleGenerateAssessment = () => {
     setIsLoading(true);
-    setError(null);
 
     let prompt = '';
     if (selectedPatient) {
@@ -310,11 +301,6 @@ const ClinicalReasoning = ({ openConfirmationModal, isPatientContextActiveInSess
         <h1>Clinical Reasoning</h1>
         <p>Get structured assessment and treatment plans based on patient context</p>
       </div>
-
-      
-
-      
-
 
 
       <div className="form-container">

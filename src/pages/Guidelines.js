@@ -103,13 +103,6 @@ const Guidelines = ({ openConfirmationModal, isPatientContextActiveInSession, is
     }, 1500);
   };
 
-  const handleUsePatientContext = () => {
-    if (isPatientContextActiveInSession) {
-      openConfirmationModal(null, false);
-    } else {
-      handleToggleSidebar();
-    }
-  };
 
   return (
     <div className="guidelines-container">

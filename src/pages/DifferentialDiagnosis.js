@@ -117,14 +117,6 @@ const DifferentialDiagnosis = ({ openConfirmationModal, isPatientContextActiveIn
     }, 2000);
   };
 
-  const handleUsePatientContext = () => {
-    if (isPatientContextActiveInSession) {
-      openConfirmationModal(null, false);
-    } else {
-      handleToggleSidebar();
-    }
-  };
-
   return (
     <div className="differential-diagnosis-container">
       <div className="page-header">

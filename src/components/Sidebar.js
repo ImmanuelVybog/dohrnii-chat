@@ -11,8 +11,6 @@ import { Squash } from 'hamburger-react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { usePatientContext } from '../context/PatientContext';
 import { getAllPatients, setActivePatient, getActivePatient, addPatient } from '../services/patientService';
-import { Patient, Sex } from '../types/patient';
-import GlobalPatientSelector from './GlobalPatientSelector/GlobalPatientSelector';
 
 
 
@@ -117,23 +115,6 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
     }
   };
 
-  const handleCreatePatientForGlobalSelector = (name, age, sex) => {
-    const patient = addPatient({
-      fullName: name,
-      age: age,
-      sex: sex,
-      chronicConditions: [],
-      longTermMedications: [],
-      allergies: [],
-      keyPastClinicalEvents: [],
-      uploadedFiles: [],
-      manualTextContext: '',
-    });
-    openConfirmationModal(patient.id, true);
-    onUpdatePatient(patient);
-    activatePatientContextInSession();
-    loadPatients();
-  };
 
   return (
     <aside className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>

@@ -170,13 +170,6 @@ const Calculators = ({ openConfirmationModal, isPatientContextActiveInSession, i
     });
   }, [selectedCalculator, inputValues]);
 
-  const handleUsePatientContext = () => {
-    if (isPatientContextActiveInSession) {
-      openConfirmationModal(null, false);
-    } else {
-      handleToggleSidebar();
-    }
-  };
 
   return (
     <div className="calculators-container">

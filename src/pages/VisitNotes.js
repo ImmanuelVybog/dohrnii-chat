@@ -29,7 +29,7 @@ const VisitNotes = ({ openConfirmationModal, isPatientContextActiveInSession, is
     } else {
       setVisitConversation('');
     }
-  }, [selectedPatient, usePatientContext]);
+  }, [selectedPatient, usePatientContextToggle]);
 
 
   const handleGenerateNote = () => {

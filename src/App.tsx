@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
-import { usePatientContext } from './context/PatientContext';
 import { getActivePatient } from './services/patientService';
 import Home from './pages/Home';
 import ClinicalReasoning from './pages/ClinicalReasoning';

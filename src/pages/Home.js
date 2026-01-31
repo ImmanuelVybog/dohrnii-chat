@@ -3,7 +3,6 @@ import './Home.css';
 import QuestionInput from '../components/QuestionInput';
 import Login from '../components/Login';
 import AccountPopup from '../components/AccountPopup';
-import dohrniiLogoIcon from '../assets/images/Dohrnii Logo Icon.svg'
 import dohrniiHeroIcon from '../assets/images/Dohrnii Home Chat Icon.svg';
 import clinicalReasoningIcon from '../assets/images/clinical-reasoning-icon.svg';
 import visitNotesIcon from '../assets/images/visit-notes-icon.svg';
@@ -123,27 +122,6 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
     }, 500); // Simulate a small delay before AI starts typing
   };
 
-  const handleNewChat = () => {
-    if (chatMessages.length > 0) {
-      setConversationHistory((prevHistory) => [
-        ...prevHistory,
-        { id: Date.now(), messages: chatMessages, title: chatMessages[0]?.content || 'New Chat' },
-      ]);
-    }
-    setChatMessages([]);
-    setCurrentQuestion('');
-    setConversationStarted(false);
-  };
-
-  const handleQuestionSelect = (selectedConversationId) => {
-    const conversation = conversationHistory.find(conv => conv.id === selectedConversationId);
-    if (conversation) {
-      setChatMessages(conversation.messages);
-      setConversationStarted(true);
-      setCurrentQuestion(''); // Clear current input when loading a past chat
-    }
-  };
-
   useEffect(() => {
     if (typingMessageIndex !== null && displayedAiResponse.length > 0) {
       let i = 0;
@@ -254,12 +232,6 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
       setChatContext({ type: 'SAVED_PATIENT_CHAT', patient: newPatient });
       setChatMessages([]); // Clear chat messages after saving and switching context
     }
-  };
-
-
-
-  const handleOpenAccountPopup = () => {
-    setIsAccountPopupOpen(true);
   };
 
   const handleCloseAccountPopup = () => {

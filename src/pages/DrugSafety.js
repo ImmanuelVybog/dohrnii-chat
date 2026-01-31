@@ -83,13 +83,6 @@ const DrugSafety = ({ openConfirmationModal, isPatientContextActiveInSession, is
     }, 2000);
   };
 
-  const handleUsePatientContext = () => {
-    if (isPatientContextActiveInSession) {
-      openConfirmationModal(null, false);
-    } else {
-      handleToggleSidebar();
-    }
-  };
 
   return (
     <div className="drug-safety-container">
