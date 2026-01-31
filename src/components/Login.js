@@ -65,7 +65,7 @@ const Login = ({ onLogin }) => {
             </div>
           )}
 
-          <div className="form-group">
+          <div className="login-form-group">
             <label htmlFor="username">Username</label>
             <input
               id="username"
@@ -75,11 +75,10 @@ const Login = ({ onLogin }) => {
               placeholder="Enter your username"
               required
               disabled={isLoading}
-              className="form-input"
             />
           </div>
 
-          <div className="form-group">
+          <div className="login-form-group">
             <label htmlFor="password">Password</label>
             <input
               id="password"
@@ -89,7 +88,6 @@ const Login = ({ onLogin }) => {
               placeholder="Enter your password"
               required
               disabled={isLoading}
-              className="form-input"
             />
           </div>
 

@@ -20,7 +20,7 @@ import PatientDetailModal from '../components/PatientDetailModal/PatientDetailMo
 
 
 
-const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, activatePatientContextInSession, deactivatePatientContextInSession, isSidebarOpen, handleToggleSidebar, handleExpandPatientSection }) => {
+const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, activatePatientContextInSession, deactivatePatientContextInSession, isSidebarOpen, handleToggleSidebar, handleExpandPatientSection, isAuthenticated, user, onLogout }) => {
   const handleUsePatientContext = () => {
     if (isPatientContextActiveInSession) {
       openConfirmationModal(null, false);
@@ -32,9 +32,7 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
   const navigate = useNavigate();
   const { theme } = useTheme();
   const [chatMessages, setChatMessages] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const [user, setUser] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState('');
 
   const [conversationStarted, setConversationStarted] = useState(false);
@@ -151,13 +149,7 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
     }
   }, [displayedAiResponse, typingMessageIndex]);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('medicalAiUser');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      setIsAuthenticated(true);
-    }
-  }, []);
+
 
   const { selectedPatient } = usePatientContext();
 
@@ -175,17 +167,7 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
 
 
 
-  const handleLogin = (userData) => {
-    setUser(userData);
-    setIsAuthenticated(true);
-    localStorage.setItem('medicalAiUser', JSON.stringify(userData));
-  };
 
-  const handleLogout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem('medicalAiUser');
-  };
 
   const handleViewPatient = () => {
     if (selectedPatient) {
@@ -237,9 +219,7 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
     setIsAccountPopupOpen(false);
   };
 
-  if (!isAuthenticated) {
-    return <Login onLogin={handleLogin} />;
-  }
+
 
   return (
     <div className="home-layout">
@@ -417,7 +397,7 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
         
       </div>
 
-      <AccountPopup isOpen={isAccountPopupOpen} onClose={handleCloseAccountPopup} user={user} onLogout={handleLogout} />
+      <AccountPopup isOpen={isAccountPopupOpen} onClose={handleCloseAccountPopup} user={user} onLogout={onLogout} />
       {isPatientDetailModalOpen && patientToView && (
         <PatientDetailModal
           patient={patientToView}

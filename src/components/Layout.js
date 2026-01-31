@@ -5,9 +5,9 @@ import { ThemeProvider } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import './Layout.css';
 
-const Layout = ({ children, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, openConfirmationModal, closeConfirmationModal, isPatientContextActiveInSession, activatePatientContextInSession, deactivatePatientContextInSession, isSidebarOpen, handleToggleSidebar }) => {
+const Layout = ({ children, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, openConfirmationModal, closeConfirmationModal, isPatientContextActiveInSession, activatePatientContextInSession, deactivatePatientContextInSession, isSidebarOpen, handleToggleSidebar, isAuthenticated, user, onLogout }) => {
   const [isAccountPopupOpen, setIsAccountPopupOpen] = useState(false);
-  const user = { name: 'Dr. John Doe', username: 'dr.johndoe' }; // Mock user
+
   const navigate = useNavigate();
 
   const handleOpenAccountPopup = () => {
@@ -22,10 +22,7 @@ const Layout = ({ children, isConfirmationModalOpen, patientToConfirmId, isConfi
     navigate('/');
   };
 
-  const handleLogout = () => {
-    console.log('User logged out');
-    // Implement actual logout logic here
-  };
+
 
   const handleNewChat = () => {
     console.log('New chat initiated');
@@ -55,7 +52,7 @@ const Layout = ({ children, isConfirmationModalOpen, patientToConfirmId, isConfi
               onOpenAccountPopup={handleOpenAccountPopup}
               onGoHome={handleGoHome}
               user={user}
-              onLogout={handleLogout}
+              onLogout={onLogout}
               onNewChat={handleNewChat}
               isConfirmationModalOpen={isConfirmationModalOpen}
               patientToConfirmId={patientToConfirmId}
@@ -76,7 +73,7 @@ const Layout = ({ children, isConfirmationModalOpen, patientToConfirmId, isConfi
             isOpen={isAccountPopupOpen}
             onClose={handleCloseAccountPopup}
             user={user}
-            onLogout={handleLogout}
+            onLogout={onLogout}
           />
         </div>
     </ThemeProvider>
