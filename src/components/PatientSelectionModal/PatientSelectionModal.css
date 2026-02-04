@@ -32,10 +32,13 @@
   padding-bottom: 10px;
 }
 
-.modal-header h2 {
+.form-section .modal-header h2 {
   margin: 0;
   color: var(--text-color);
+  font-size: 1.2em;
   font-weight: 500;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .close-button {
@@ -55,7 +58,7 @@
 }
 
 .patient-search-input {
-  width: 100%;
+  width: -webkit-fill-available;
   padding: 10px;
   border: 1px solid var(--border-color);
   border-radius: 0.5rem;
@@ -66,9 +69,6 @@
 .patient-list-container {
   flex-grow: 1;
   overflow-y: auto;
-  border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
-  padding: 10px;
   background: var(--secondary-background-color);
 }
 
@@ -93,7 +93,7 @@
 }
 
 .create-patient-btn {
-  background-color: var(--primary-button-background);
+  background-color: var(--primary-button-bg);
   color: var(--primary-button-text);
   border: none;
   padding: 10px 15px;
@@ -104,7 +104,7 @@
 }
 
 .create-patient-btn:hover {
-  background-color: var(--primary-button-hover-background);
+  background-color: var(--primary-button-hover-bg);
 }
 
 .create-patient-form {
@@ -114,20 +114,21 @@
   margin-top: 20px;
   padding: 15px;
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--secondary-background-color);
+  border-radius: 1rem;
+  background: var(--background-color);
 }
 
 .create-patient-form h3 {
   margin-top: 0;
   color: var(--text-color);
+  font-weight: 500;
 }
 
 .create-patient-form input,
 .create-patient-form select {
   padding: 10px;
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: 0.5rem;
   background: var(--input-background-color);
   color: var(--text-color);
 }
@@ -150,28 +151,29 @@
 }
 
 .form-actions button {
+  font-family: "Google Sans Flex", sans-serif;
   padding: 8px 15px;
-  border-radius: 4px;
+  border-radius: 0.5rem;
   cursor: pointer;
   font-size: 14px;
 }
 
 .form-actions button:first-child {
-  background-color: var(--primary-button-background);
+  background-color: var(--primary-button-bg);
   color: var(--primary-button-text);
   border: none;
 }
 
 .form-actions button:first-child:hover {
-  background-color: var(--primary-button-hover-background);
+  background-color: var(--primary-button-hover-bg);
 }
 
 .form-actions button:last-child {
-  background-color: var(--secondary-button-background);
+  background-color: var(--secondary-button-bg);
   color: var(--secondary-button-text);
   border: 1px solid var(--secondary-button-border);
 }
 
 .form-actions button:last-child:hover {
-  background-color: var(--secondary-button-hover-background);
+  background-color: var(--secondary-button-hover-bg);
 }

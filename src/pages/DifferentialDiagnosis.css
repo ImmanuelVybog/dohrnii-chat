@@ -6,17 +6,17 @@
 
 .form-section {
   border-radius: calc(0.75rem + 8px);
-  border: 1px solid rgb(231 236 239);
+  border: 1px solid var(--border-color);
   background-color: var(--card);
   padding: 1.5rem;
   box-shadow: var(--shadow-soft);
 }
 
 .form-section h2 {
-  color: #333;
+  color: var(--text-color);
   margin-top: 0;
   margin-bottom: 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 10px;
 }
 
@@ -51,6 +51,7 @@
   color: #16ac9f;
   margin-bottom: 20px;
   text-align: center;
+  font-weight: 500;
 }
 
 /* Dark mode styles */

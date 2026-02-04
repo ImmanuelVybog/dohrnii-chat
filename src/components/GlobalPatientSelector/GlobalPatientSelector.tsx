@@ -4,6 +4,7 @@ import { getActivePatient, setActivePatient, clearActivePatient } from '../../se
 import { Patient } from '../../types/patient';
 import { usePatientContext } from '../../context/PatientContext';
 import PatientSelectionModal from '../PatientSelectionModal/PatientSelectionModal';
+import Tooltip from '../shared/Tooltip';
 
 interface GlobalPatientSelectorProps {
   isConfirmationModalOpen: boolean;
@@ -74,9 +75,11 @@ const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = ({ isConfirm
         </div>
       ) : (
         <>
-          <button className="use-patient-context-cta" onClick={handleOpenPatientSelectionModal}>
-            Use patient context
-          </button>
+          <Tooltip text="Link a patient profile to get personalized clinical recommendations">
+            <button className="use-patient-context-cta" onClick={handleOpenPatientSelectionModal}>
+              Use patient context
+            </button>
+          </Tooltip>
         </>
       )}
 

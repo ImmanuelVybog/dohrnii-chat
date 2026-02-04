@@ -11,7 +11,7 @@
 .page-header h1 {
   font-size: 24px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-color);
   margin-bottom: 6px;
 }
 
@@ -32,7 +32,7 @@
     font-size: .875rem;
     display: block;
     margin: 0px;
-    color: #555;
+    color: var(--text-color);
 }
 
 
@@ -48,7 +48,7 @@
 .form-section h2 {
   font-size: 16px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-color);
   margin-bottom: 16px;
   border: none;
   padding: 0;
@@ -65,7 +65,7 @@
   font-size: .875rem;
   display: block;
   margin-bottom: 12px;
-  color: #555;
+  color: var(--text-color);
 }
 
 .form-group input,
@@ -76,9 +76,9 @@
   padding: 10px 14px;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
-  background-color: #ffffff;
+  background-color: transparent;
   font-size: 14px;
-  color: #0f172a;
+  color: var(--text-color);
 }
 
 .form-group textarea {
@@ -91,13 +91,13 @@
   font-family: "Google Sans Flex", sans-serif;
   font-size: 14px;
   line-height: 1.5;
-  color: #94a3b8;
+  color: var(--placeholder-color);
 }
 
 .collapsible-caption {
   font-size: 0.75rem;
   font-weight: 400;
-  color: #64748b;
+  color: var(--placeholder-color);
   margin-left: 8px;
 }
 
@@ -108,10 +108,10 @@
 }
 
 .advanced-section-card {
-  background-color: #f8fafc;
+  background-color: var(--secondary-background);
   border-radius: 12px;
   padding: 16px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
 }
 
 .advanced-section-title {
@@ -124,7 +124,7 @@
 
 .advanced-content .helper-text {
   font-size: 12px;
-  color: #64748b;
+  color: var(--placeholder-color);
   margin-bottom: 10px;
   font-style: italic;
 }

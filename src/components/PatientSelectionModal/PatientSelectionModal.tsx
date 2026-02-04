@@ -3,6 +3,7 @@ import './PatientSelectionModal.css';
 import { getAllPatients, setActivePatient, addPatient } from '../../services/patientService';
 import { Patient, Sex } from '../../types/patient';
 import { usePatientContext } from '../../context/PatientContext';
+import CustomSelect from '../shared/CustomSelect';
 
 interface PatientSelectionModalProps {
   isOpen: boolean;
@@ -19,12 +20,20 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
   const [newPatientName, setNewPatientName] = useState('');
   const [newPatientAge, setNewPatientAge] = useState<number | ''>('');
   const [newPatientSex, setNewPatientSex] = useState<Sex | ''>('');
+  const [sex, setSex] = useState<Sex | ''>('');
 
   useEffect(() => {
     if (isOpen) {
       loadPatients();
     }
   }, [isOpen]);
+
+  const sexOptions = [
+    { value: '', label: 'Select' },
+    { value: 'male', label: 'Male' },
+    { value: 'female', label: 'Female' },
+    { value: 'other', label: 'Other' },
+  ];
 
   const loadPatients = () => {
     const patients = getAllPatients();
@@ -131,12 +140,12 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
                 value={newPatientAge}
                 onChange={(e) => setNewPatientAge(parseInt(e.target.value) || '')}
               />
-              <select value={newPatientSex} onChange={(e) => setNewPatientSex(e.target.value as Sex)}>
-                <option value="">Select Sex</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
+              <CustomSelect
+                options={sexOptions}
+                value={sex}
+                onChange={setSex}
+                placeholder="Select"
+              />
               <div className="form-actions">
                 <button onClick={handleCreatePatient}>Create</button>
                 <button onClick={handleCloseCreatePatientForm}>Cancel</button>

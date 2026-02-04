@@ -97,7 +97,7 @@
 }
 
 .dark-mode .custom-select-arrow {
-  border-top-color: #eee;
+  border-top-color: var(--border-color);
 }
 
 .dark-mode .custom-select-options {

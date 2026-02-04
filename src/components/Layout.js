@@ -65,7 +65,7 @@ const Layout = ({ children, isConfirmationModalOpen, patientToConfirmId, isConfi
               isSidebarOpen={isSidebarOpen}
               handleToggleSidebar={handleToggleSidebar}
             />
-          {isSidebarOpen && <div className="sidebar-backdrop" onClick={handleToggleSidebar}></div>}
+
           <div className={`main-content ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
             {children}
           </div>

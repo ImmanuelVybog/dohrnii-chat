@@ -41,6 +41,8 @@
 
 .tag-input {
   flex-grow: 1;
+  color: var(--placeholder-color);
+  background: none;
   border: none;
   outline: none;
   padding: 5px;

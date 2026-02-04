@@ -26,13 +26,13 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
     const [newPatientAge, setNewPatientAge] = useState('');
     const [newPatientSex, setNewPatientSex] = useState('');
 
-    const [isPatientSectionExpanded, setIsPatientSectionExpanded] = useState(false);
+    const [isPatientSectionExpanded, setIsPatientSectionExpanded] = useState(true);
 
     const handleTogglePatientSection = () => {
       setIsPatientSectionExpanded(!isPatientSectionExpanded);
     };
 
-    const [isQuestionHistoryExpanded, setIsQuestionHistoryExpanded] = useState(initialExpandQuestionHistory || false);
+    const [isQuestionHistoryExpanded, setIsQuestionHistoryExpanded] = useState(true);
 
     useEffect(() => {
       loadPatients();
@@ -254,7 +254,7 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
 
       {isCreatePatientModalOpen && (
         <div className="create-patient-modal-overlay">
-          <div className="create-patient-modal">
+          <div className="create-patient-form">
             <h2>Create New Patient</h2>
             <input
               type="text"
