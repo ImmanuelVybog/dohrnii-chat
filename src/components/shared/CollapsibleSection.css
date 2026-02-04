@@ -6,7 +6,7 @@
   cursor: pointer;
   border-bottom: 1px solid #e0e0e0;
   border-radius: calc(0.75rem + 8px);
-  border: 1px solid rgb(231 236 239);
+  border: 1px solid var(--border-color);
   background-color: var(--background-color);
   box-shadow: var(--shadow-soft);
 }
@@ -20,7 +20,7 @@
 
 .collapsible-header h2 {
   font-family: "Google Sans Flex", sans-serif;
-  color: #333;
+  color: var(--text-color);
   font-size: 16px;
   font-weight: 600;
   border: none;
@@ -29,7 +29,7 @@
 
 .collapse-icon {
   display: flex;
-  color: #555;
+  color: var(--text-color);
 }
 
 /* Dark mode styles */

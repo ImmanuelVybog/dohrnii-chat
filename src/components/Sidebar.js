@@ -1,4 +1,3 @@
-import userIcon from '../assets/images/user-icon.svg';
 import { useState, useEffect } from 'react';
 import AccountMenuPopup from './AccountMenuPopup';
 import './Sidebar.css';
@@ -7,10 +6,13 @@ import logoIcon from '../assets/images/Dohrnii Logo Icon.svg';
 import newChatIcon from '../assets/images/lets-icons--chat-plus.svg';
 import dropdownIconDown from '../assets/images/down icon.svg';
 import dropdownIconUp from '../assets/images/up icon.svg';
+import userIconLight from '../assets/images/user-icon-light.svg';
+import userIconDark from '../assets/images/user-icon-dark.svg';
 import { Squash } from 'hamburger-react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { usePatientContext } from '../context/PatientContext';
 import { getAllPatients, setActivePatient, getActivePatient, addPatient } from '../services/patientService';
+import { useTheme } from '../context/ThemeContext';
 
 
 
@@ -25,6 +27,8 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
     const [newPatientName, setNewPatientName] = useState('');
     const [newPatientAge, setNewPatientAge] = useState('');
     const [newPatientSex, setNewPatientSex] = useState('');
+    const { isDarkMode } = useTheme();
+
 
     const [isPatientSectionExpanded, setIsPatientSectionExpanded] = useState(true);
 
@@ -237,7 +241,7 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
       )}
       <div className="sidebar-footer">
         <button className="account-btn" onClick={() => setIsAccountMenuOpen(prev => !prev)}>
-          <img src={userIcon} alt="Account" className="account-icon" />
+          <img src={isDarkMode? userIconDark : userIconLight} alt="Account" className="account-icon" />
           {isSidebarOpen && <span>Account</span>}
         </button>
       </div>

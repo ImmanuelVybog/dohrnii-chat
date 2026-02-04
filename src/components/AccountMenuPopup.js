@@ -1,11 +1,14 @@
-import React from 'react';
 import './AccountMenuPopup.css';
-import settingsIcon from '../assets/images/settings-icon.svg';
-import logoutIcon from '../assets/images/logout-icon.svg';
+import settingsIconLight from '../assets/images/settings-icon-light.svg';
+import settingsIconDark from '../assets/images/settings-icon-dark.svg';
+import logoutIconLight from '../assets/images/logout-icon-light.svg';
+import logoutIconDark from '../assets/images/logout-icon-dark.svg';
+import { useTheme } from '../context/ThemeContext';
 
 
 
 const AccountMenuPopup = ({ isOpen, onClose, onOpenAccountPopup, user, onLogout }) => {
+  const { isDarkMode } = useTheme();
   if (!isOpen) return null;
 
   return (
@@ -20,11 +23,11 @@ const AccountMenuPopup = ({ isOpen, onClose, onOpenAccountPopup, user, onLogout 
         </div>
         <div className="menu-section">
           <button className="menu-item account-btn" onClick={onOpenAccountPopup}>
-            <img src={settingsIcon} alt="Settings" className="account-icon" />
+            <img src={isDarkMode ? settingsIconDark : settingsIconLight} alt="Settings" className="account-icon" />
             <span>Settings</span>
           </button>
           <button className="menu-item account-btn" onClick={onLogout}>
-            <img src={logoutIcon} alt="Log out" className="account-icon" />
+            <img src={isDarkMode ? logoutIconDark : logoutIconLight} alt="Log out" className="account-icon" />
             <span>Log out</span>
           </button>
         </div>

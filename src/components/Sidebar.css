@@ -99,7 +99,7 @@
   background: none;
   border: none;
   border-radius: 8px;
-  color: #333;
+  color: var(--sidebar-text-color);
   padding: 0.5rem;
   text-align: left;
   cursor: pointer;
@@ -123,7 +123,7 @@
   background: none;
   border: none;
   border-radius: 8px;
-  color: #333;
+  color: var(--sidebar-text-color);
   padding: 0.5rem;
   text-align: left;
   cursor: pointer;
@@ -138,7 +138,7 @@
 }
 
 .question-item button:hover, .workspace-list li a:hover {
-  color: #16ac9f;
+  color: var(--primary-color);
   background-color: var(--sidebar-item-hover-bg);
 }
 
@@ -176,7 +176,7 @@
 
 .sidebar-footer {
   padding: 15px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--border-color);
 }
 
 .account-btn {
@@ -185,7 +185,7 @@
   align-items: center;
   background: none;
   border: none;
-  color: #333;
+  color: var(--sidebar-text-color);
   cursor: pointer;
   font-size: 0.875rem;
   width: 100%;
@@ -308,18 +308,18 @@
 .patient-item {
   padding: 8px 10px;
   margin-bottom: 0.4rem;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.2s;
-  color: #333;
+  color: var(--text-color);
   font-size: 0.875rem;
   text-align: left;
 }
 
 .patient-item:hover {
-  background-color: #e9e9e9;
+  background-color: var(--sidebar-item-hover-bg);
 }
 
 .patient-item.active {

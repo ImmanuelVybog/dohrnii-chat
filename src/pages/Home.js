@@ -29,7 +29,7 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
     }
   };
   const navigate = useNavigate();
-  const { theme } = useTheme();
+  const { theme, isDarkMode } = useTheme();
   const [chatMessages, setChatMessages] = useState([]);
 
   const [currentQuestion, setCurrentQuestion] = useState('');
@@ -241,8 +241,8 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
               <div className="explore-section">
                 <h2 className="explore-title">Explore what Dohrnii can help with</h2>
                 <div className="explore-cards">
-                  <div className="explore-card" onClick={() => navigate('/clinical-reasoning')}>
-                    <div className="explore-card-icon">
+                  <div className="explore-card" onClick={() => navigate('/clinical-reasoning')} style={{ backgroundColor: isDarkMode ? '#242626' : '#ffffff' }}>
+                    <div className="explore-card-icon" style={{ backgroundColor: isDarkMode ? '#00968a42' : '#e8f7f6' }}>
                       <img src={clinicalReasoningIcon} alt="Clinical Reasoning" />
                     </div>
                     <div className="explore-card-content">
@@ -250,8 +250,8 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
                       <p className="explore-card-description">Get structured assessment and treatment plans</p>
                     </div>
                   </div>
-                  <div className="explore-card" onClick={() => navigate('/visit-notes')}>
-                    <div className="explore-card-icon">
+                  <div className="explore-card" onClick={() => navigate('/visit-notes')} style={{ backgroundColor: isDarkMode ? '#242626' : '#ffffff' }}>
+                    <div className="explore-card-icon" style={{ backgroundColor: isDarkMode ? '#00968a42' : '#e8f7f6' }}>
                       <img src={visitNotesIcon} alt="Visit Notes" />
                     </div>
                     <div className="explore-card-content">
@@ -259,8 +259,8 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
                       <p className="explore-card-description">Turn patient conversations into clinical notes</p>
                     </div>
                   </div>
-                  <div className="explore-card" onClick={() => navigate('/drug-safety')}>
-                    <div className="explore-card-icon">
+                  <div className="explore-card" onClick={() => navigate('/drug-safety')} style={{ backgroundColor: isDarkMode ? '#242626' : '#ffffff' }}>
+                    <div className="explore-card-icon" style={{ backgroundColor: isDarkMode ? '#00968a42' : '#e8f7f6' }}>
                       <img src={drugSafetyIcon} alt="Drug Safety" />
                     </div>
                     <div className="explore-card-content">
@@ -268,8 +268,8 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
                       <p className="explore-card-description">Check drug interactions and contraindications</p>
                     </div>
                   </div>
-                  <div className="explore-card" onClick={() => navigate('/clinical-guidelines')}>
-                    <div className="explore-card-icon">
+                  <div className="explore-card" onClick={() => navigate('/clinical-guidelines')} style={{ backgroundColor: isDarkMode ? '#242626' : '#ffffff' }}>
+                    <div className="explore-card-icon" style={{ backgroundColor: isDarkMode ? '#00968a42' : '#e8f7f6' }}>
                       <img src={clinicalGuidelinesIcon} alt="Clinical Guidelines" />
                     </div>
                     <div className="explore-card-content">
@@ -277,8 +277,8 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
                       <p className="explore-card-description">Browse trusted medical guidelines</p>
                     </div>
                   </div>
-                  <div className="explore-card" onClick={() => navigate('/calculators')}>
-                    <div className="explore-card-icon">
+                  <div className="explore-card" onClick={() => navigate('/calculators')} style={{ backgroundColor: isDarkMode ? '#242626' : '#ffffff' }}>
+                    <div className="explore-card-icon" style={{ backgroundColor: isDarkMode ? '#00968a42' : '#e8f7f6' }}>
                       <img src={calculatorsIcon} alt="Calculators" />
                     </div>
                     <div className="explore-card-content">
@@ -286,8 +286,8 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
                       <p className="explore-card-description">Use common clinical scoring tools</p>
                     </div>
                   </div>
-                  <div className="explore-card" onClick={() => navigate('/differential-diagnosis')}>
-                    <div className="explore-card-icon">
+                  <div className="explore-card" onClick={() => navigate('/differential-diagnosis')} style={{ backgroundColor: isDarkMode ? '#242626' : '#ffffff' }}>
+                    <div className="explore-card-icon" style={{ backgroundColor: isDarkMode ? '#00968a42' : '#e8f7f6' }}>
                       <img src={differentialDiagnosisIcon} alt="Differential Diagnosis" />
                     </div>
                     <div className="explore-card-content">

@@ -9,6 +9,7 @@ import Guidelines from './pages/Guidelines';
 import Calculators from './pages/Calculators';
 import DifferentialDiagnosis from './pages/DifferentialDiagnosis';
 import Login from './components/Login';
+import { ThemeProvider } from './context/ThemeContext';
 
 import Layout from './components/Layout';
 import { PatientProvider } from './context/PatientContext';
@@ -103,7 +104,8 @@ function App() {
   };
 
   return (
-    <PatientProvider>
+    <ThemeProvider>
+      <PatientProvider>
       {isAuthenticated ? (
         <Layout
           isConfirmationModalOpen={isConfirmationModalOpen}
@@ -136,6 +138,7 @@ function App() {
         <Login onLogin={handleLogin} />
       )}
     </PatientProvider>
+    </ThemeProvider>
   );
 }
 

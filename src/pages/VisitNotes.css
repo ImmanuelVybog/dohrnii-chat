@@ -56,7 +56,8 @@
 .visit-input-textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  background: none;
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   font-size: 1em;
   box-sizing: border-box;
@@ -67,19 +68,20 @@
 
 .microphone-button {
   font-family: 'Google Sans Flex', sans-serif;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
+  background: none;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
   padding: 8px 15px;
-  border-radius: 5px;
+  border-radius: 0.5rem;
   cursor: not-allowed;
-  color: #666;
   font-size: 0.9em;
 }
 
 .icd10-input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  background: none;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1em;
   box-sizing: border-box;

@@ -4,6 +4,7 @@
 :root {
   --background-color: #ffffff;
   --text-color: #1e293b;
+  --text-color-accent: #51565d;
   --primary-color: #16AC9F;
   --primary-hover-color: #13a9b0;
   --accent-color: #1cb8ab;
@@ -15,6 +16,7 @@
   --sidebar-background: #f0f2f5;
   --sidebar-border: #e0e0e0;
   --sidebar-item-hover-bg: #63c8ce1c;
+  --sidebar-text-color: #2b2c2d;
   --placeholder-color: #a0a0a0;
 
   --primary-button-bg: #16AC9F;
@@ -107,6 +109,7 @@
 [data-theme="dark"] {
   --background-color: #1b1d1d;
   --text-color: #e2e8f0;
+  --text-color-accent: #a0aec0;
   --primary-color: #00968a;
   --primary-hover-color: #008a99;
   --accent-color: #00a3b2;
@@ -118,7 +121,8 @@
   --sidebar-background: #101111;
   --sidebar-border: #4a5568;
   --sidebar-item-hover-bg: #63c8ce1c;
-  --placeholder-color: #a0aec0;
+  --sidebar-text-color: #e2e8f0;
+  --placeholder-color: #a0aec0aa;
 
   --primary-button-bg: #00968a;
   --primary-button-text: #ffffff;
@@ -282,7 +286,6 @@ input:-webkit-autofill:active {
 
 input:focus,
 input:active {
-    background-color: var(--input-background);
     outline: none;
     box-shadow: none;
 }
