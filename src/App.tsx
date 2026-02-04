@@ -45,7 +45,7 @@ function App() {
   const [patientToConfirmId, setPatientToConfirmId] = useState<string | null>(null);
   const [isConfirmingNewPatient, setIsConfirmingNewPatient] = useState(false);
   const [isPatientContextActiveInSession, setIsPatientContextActiveInSession] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   // Authentication states

@@ -6,10 +6,6 @@ const QuestionInput = ({ onQuestionSubmit, currentQuestion, setCurrentQuestion, 
   const question = currentQuestion;
   const setQuestion = setCurrentQuestion;
 
-  const handleExcludeContextChange = (e) => {
-    onExcludeContextChange(e.target.checked);
-  };
-
   // The fixed prefix text
   const prefix = "Ask Dohrnii ";
 
@@ -96,17 +92,6 @@ const QuestionInput = ({ onQuestionSubmit, currentQuestion, setCurrentQuestion, 
           <button type="submit" className="question-input-button">Ask Dohrnii</button>
         </div>
       </form>
-      {isChatMode && (
-        <div className="exclude-context-checkbox">
-          <input
-            type="checkbox"
-            id="excludeContext"
-            checked={excludeContext}
-            onChange={handleExcludeContextChange}
-          />
-          <label htmlFor="excludeContext">Exclude patient context for this message</label>
-        </div>
-      )}
     </div>
   );
 };

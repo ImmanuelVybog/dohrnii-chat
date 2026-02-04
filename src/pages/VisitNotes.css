@@ -27,9 +27,9 @@
 
 .note-type-button.active {
   font-family: 'Google Sans Flex', sans-serif;
-  background-color: #17c5cf;
+  background-color: #16ac9f;
   color: white;
-  border-color: #17c5cf;
+  border-color: #16ac9f;
 }
 
 .note-type-button.active:hover {
@@ -91,7 +91,7 @@
 }
 
 .generated-note-section h2 {
-  color: #17c5cf;
+  color: #16ac9f;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -141,8 +141,8 @@
 }
 
 .dark-mode .note-type-button.active {
-  background-color: #17c5cf;
-  border-color: #17c5cf;
+  background-color: #16ac9f;
+  border-color: #16ac9f;
   color: white;
 }
 

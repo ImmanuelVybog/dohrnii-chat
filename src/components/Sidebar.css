@@ -119,11 +119,11 @@
 }
 
 .question-item button:hover, .workspace-list li a:hover {
-  color: #17c5cf;
+  color: #16ac9f;
 }
 
 .workspace-list li a.active-link {
-  color: #17c5cf;
+  color: #16ac9f;
   font-weight: bold;
 }
 
@@ -173,7 +173,7 @@
 }
 
 .account-btn:hover {
-  color: #17c5cf;
+  color: #16ac9f;
 }
 
 .account-icon {
@@ -194,7 +194,7 @@
 }
 
 .dark-mode .new-chat-btn {
-  background-color: #17c5cf;
+  background-color: #16ac9f;
 }
 
 .dark-mode .new-chat-btn:hover {
@@ -212,11 +212,11 @@
 
 .dark-mode .question-item button:hover,
 .dark-mode .workspace-list li a:hover {
-  color: #17c5cf;
+  color: #16ac9f;
 }
 
 .dark-mode .workspace-list li a.active-link {
-  color: #17c5cf;
+  color: #16ac9f;
 }
 
 .dark-mode .sidebar-footer {
@@ -228,7 +228,7 @@
 }
 
 .dark-mode .account-btn:hover {
-  color: #17c5cf;
+  color: #16ac9f;
 }
 
 .sidebar-backdrop {
@@ -355,7 +355,7 @@
 }
 
 .dark-mode .create-patient-btn {
-  background-color: #17c5cf;
+  background-color: #16ac9f;
 }
 
 .dark-mode .create-patient-btn:hover {

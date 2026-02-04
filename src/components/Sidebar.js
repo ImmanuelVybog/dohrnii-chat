@@ -128,7 +128,7 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
               onClick={handleGoHome}
               style={{ cursor: 'pointer' }}
             />
-            <Squash toggled={isSidebarOpen} toggle={handleToggleSidebar} color="#17C5CF" className="sidebar-toggle-button" />
+            <Squash toggled={isSidebarOpen} toggle={handleToggleSidebar} color="#16AC9F" className="sidebar-toggle-button" />
           </div>
           <button className="new-chat-btn" onClick={onNewChat}>
               <img src={newChatIcon} alt="New Chat" className="new-chat-icon" />
@@ -219,7 +219,7 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
         <div className="sidebar-closed" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
           <div className="sidebar-toggle-container">
             {isHovered ? (
-              <Squash toggled={isSidebarOpen} toggle={handleToggleSidebar} color="#17C5CF" className="sidebar-toggle-button" />
+              <Squash toggled={isSidebarOpen} toggle={handleToggleSidebar} color="#16AC9F" className="sidebar-toggle-button" />
             ) : (
               <img
                 src={logoIcon}
