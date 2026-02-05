@@ -16,18 +16,13 @@ import { usePatientContext } from '../context/PatientContext';
 import { addPatient, setActivePatient } from '../services/patientService';
 import { useNavigate } from 'react-router-dom';
 import PatientDetailModal from '../components/PatientDetailModal/PatientDetailModal';
+import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPatientSelector';
+
 
 
 
 const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, activatePatientContextInSession, deactivatePatientContextInSession, isSidebarOpen, handleToggleSidebar, handleExpandPatientSection, isAuthenticated, user, onLogout }) => {
-  const handleUsePatientContext = () => {
-    if (isPatientContextActiveInSession) {
-      openConfirmationModal(null, false);
-    } else {
-      handleToggleSidebar();
-      handleExpandPatientSection();
-    }
-  };
+
   const navigate = useNavigate();
   const { theme, isDarkMode } = useTheme();
   const [chatMessages, setChatMessages] = useState([]);
@@ -232,7 +227,22 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
                   <h2 className="hero-title">Ask your medical questions</h2>
                   <p className="hero-subtitle">Get evidence-based information about symptoms, conditions, and treatments.</p>
               </div>
-              <QuestionInput onQuestionSubmit={handleQuestionSubmit} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion} isChatMode={false} onExcludeContextChange={setExcludeContext} excludeContext={excludeContext} openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} handleToggleSidebar={handleToggleSidebar} />   
+              <QuestionInput
+                onQuestionSubmit={handleQuestionSubmit}
+                currentQuestion={currentQuestion}
+                setCurrentQuestion={setCurrentQuestion}
+                isChatMode={false}
+                onExcludeContextChange={setExcludeContext}
+                excludeContext={excludeContext}
+                openConfirmationModal={openConfirmationModal}
+                isPatientContextActiveInSession={isPatientContextActiveInSession}
+                isConfirmationModalOpen={isConfirmationModalOpen}
+                patientToConfirmId={patientToConfirmId}
+                isConfirmingNewPatient={isConfirmingNewPatient}
+                closeConfirmationModal={closeConfirmationModal}
+                activatePatientContextInSession={activatePatientContextInSession}
+                deactivatePatientContextInSession={deactivatePatientContextInSession}
+                handleToggleSidebar={handleToggleSidebar} />   
               <div className="suggestion-buttons">
                   <button onClick={() => handleSuggestionClick('Symptoms of diabetes?')} className="suggestion-button">Symptoms of diabetes?</button>
                   <button onClick={() => handleSuggestionClick('How does high BP affect the body?')} className="suggestion-button">How does high BP affect the body?</button>
@@ -304,9 +314,17 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
             <div className="chat-conversation-container">
               {chatContext.type === 'GENERAL_CHAT' && (
                 <div className="general-chat-context-info">
-                  <p className="general-chat-helper-text">General medical discussion</p>
-                  <p className="general-chat-no-context">No patient context attached</p>
-                  <button className="attach-patient-context-button" onClick={handleUsePatientContext}>Use patient context</button>
+                  <p className="general-chat-helper-text">General discussion (no patient context attached)</p>
+                  <GlobalPatientSelector
+                    isConfirmationModalOpen={isConfirmationModalOpen}
+                    patientToConfirmId={patientToConfirmId}
+                    isConfirmingNewPatient={isConfirmingNewPatient}
+                    openConfirmationModal={openConfirmationModal}
+                    closeConfirmationModal={closeConfirmationModal}
+                    isPatientContextActiveInSession={isPatientContextActiveInSession}
+                    activatePatientContextInSession={activatePatientContextInSession}
+                    deactivatePatientContextInSession={deactivatePatientContextInSession}
+                  />
                 </div>
               )}
               {chatContext.type === 'SAVED_PATIENT_CHAT' && (

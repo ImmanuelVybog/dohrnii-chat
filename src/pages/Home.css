@@ -87,7 +87,7 @@ body {
 .citation-number {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--citation-number-color);
+  color: #16AC9F;
   margin-right: 0.5rem;
   flex-shrink: 0;
 }
@@ -95,14 +95,14 @@ body {
 .citation-title {
   font-size: 1rem;
   font-weight: 500;
-  color: var(--citation-title-color);
+  color: #16AC9F;
   text-decoration: none;
   line-height: 1.4;
 }
 
 .citation-title:hover {
   text-decoration: underline;
-  color: var(--citation-title-hover-color);
+  color: #29d1c3;
 }
 
 .citation-meta,
@@ -453,12 +453,13 @@ body {
 /* General Chat Context Info Styles */
 .general-chat-context-info {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  padding: 1rem;
+  justify-content: space-between;
+  padding: 0.5rem;
   background-color: var(--general-chat-info-bg);
-  border-radius: 12px;
-  margin-bottom: 1rem;
+  border-radius: 2rem;
+  margin: 0 2.4rem;
   text-align: center;
   border: 1px solid var(--general-chat-info-border);
 }
@@ -467,7 +468,7 @@ body {
   font-size: 1rem;
   font-weight: 500;
   color: var(--general-chat-helper-text-color);
-  margin-bottom: 0.25rem;
+  margin: 0px 0px 0px 10px;
 }
 
 .general-chat-no-context {

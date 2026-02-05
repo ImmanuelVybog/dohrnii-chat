@@ -154,7 +154,6 @@ const VisitNotes = ({ openConfirmationModal, isPatientContextActiveInSession, is
             onChange={(e) => setVisitConversation(e.target.value)}
             placeholder="Type or paste visit conversation here..."
             rows={10}
-            className="visit-input-textarea"
           ></textarea>
           <button className="microphone-button" disabled>
             Start Recording

@@ -44,6 +44,7 @@
   --input-placeholder: #a0a0a0;
   --suggestion-button-bg: rgba(22,172,159, 0.1);
   --suggestion-button-border: rgba(22,172,159, 0.3);
+  --error-color: #dc3545;
   --suggestion-button-text: #16AC9F;
   --settings-activetab-bg: #eeecec;
   --title-text-color: #2a2a2a;
@@ -59,9 +60,6 @@
   --citation-card-border: #e9ecef;
   --citation-card-hover-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   --citation-card-hover-border: #adb5bd;
-  --citation-number-color: #16AC9F;
-  --citation-title-color: #16AC9F;
-  --citation-title-hover-color: #13a9b0;
   --citation-meta-color: #6c757d;
   --citation-tag-bg: #e9ecef;
   --citation-tag-color: #495057;
@@ -131,7 +129,7 @@
   --primary-button-hover-text: #ffffff;
   --primary-button-hover-border: #008a99;
   
-  --secondary-button-bg: #2d3748;
+  --secondary-button-bg: #2d37487c;
   --secondary-button-text: #e2e8f0;
   --secondary-button-border: #4a5568;
   --secondary-button-hover-bg: #4a5568;
@@ -164,13 +162,10 @@
   --citation-card-border: #444444;
   --citation-card-hover-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   --citation-card-hover-border: #555555;
-  --citation-number-color: #90caf9;
-  --citation-title-color: #90caf9;
-  --citation-title-hover-color: #a7d9ff;
   --citation-meta-color: #b0b0b0;
   --citation-tag-bg: #4a4a4a;
   --citation-tag-color: #e0e0e0;
-  --general-chat-info-bg: #2d3748;
+  --general-chat-info-bg: #2d374854;
   --general-chat-info-border: #4a5568;
   --general-chat-helper-text-color: #e2e8f0;
   --general-chat-no-context-color: #a0aec0;
@@ -289,3 +284,206 @@ input:active {
     outline: none;
     box-shadow: none;
 }
+
+/* Form group styles */
+.form-section {
+  border-radius: calc(0.75rem + 8px);
+  border: 1px solid var(--border-color);
+  background-color: var(--card);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.form-section h2 {
+  font-family: 'Google Sans Flex', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-top: 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  line-height: 1;
+  font-weight: 500;
+  font-size: .875rem;
+  display: block;
+  margin-bottom: 12px;
+  color: var(--text-color-accent);
+  text-align: left;
+}
+
+.form-group input[type="number"],
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group h3 {
+    line-height: 1;
+    font-weight: 500;
+    font-size: .875rem;
+    display: block;
+    margin: 0px;
+    color: var(--text-color-accent);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  font-family: "Google Sans Flex", sans-serif;
+  height: 44px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.form-group textarea {
+  height: auto;
+  min-height: 90px;
+  width: -webkit-fill-available;
+}
+
+::placeholder {
+  font-family: "Google Sans Flex", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--placeholder-color);
+}
+
+.form-section textarea {
+    width: 100%;
+    padding: 10px;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 1em;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    resize: vertical;
+    font-family: 'Google Sans Flex', sans-serif;
+}
+
+.form-actions .primary-button {
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    background-color: var(--primary-button-bg);
+    color: var(--primary-button-text);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.form-actions .primary-button:hover {
+    background-color: var(--primary-button-hover-bg);
+    color: var(--primary-button-hover-text);
+    border-color: var(--primary-button-hover-border);
+}
+
+.form-actions .primary-button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.form-actions .secondary-button {
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--secondary-button-border);
+    background-color: var(--secondary-button-bg);
+    color: var(--secondary-button-text);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.form-actions .secondary-button:hover {
+    background-color: var(--secondary-button-hover-bg);
+    color: var(--secondary-button-hover-text);
+    border-color: var(--secondary-button-hover-border);
+}
+
+.form-actions .secondary-button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
+
+/* Dark mode styles */
+.dark-mode .calculators-container h1,
+.dark-mode .calculation-results-section h2 {
+  color: #4dd0e1;
+}
+
+.dark-mode .guidelines-container h1,
+.dark-mode .search-results-section h2 {
+  color: #4dd0e1;
+}
+
+.dark-mode .differential-diagnosis-container h1,
+.dark-mode .diagnosis-results-section h2 {
+  color: #4dd0e1;
+}
+
+.dark-mode .clinical-reasoning-container h1,
+.dark-mode .ai-response-section h2 {
+  color: #4dd0e1;
+}
+
+.dark-mode .form-section {
+  background-color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .form-section h2 {
+  color: #eee;
+  border-bottom-color: #444;
+}
+
+.dark-mode .form-group label {
+  color: #ddd;
+}
+
+.dark-mode .form-group input[type="number"],
+.dark-mode .form-group input[type="text"],
+.dark-mode .form-group select,
+.dark-mode .form-group textarea {
+  background-color: #444;
+  border-color: #555;
+  color: #eee;
+}
+
+.dark-mode .guideline-list .result-card a {
+  color: #4dd0e1;
+}
+
+.dark-mode .advanced-content {
+  background-color: #3a3a3a;
+}
+
+.dark-mode .advanced-content h3 {
+  color: #ccc;
+}
+

@@ -36,36 +36,6 @@
   background-color: #13a9b0;
 }
 
-.form-section {
-  border-radius: calc(0.75rem + 8px);
-  border: 1px solid rgb(231 236 239);
-  background-color: var(--card);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-soft);
-}
-
-.form-section h2 {
-  font-family: 'Google Sans Flex', sans-serif;
-  color: #333;
-  margin-top: 0;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 10px;
-}
-
-.visit-input-textarea {
-  width: 100%;
-  padding: 10px;
-  background: none;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  font-size: 1em;
-  box-sizing: border-box;
-  margin-bottom: 10px;
-  resize: vertical;
-  font-family: 'Google Sans Flex', sans-serif;
-}
-
 .microphone-button {
   font-family: 'Google Sans Flex', sans-serif;
   background: none;

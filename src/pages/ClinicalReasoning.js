@@ -3,6 +3,7 @@ import TagInput from '../components/shared/TagInput';
 import CollapsibleSection from '../components/shared/CollapsibleSection';
 import PrimaryActionButton from '../components/shared/PrimaryActionButton';
 import ResultCard from '../components/shared/ResultCard';
+import '../App.css';
 import './ClinicalReasoning.css';
 import CustomSelect from '../components/shared/CustomSelect';
 import { usePatientContext } from '../context/PatientContext';

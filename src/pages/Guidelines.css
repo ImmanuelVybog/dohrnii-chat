@@ -4,35 +4,6 @@
   margin: 0 auto;
 }
 
-.form-section {
-  border-radius: calc(0.75rem + 8px);
-  border: 1px solid var(--border-color);
-  background-color: var(--card);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-soft);
-}
-
-.form-section h2 {
-  color: var(--text-color);
-  margin-top: 0;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 10px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  line-height: 1;
-  font-weight: 500;
-  font-size: .875rem;
-  display: block;
-  margin-bottom: 12px;
-  color: var(--text-color-accent);
-}
-
 .form-group input[type="text"],
 .form-group select {
   width: 100%;
@@ -64,35 +35,4 @@
 
 .guideline-list .result-card a:hover {
   text-decoration: underline;
-}
-
-/* Dark mode styles */
-.dark-mode .guidelines-container h1,
-.dark-mode .search-results-section h2 {
-  color: #4dd0e1;
-}
-
-.dark-mode .form-section {
-  background-color: #333;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.dark-mode .form-section h2 {
-  color: #eee;
-  border-bottom-color: #444;
-}
-
-.dark-mode .form-group label {
-  color: #ddd;
-}
-
-.dark-mode .form-group input[type="text"],
-.dark-mode .form-group select {
-  background-color: #444;
-  border-color: #555;
-  color: #eee;
-}
-
-.dark-mode .guideline-list .result-card a {
-  color: #4dd0e1;
 }

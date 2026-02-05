@@ -20,80 +20,6 @@
   color: #64748b;
 }
 
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.form-group h3 {
-    line-height: 1;
-    font-weight: 500;
-    font-size: .875rem;
-    display: block;
-    margin: 0px;
-    color: var(--text-color-accent);
-}
-
-
-
-.form-section {
-  border-radius: calc(0.75rem + 8px);
-  border: 1px solid rgb(231 236 239);
-  background-color: var(--card);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-soft);
-}
-
-.form-section h2 {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-color);
-  margin-bottom: 16px;
-  border: none;
-  padding: 0;
-}
-
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  line-height: 1;
-  font-weight: 500;
-  font-size: .875rem;
-  display: block;
-  margin-bottom: 12px;
-  color: var(--text-color);
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  font-family: "Google Sans Flex", sans-serif;
-  height: 44px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  background-color: transparent;
-  font-size: 14px;
-  color: var(--text-color);
-}
-
-.form-group textarea {
-  height: auto;
-  min-height: 90px;
-  width: -webkit-fill-available;
-}
-
-::placeholder {
-  font-family: "Google Sans Flex", sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--placeholder-color);
-}
-
 .collapsible-caption {
   font-size: 0.75rem;
   font-weight: 400;
@@ -268,49 +194,11 @@
 }
 
 .auto-filled {
-  border: 1px solid #4CAF50 !important; /* Green border */
-  background-color: #e8f5e9 !important; /* Light green background */
+  border: 1px solid #4CAF50 !important;
+  background-color: #e8f5e9 !important;
 }
 
 .dark-mode .auto-filled {
-  border: 1px solid #81c784 !important; /* Lighter green border for dark mode */
-  background-color: #388e3c !important; /* Darker green background for dark mode */
-}
-
-
-/* Dark mode styles */
-.dark-mode .clinical-reasoning-container h1,
-.dark-mode .ai-response-section h2 {
-  color: #4dd0e1; /* Lighter teal for dark mode */
-}
-
-.dark-mode .form-section {
-  background-color: #333;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.dark-mode .form-section h2 {
-  color: #eee;
-  border-bottom-color: #444;
-}
-
-.dark-mode .form-group label {
-  color: #ddd;
-}
-
-.dark-mode .form-group input[type="number"],
-.dark-mode .form-group input[type="text"],
-.dark-mode .form-group select,
-.dark-mode .form-group textarea {
-  background-color: #444;
-  border-color: #555;
-  color: #eee;
-}
-
-.dark-mode .advanced-content {
-  background-color: #3a3a3a;
-}
-
-.dark-mode .advanced-content h3 {
-  color: #ccc;
+  border: 1px solid #81c784 !important;
+  background-color: #388e3c !important;
 }

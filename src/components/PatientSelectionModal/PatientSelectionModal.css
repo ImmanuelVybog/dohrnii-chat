@@ -6,21 +6,37 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-end;
   z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.patient-selection-modal-overlay.open {
+  visibility: visible;
+  opacity: 1;
 }
 
 .patient-selection-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
   background: var(--background-color);
   padding: 20px;
-  border-radius: 1rem;
-  width: 90%;
-  max-width: 500px;
+  border-radius: 1rem 0 0 1rem;
+  width: 40%;
+  max-width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  max-height: 80vh;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.patient-selection-modal.open {
+  transform: translateX(0);
 }
 
 .modal-header {
@@ -29,8 +45,30 @@
   align-items: center;
   margin-bottom: 20px;
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: 10px;
+  padding-bottom: 1rem;
 }
+
+.modal-header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+  gap: 0.5rem;
+}
+
+.modal-header-content h2 {
+  color: var(--text-color);
+  font-weight: 500;
+  margin: 0;
+}
+
+.modal-subtext {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-color-accent);
+  text-align: left;
+}
+
 
 .form-section .modal-header h2 {
   margin: 0;
@@ -54,7 +92,8 @@
   flex-direction: column;
   gap: 15px;
   flex-grow: 1;
-  overflow: hidden;
+  overflow-y: auto;
+  padding-right: 10px;
 }
 
 .patient-search-input {
@@ -112,25 +151,16 @@
   flex-direction: column;
   gap: 10px;
   margin-top: 20px;
-  padding: 15px;
-  border: 1px solid var(--border-color);
-  border-radius: 1rem;
   background: var(--background-color);
+  overflow-y: auto;
+  flex-grow: 1;
 }
 
 .create-patient-form h3 {
   margin-top: 0;
   color: var(--text-color);
   font-weight: 500;
-}
-
-.create-patient-form input,
-.create-patient-form select {
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
-  background: var(--input-background-color);
-  color: var(--text-color);
+  text-align: left;
 }
 
 .create-patient-form select {
@@ -144,36 +174,41 @@
   padding-right: 30px;
 }
 
+.form-field-group textarea {
+  resize: vertical;
+}
+
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color);
 }
 
-.form-actions button {
-  font-family: "Google Sans Flex", sans-serif;
-  padding: 8px 15px;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.form-actions button:first-child {
+.auto-fill-button {
   background-color: var(--primary-button-bg);
   color: var(--primary-button-text);
   border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
-.form-actions button:first-child:hover {
+.auto-fill-button:hover {
   background-color: var(--primary-button-hover-bg);
 }
 
-.form-actions button:last-child {
-  background-color: var(--secondary-button-bg);
-  color: var(--secondary-button-text);
-  border: 1px solid var(--secondary-button-border);
+.use-context-checkbox {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+  color: var(--text-color);
+  font-size: 14px;
 }
 
-.form-actions button:last-child:hover {
-  background-color: var(--secondary-button-hover-bg);
+.use-context-checkbox input {
+  margin-right: 8px;
 }
