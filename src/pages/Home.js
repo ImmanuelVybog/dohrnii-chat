@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './Home.css';
 import QuestionInput from '../components/QuestionInput';
 import AccountPopup from '../components/AccountPopup';
@@ -38,6 +38,22 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
   const [chatContext, setChatContext] = useState({ type: 'GENERAL_CHAT' });
   const [isPatientDetailModalOpen, setIsPatientDetailModalOpen] = useState(false);
   const [patientToView, setPatientToView] = useState(null);
+  const conversationContainerRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (conversationContainerRef.current) {
+      conversationContainerRef.current.scrollTo({
+        top: conversationContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (conversationStarted) {
+      scrollToBottom();
+    }
+  }, [chatMessages, conversationStarted, displayedAiResponse]);
 
 
   const handleQuickActionClick = (message) => {
@@ -503,7 +519,7 @@ A **myocardial infarction (MI)**, commonly known as a **heart attack**, occurs w
           )}
 
           {conversationStarted && (
-            <div className="chat-conversation-container">
+            <div className="chat-conversation-container" ref={conversationContainerRef}>
               {chatContext.type === 'GENERAL_CHAT' && (
                 <div className="general-chat-context-info">
                   <p className="general-chat-helper-text">General discussion (no patient context attached)</p>

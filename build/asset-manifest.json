@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.ad87846d.css",
-    "main.js": "/static/js/main.4a0b268c.js",
+    "main.css": "/static/css/main.1a1d473e.css",
+    "main.js": "/static/js/main.eccc4d46.js",
     "static/js/453.22888298.chunk.js": "/static/js/453.22888298.chunk.js",
     "static/media/Dohrnii Home Chat Icon.svg": "/static/media/Dohrnii Home Chat Icon.7e53f0ea71a30f5b8a97dfaae9f88196.svg",
     "static/media/Dohrnii Logo.svg": "/static/media/Dohrnii Logo.cc07ec3fb2659147a9e86bcb674c91a1.svg",
@@ -33,12 +33,12 @@
     "static/media/user-icon-hover.svg": "/static/media/user-icon-hover.8c06c565962c29c2a7c0fbe0b8bb4b77.svg",
     "static/media/user-icon-dark.svg": "/static/media/user-icon-dark.59487cfdd490b11290ac65321eb10d09.svg",
     "static/media/user-icon-light.svg": "/static/media/user-icon-light.d1e9a9277d9df0969feb7e1949cb806b.svg",
-    "main.ad87846d.css.map": "/static/css/main.ad87846d.css.map",
-    "main.4a0b268c.js.map": "/static/js/main.4a0b268c.js.map",
+    "main.1a1d473e.css.map": "/static/css/main.1a1d473e.css.map",
+    "main.eccc4d46.js.map": "/static/js/main.eccc4d46.js.map",
     "453.22888298.chunk.js.map": "/static/js/453.22888298.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ad87846d.css",
-    "static/js/main.4a0b268c.js"
+    "static/css/main.1a1d473e.css",
+    "static/js/main.eccc4d46.js"
   ]
 }

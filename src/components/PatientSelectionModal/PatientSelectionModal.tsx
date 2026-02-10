@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './PatientSelectionModal.css';
 import { getAllPatients, setActivePatient, addPatient, deletePatient } from '../../services/patientService';
 import { Patient, Sex, UploadedFile } from '../../types/patient';
@@ -37,6 +37,25 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
     return Date.now().toString(36) + Math.random().toString(36).substring(2);
   };
 
+  const loadPatients = useCallback(() => {
+  const patients = getAllPatients();
+  setAllPatients(patients);
+  }, []);
+
+  const handleCloseUploadContextModal = useCallback(() => {
+    setIsUploadContextModalOpen(false);
+    setNewPatientName('');
+    setNewPatientAge('');
+    setNewPatientSex('');
+    setMedicalConditions([]);
+    setMedications([]);
+    setAllergies([]);
+    setKeyPastEvents([]);
+    setUploadedFiles([]);
+    setManualTextContext('');
+  }, []);
+
+
   useEffect(() => {
     if (isOpen) {
       loadPatients();
@@ -46,7 +65,11 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
         onClose();
       }
-      if (isUploadContextModalOpen && uploadContextModalRef.current && !uploadContextModalRef.current.contains(event.target as Node)) {
+      if (
+        isUploadContextModalOpen &&
+        uploadContextModalRef.current &&
+        !uploadContextModalRef.current.contains(event.target as Node)
+      ) {
         handleCloseUploadContextModal();
       }
     };
@@ -55,7 +78,8 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen, isUploadContextModalOpen, onClose]);
+  }, [isOpen, isUploadContextModalOpen, onClose, loadPatients, handleCloseUploadContextModal]);
+
 
   const sexOptions = [
     { value: '', label: 'Select' },
@@ -63,11 +87,6 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
     { value: 'female', label: 'Female' },
     { value: 'other', label: 'Other' },
   ];
-
-  const loadPatients = () => {
-    const patients = getAllPatients();
-    setAllPatients(patients);
-  };
 
   const handleSelectPatient = (patientId: string) => {
     setActivePatient(patientId);
@@ -107,19 +126,6 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
 
   const handleOpenUploadContextModal = () => {
     setIsUploadContextModalOpen(true);
-  };
-
-  const handleCloseUploadContextModal = () => {
-    setIsUploadContextModalOpen(false);
-    setNewPatientName('');
-    setNewPatientAge('');
-    setNewPatientSex('');
-    setMedicalConditions([]);
-    setMedications([]);
-    setAllergies([]);
-    setKeyPastEvents([]);
-    setUploadedFiles([]); // Clear uploaded files on form close
-    setManualTextContext('');
   };
 
   const handleTogglePatientOptionsMenu = (patientId: string, event: React.MouseEvent) => {

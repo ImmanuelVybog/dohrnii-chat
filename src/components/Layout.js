@@ -3,7 +3,6 @@ import Sidebar from './Sidebar';
 import AccountPopup from './AccountPopup';
 import { ThemeProvider } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
-import { usePatientContext } from '../context/PatientContext';
 import './Layout.css';
 
 const Layout = ({ children, isSidebarOpen, handleToggleSidebar, isAuthenticated, user, onLogout, openPatientSelectionModal, isPatientSelectionModalOpen }) => {
