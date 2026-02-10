@@ -1,19 +1,27 @@
 .App {
   display: flex;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .main-content {
   flex-grow: 1;
-  padding: 20px; /* Adjust as needed */
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0; /* Removing padding to allow internal scroll */
   transition: margin-left 0.3s ease-in-out;
 }
 
 .main-content.sidebar-open {
-  margin-left: 250px; /* Same as sidebar width */
+  margin-left: 250px;
+  width: calc(100% - 250px);
 }
 
 .main-content.sidebar-closed {
-  margin-left: 60px; /* Same as closed sidebar width */
+  margin-left: 60px;
+  width: calc(100% - 60px);
 }
 
 .main-content.patient-sidebar-open {

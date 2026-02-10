@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import './QuestionInput.css';
 import GlobalPatientSelector from './GlobalPatientSelector/GlobalPatientSelector';
 
@@ -23,6 +23,7 @@ const QuestionInput = ({
 }) => {
   const question = currentQuestion;
   const setQuestion = setCurrentQuestion;
+  const textareaRef = useRef(null);
 
   // The fixed prefix text
   const prefix = "Ask Dohrnii ";
@@ -40,6 +41,14 @@ const QuestionInput = ({
   const [index, setIndex] = useState(0);
   const [typing, setTyping] = useState(true);
   const [char, setChar] = useState(0);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [question]);
 
   useEffect(() => {
     const current = suggestions[index];
@@ -84,14 +93,22 @@ const QuestionInput = ({
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      handleSubmit(e);
+    }
+  };
+
   return (
-    <div className="question-input-container">
+    <div className="question-input-box">
       <form className="question-input-form" onSubmit={handleSubmit}>
         <div className="question-input-field-container">
-          <input
-            type="text"
+          <textarea
+            ref={textareaRef}
+            rows={1}
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder={isChatMode ? "Ask Dohrnii anything" : prefix + animatedText}
             className={`question-input-field ${isChatMode ? '' : 'animated-placeholder'}`}
           />

@@ -2,12 +2,18 @@ body {
   background-color: var(--background-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
-  overflow-x: hidden;
+  overflow: hidden;
+  height: 100vh;
+  margin: 0;
 }
 
 .home-layout {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
 .main-content-area {
@@ -16,32 +22,53 @@ body {
   transition: margin-left 0.3s ease-in-out;
 }
 
-.main-content-area.sidebar-open {
-  margin-left: 250px; /* Adjust for sidebar width */
-} /* background: radial-gradient(circle at bottom right, rgb(99 211 219 / 29%) 0%, rgb(111 199 205 / 4%) 50%, rgba(255, 255, 255, 0) 100%); */
-
-
 
 /* Chat conversation layout */
 .chat-conversation-container {
   display: flex;
   flex-direction: column;
-  flex: 1;
   height: 100%;
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  padding-top: 20px;
+  margin: 0;
   position: relative;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 .answer-display {
   flex: 1;
-  overflow-y: auto;
-  padding: 1rem 1.2rem;
+  padding: 1rem 0.5rem 200px 0.5rem;
   display: flex;
   flex-direction: column;
-  scrollbar-width: none;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.answer-display::-webkit-scrollbar,
+.chat-area::-webkit-scrollbar,
+.chat-conversation-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.answer-display::-webkit-scrollbar-track,
+.chat-area::-webkit-scrollbar-track,
+.chat-conversation-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.answer-display::-webkit-scrollbar-thumb,
+.chat-area::-webkit-scrollbar-thumb,
+.chat-conversation-container::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+
+.answer-display::-webkit-scrollbar-thumb:hover,
+.chat-area::-webkit-scrollbar-thumb:hover,
+.chat-conversation-container::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
 
 .citations-title {
@@ -145,10 +172,13 @@ body {
   align-self: flex-start;
   background: none;
   color: var(--chat-text-user);
-  padding: 0rem 1.2rem;
   border-radius: 16px;
   font-size: 1.5rem;
   font-weight: 500;
+}
+
+.user-message p {
+  margin: 0px 0px 20px 0px;
 }
 
 .ai-message {
@@ -157,9 +187,8 @@ body {
   align-items: flex-start;
   background: none;
   color: var(--chat-text-ai);
-  padding: 0rem 1.2rem;
   border-radius: 18px 18px 18px 0;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .ai-message p {
@@ -184,36 +213,69 @@ body {
   align-items: center;
   padding: 1rem;
   width: 100%;
+  max-width: 900px;
   gap: 26px;
   overflow: visible;
+  box-sizing: border-box;
+}
+
+.question-input-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  gap: 26px;
+  overflow: visible;
+  box-sizing: border-box;
 }
 
 .question-input-container.fixed-bottom {
-  position: sticky;
+  position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: var(--background-color);
-  padding: 1rem;
+  max-width: 100%;
+  padding: 0rem 1rem 0.5rem 1rem;
   z-index: 998;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  overflow: visible;
+  flex-direction: column-reverse;
+  gap: 1rem;
+  box-shadow: 0 -20px 40px -10px var(--background-color);
+  background-color: var(--background-color);
+  pointer-events: auto;
+  box-sizing: border-box;
 }
 
 .chat-area {
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 0;
   position: relative;
   width: 100%;
   height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
 }
+
+.chat-area:not(.in-conversation)::before,
+.chat-area:not(.in-conversation)::after {
+  content: '';
+  flex: 1;
+}
+
+.chat-area.in-conversation {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
 
 
 .hero-section {
@@ -280,6 +342,16 @@ body {
   outline: none;
   background-color: var(--input-background);
   color: var(--text-color);
+}
+
+.question-input-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 900px;
+  text-align: center;
 }
 
 .question-input::placeholder {
@@ -363,9 +435,7 @@ body {
 .explore-section {
   width: 100%;
   max-width: 900px;
-  margin-top: 2rem;
   text-align: center;
-  padding: 20px;
 }
 
 .explore-title {
@@ -454,16 +524,22 @@ body {
 
 /* General Chat Context Info Styles */
 .general-chat-context-info {
+  position: sticky;
+  top: 0;
+  z-index: 999;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem;
-  background-color: var(--general-chat-info-bg);
+  background-color: var(--background-color);
   border-radius: 2rem;
-  margin: 0 2.4rem;
+  margin: 2rem auto 1.5rem auto;
+  max-width: 780px;
+  width: calc(100% - 4rem);
   text-align: center;
   border: 1px solid var(--general-chat-info-border);
+  box-sizing: border-box;
 }
 
 .general-chat-helper-text {
@@ -504,6 +580,24 @@ body {
   margin-bottom: 1rem;
 }
 
+.saved-patient-context-display {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background-color: var(--background-color);
+  border-radius: 2rem;
+  margin: 2rem auto 1.5rem auto;
+  max-width: 800px;
+  width: calc(100% - 4rem);
+  text-align: center;
+  box-sizing: border-box;
+}
+
 .patient-context-pill {
   background-color: var(--primary-color);
   color: white;
@@ -540,16 +634,22 @@ body {
 
 /* Temporary Patient Context Styles */
 .temporary-patient-context-container {
+  position: sticky;
+  top: 0;
+  z-index: 999;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  margin-bottom: 1rem;
+  margin: 2rem auto 1.5rem auto;
+  max-width: 800px;
+  width: calc(100% - 4rem);
   padding: 1rem;
-  background-color: var(--temporary-context-bg);
+  background-color: var(--background-color);
   border: 1px solid var(--temporary-context-border);
   border-radius: 12px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .temporary-patient-pill {

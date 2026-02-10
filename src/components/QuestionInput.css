@@ -5,10 +5,17 @@
   padding: 20px;
 }
 
+.question-input-box {
+  width: 100%;
+  max-width: 900px;
+  text-align: center;
+}
+
 .question-input-form {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 1rem;
   width: -webkit-fill-available;
   background: var(--background-color);
   border: 1px solid rgb(231 235 239 / 50%);
@@ -31,6 +38,31 @@
   margin-right: 10px;
   font-family: "Google Sans Flex", sans-serif;
   font-size: 16px;
+  resize: none;
+  max-height: 250px;
+  overflow-y: auto;
+  line-height: 1.5;
+}
+
+.in-conversation .question-input-box {
+  max-width: 800px;
+}
+
+.question-input-field::-webkit-scrollbar {
+  width: 6px;
+}
+
+.question-input-field::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.question-input-field::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+
+.question-input-field::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
 
 .question-input-field:focus {

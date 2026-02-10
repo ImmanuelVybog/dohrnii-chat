@@ -8,7 +8,6 @@ import './Layout.css';
 
 const Layout = ({ children, isSidebarOpen, handleToggleSidebar, isAuthenticated, user, onLogout, openPatientSelectionModal, isPatientSelectionModalOpen }) => {
   const [isAccountPopupOpen, setIsAccountPopupOpen] = useState(false);
-  const { onClosePatientSelectionModal } = usePatientContext();
 
   const navigate = useNavigate();
 

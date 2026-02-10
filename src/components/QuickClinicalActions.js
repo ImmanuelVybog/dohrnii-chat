@@ -3,7 +3,7 @@ import './QuickClinicalActions.css';
 import downIcon from '../assets/images/down icon.svg';
 import upIcon from '../assets/images/up icon.svg';
 
-const QuickClinicalActions = ({ onActionClick }) => {
+const QuickClinicalActions = ({ onActionClick, isChatMode }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const popoverRef = useRef(null);
 
@@ -65,7 +65,7 @@ const QuickClinicalActions = ({ onActionClick }) => {
           </button>
           
           {isPopoverOpen && (
-            <div className="more-actions-popover">
+            <div className={`more-actions-popover ${isChatMode ? 'upward' : ''}`}>
               {secondaryActions.map((action, index) => (
                 <button
                   key={index}

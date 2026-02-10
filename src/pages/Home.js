@@ -40,18 +40,6 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
   const [patientToView, setPatientToView] = useState(null);
 
 
-
-
-
-
-
-
-    const handleSuggestionClick = (suggestion) => {
-    setCurrentQuestion(suggestion);
-    handleQuestionSubmit(suggestion);
-    setConversationStarted(true);
-    };
-
   const handleQuickActionClick = (message) => {
     setCurrentQuestion(message);
     handleQuestionSubmit(message);
@@ -425,31 +413,33 @@ A **myocardial infarction (MI)**, commonly known as a **heart attack**, occurs w
     <div className="home-layout">
       <div className={`main-content-area`}>
         <div className={`main-content`}>
-          <div className="chat-area">
-          {!conversationStarted && (
+          <div className={`chat-area ${conversationStarted ? 'in-conversation' : ''}`}>
+      {!conversationStarted && (
             <div className="question-input-container">
               <div className="hero-section">
                   <img src={dohrniiHeroIcon} alt="Jellyfish Icon" className="hero-icon" />
                   <h2 className="hero-title">Ask your medical questions</h2>
                   <p className="hero-subtitle">Get evidence-based information about symptoms, conditions, and treatments.</p>
               </div>
-              <QuestionInput
-                onQuestionSubmit={handleQuestionSubmit}
-                currentQuestion={currentQuestion}
-                setCurrentQuestion={setCurrentQuestion}
-                isChatMode={false}
-                onExcludeContextChange={setExcludeContext}
-                excludeContext={excludeContext}
-                openConfirmationModal={openConfirmationModal}
-                isPatientContextActiveInSession={isPatientContextActiveInSession}
-                isConfirmationModalOpen={isConfirmationModalOpen}
-                patientToConfirmId={patientToConfirmId}
-                isConfirmingNewPatient={isConfirmingNewPatient}
-                closeConfirmationModal={closeConfirmationModal}
-                activatePatientContextInSession={activatePatientContextInSession}
-                deactivatePatientContextInSession={deactivatePatientContextInSession}
-                handleToggleSidebar={handleToggleSidebar} />
-              <QuickClinicalActions onActionClick={handleQuickActionClick} />
+              <div className="question-input-form-container">
+                <QuestionInput
+                  onQuestionSubmit={handleQuestionSubmit}
+                  currentQuestion={currentQuestion}
+                  setCurrentQuestion={setCurrentQuestion}
+                  isChatMode={false}
+                  onExcludeContextChange={setExcludeContext}
+                  excludeContext={excludeContext}
+                  openConfirmationModal={openConfirmationModal}
+                  isPatientContextActiveInSession={isPatientContextActiveInSession}
+                  isConfirmationModalOpen={isConfirmationModalOpen}
+                  patientToConfirmId={patientToConfirmId}
+                  isConfirmingNewPatient={isConfirmingNewPatient}
+                  closeConfirmationModal={closeConfirmationModal}
+                  activatePatientContextInSession={activatePatientContextInSession}
+                  deactivatePatientContextInSession={deactivatePatientContextInSession}
+                  handleToggleSidebar={handleToggleSidebar} />
+                <QuickClinicalActions onActionClick={handleQuickActionClick} isChatMode={false} />
+              </div>
               <div className="explore-section">
                 <h2 className="explore-title">Explore what Dohrnii can help with</h2>
                 <div className="explore-cards">
@@ -605,10 +595,12 @@ A **myocardial infarction (MI)**, commonly known as a **heart attack**, occurs w
                   </div>
                 ))}
               </div>
-              <div className="question-input-container fixed-bottom">
-                <QuestionInput onQuestionSubmit={handleQuestionSubmit} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion} isChatMode={true} onExcludeContextChange={setExcludeContext} excludeContext={excludeContext} openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} handleToggleSidebar={handleToggleSidebar} />
-                <QuickClinicalActions onActionClick={handleQuickActionClick} />
-              </div>
+            </div>
+          )}
+          {conversationStarted && (
+            <div className="question-input-container fixed-bottom">
+              <QuestionInput onQuestionSubmit={handleQuestionSubmit} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion} isChatMode={true} onExcludeContextChange={setExcludeContext} excludeContext={excludeContext} openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} handleToggleSidebar={handleToggleSidebar} />
+              <QuickClinicalActions onActionClick={handleQuickActionClick} isChatMode={true} />
             </div>
           )}
         </div>

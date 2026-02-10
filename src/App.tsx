@@ -1,6 +1,5 @@
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { getActivePatient } from './services/patientService';
 import Home from './pages/Home';
 import ClinicalReasoning from './pages/ClinicalReasoning';
 import VisitNotes from './pages/VisitNotes';
@@ -16,16 +15,6 @@ import { PatientProvider } from './context/PatientContext';
 import './App.css';
 
 
-
-interface PageProps {
-  isSidebarOpen: boolean;
-  handleToggleSidebar: () => void;
-  isAuthenticated: boolean;
-  user: any | null;
-  onLogout: () => void;
-  openPatientSelectionModal: () => void;
-  isPatientSelectionModalOpen: boolean;
-}
 
 function App() {
 
@@ -64,10 +53,6 @@ function App() {
 
   const openPatientSelectionModal = () => {
     setIsPatientSelectionModalOpen(true);
-  };
-
-  const closePatientSelectionModal = () => {
-    setIsPatientSelectionModalOpen(false);
   };
 
 
