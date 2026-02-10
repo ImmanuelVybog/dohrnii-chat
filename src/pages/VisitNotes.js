@@ -4,7 +4,7 @@ import './VisitNotes.css';
 import { usePatientContext } from '../context/PatientContext';
 import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPatientSelector';
 
-const VisitNotes = ({ openConfirmationModal, isPatientContextActiveInSession, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, activatePatientContextInSession, deactivatePatientContextInSession, handleToggleSidebar, }) => {
+const VisitNotes = ({ handleToggleSidebar }) => {
   const { selectedPatient, onUpdatePatient } = usePatientContext();
   const [noteType, setNoteType] = useState('SOAP Note');
   const [visitConversation, setVisitConversation] = useState('');
@@ -115,16 +115,7 @@ const VisitNotes = ({ openConfirmationModal, isPatientContextActiveInSession, is
 
       <div className='form-container'>
         <div className="form-section">
-          <GlobalPatientSelector
-          isConfirmationModalOpen={isConfirmationModalOpen}
-          patientToConfirmId={patientToConfirmId}
-          isConfirmingNewPatient={isConfirmingNewPatient}
-          openConfirmationModal={openConfirmationModal}
-          closeConfirmationModal={closeConfirmationModal}
-          isPatientContextActiveInSession={isPatientContextActiveInSession}
-          activatePatientContextInSession={activatePatientContextInSession}
-          deactivatePatientContextInSession={deactivatePatientContextInSession}
-        />
+          <GlobalPatientSelector />
         </div>
 
         <div className="note-type-selector">

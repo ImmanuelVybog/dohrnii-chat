@@ -108,7 +108,7 @@ const clinicalScenarios = [
   },
 ];
 
-const ClinicalReasoning = ({ openConfirmationModal, isPatientContextActiveInSession, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, activatePatientContextInSession, deactivatePatientContextInSession, handleToggleSidebar, }) => {
+const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, handleToggleSidebar, }) => {
   const { selectedPatient } = usePatientContext();
 
   const [age, setAge] = useState('');
@@ -312,9 +312,6 @@ const ClinicalReasoning = ({ openConfirmationModal, isPatientContextActiveInSess
           isConfirmingNewPatient={isConfirmingNewPatient}
           openConfirmationModal={openConfirmationModal}
           closeConfirmationModal={closeConfirmationModal}
-          isPatientContextActiveInSession={isPatientContextActiveInSession}
-          activatePatientContextInSession={activatePatientContextInSession}
-          deactivatePatientContextInSession={deactivatePatientContextInSession}
         />
         </div>
         <div className="form-section quick-start-scenarios">

@@ -98,7 +98,17 @@ const calculators = [
   // Add more calculators here
 ];
 
-const Calculators = ({ openConfirmationModal, isPatientContextActiveInSession, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, activatePatientContextInSession, deactivatePatientContextInSession, handleToggleSidebar, }) => {
+/**
+ * @param {object} props
+ * @param {boolean} props.isSidebarOpen
+ * @param {function} props.handleToggleSidebar
+ * @param {boolean} props.isAuthenticated
+ * @param {object | null} props.user
+ * @param {function} props.onLogout
+ * @param {function} props.openPatientSelectionModal
+ * @param {boolean} props.isPatientSelectionModalOpen
+ */
+const Calculators = ({ isSidebarOpen, handleToggleSidebar, isAuthenticated, user, onLogout, openPatientSelectionModal, isPatientSelectionModalOpen }) => {
   const { selectedPatient } = usePatientContext();
   const [selectedCalculatorId, setSelectedCalculatorId] = useState(calculators[0].id);
   const [inputValues, setInputValues] = useState({});
@@ -180,16 +190,7 @@ const Calculators = ({ openConfirmationModal, isPatientContextActiveInSession, i
 
       <div className="form-container">
         <div className="form-section">
-          <GlobalPatientSelector
-          isConfirmationModalOpen={isConfirmationModalOpen}
-          patientToConfirmId={patientToConfirmId}
-          isConfirmingNewPatient={isConfirmingNewPatient}
-          openConfirmationModal={openConfirmationModal}
-          closeConfirmationModal={closeConfirmationModal}
-          isPatientContextActiveInSession={isPatientContextActiveInSession}
-          activatePatientContextInSession={activatePatientContextInSession}
-          deactivatePatientContextInSession={deactivatePatientContextInSession}
-        />
+          <GlobalPatientSelector />
         </div>
         <div className="form-section">
           <h2>Select a Calculator</h2>

@@ -185,6 +185,7 @@ body {
   padding: 1rem;
   width: 100%;
   gap: 26px;
+  overflow: visible;
 }
 
 .question-input-container.fixed-bottom {
@@ -199,6 +200,7 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  overflow: visible;
 }
 
 .chat-area {
@@ -294,7 +296,7 @@ body {
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-hover);
 }
 
 .suggestion-buttons {

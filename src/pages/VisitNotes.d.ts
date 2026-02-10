@@ -1,7 +1,13 @@
 import { FunctionComponent } from 'react';
 
 interface VisitNotesProps {
-  onTogglePatientSidebar?: () => void;
+  isSidebarOpen: boolean;
+  handleToggleSidebar: () => void;
+  isAuthenticated: boolean;
+  user: any | null;
+  onLogout: () => void;
+  openPatientSelectionModal: () => void;
+  isPatientSelectionModalOpen: boolean;
 }
 
 declare const VisitNotes: FunctionComponent<VisitNotesProps>;

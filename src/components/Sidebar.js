@@ -8,26 +8,29 @@ import dropdownIconDown from '../assets/images/down icon.svg';
 import dropdownIconUp from '../assets/images/up icon.svg';
 import userIconLight from '../assets/images/user-icon-light.svg';
 import userIconDark from '../assets/images/user-icon-dark.svg';
+import userIconHover from '../assets/images/user-icon-hover.svg';
 import { Squash } from 'hamburger-react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { usePatientContext } from '../context/PatientContext';
-import { getAllPatients, setActivePatient, getActivePatient, addPatient } from '../services/patientService';
+import { getAllPatients, setActivePatient, getActivePatient, deletePatient } from '../services/patientService';
 import { useTheme } from '../context/ThemeContext';
 
 
 
-const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, user, onLogout, onNewChat, initialExpandQuestionHistory, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, openConfirmationModal, closeConfirmationModal, isPatientContextActiveInSession, activatePatientContextInSession, deactivatePatientContextInSession, isSidebarOpen, handleToggleSidebar }) => {
+const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, user, onLogout, onNewChat, initialExpandQuestionHistory, isSidebarOpen, onToggleSidebar, onOpenPatientSelectionModal }) => {
     const navigate = useNavigate();
     const [isHovered, setIsHovered] = useState(false);
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
     const { onUpdatePatient } = usePatientContext();
     const [allPatients, setAllPatients] = useState([]);
     const [activePatientId, setActivePatientId] = useState(null);
-    const [isCreatePatientModalOpen, setIsCreatePatientModalOpen] = useState(false);
-    const [newPatientName, setNewPatientName] = useState('');
-    const [newPatientAge, setNewPatientAge] = useState('');
-    const [newPatientSex, setNewPatientSex] = useState('');
     const { isDarkMode } = useTheme();
+    const [openPatientOptionsMenuId, setOpenPatientOptionsMenuId] = useState(null);
+    const [userIcon, setUserIcon] = useState(isDarkMode ? userIconDark : userIconLight);
+
+    useEffect(() => {
+      setUserIcon(isDarkMode ? userIconDark : userIconLight);
+    }, [isDarkMode]);
 
 
     const [isPatientSectionExpanded, setIsPatientSectionExpanded] = useState(true);
@@ -65,7 +68,6 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
       const newlyActivePatient = getActivePatient();
       if (newlyActivePatient) {
         onUpdatePatient(newlyActivePatient);
-      activatePatientContextInSession();
       }
       setActivePatientId(patientId);
     };
@@ -84,39 +86,15 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
     navigate('/');
   };
 
-  const handleOpenCreatePatientModal = () => {
-    setIsCreatePatientModalOpen(true);
+  const handleTogglePatientOptionsMenu = (patientId, event) => {
+    event.stopPropagation(); // Prevent triggering handleSelectPatient
+    setOpenPatientOptionsMenuId(openPatientOptionsMenuId === patientId ? null : patientId);
   };
 
-
-  const handleCloseCreatePatientModal = () => {
-    setIsCreatePatientModalOpen(false);
-    setNewPatientName('');
-    setNewPatientAge('');
-    setNewPatientSex('');
-  };
-
-  const handleCreatePatientInModal = () => {
-    if (newPatientName && newPatientAge && newPatientSex) {
-      const patient = addPatient({
-        fullName: newPatientName,
-        age: newPatientAge,
-        sex: newPatientSex,
-        chronicConditions: [],
-        longTermMedications: [],
-        allergies: [],
-        keyPastClinicalEvents: [],
-        uploadedFiles: [],
-        manualTextContext: '',
-      });
-      onUpdatePatient(patient); // Update the patient context
-      openConfirmationModal(patient.id, true);
-      activatePatientContextInSession();
-      loadPatients(); // Reload the patient list
-      handleCloseCreatePatientModal();
-    } else {
-      alert('Please fill in all patient details.');
-    }
+  const handleDeletePatient = (patientId) => {
+    deletePatient(patientId);
+    loadPatients(); // Reload patients after deletion
+    setOpenPatientOptionsMenuId(null); // Close the options menu
   };
 
 
@@ -132,7 +110,7 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
               onClick={handleGoHome}
               style={{ cursor: 'pointer' }}
             />
-            <Squash toggled={isSidebarOpen} toggle={handleToggleSidebar} color="#16AC9F" className="sidebar-toggle-button" />
+            <Squash toggled={isSidebarOpen} toggle={onToggleSidebar} color="#16AC9F" className="sidebar-toggle-button" />
           </div>
           <button className="new-chat-btn" onClick={onNewChat}>
               <img src={newChatIcon} alt="New Chat" className="new-chat-icon" />
@@ -189,7 +167,22 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
                       className={`patient-item ${patient.id === activePatientId ? 'active' : ''}`}
                       onClick={() => handleSelectPatient(patient.id)}
                     >
-                      {patient.fullName} · {patient.age}{patient.sex?.charAt(0) || ''}
+                      <div className="patient-info">
+                        {patient.fullName} · {patient.age}{patient.sex?.charAt(0) || ''}
+                      </div>
+                      <div className="patient-options">
+                        <button
+                          className="options-button"
+                          onClick={(e) => handleTogglePatientOptionsMenu(patient.id, e)}
+                        >
+                          &#8226;&#8226;&#8226;
+                        </button>
+                        {openPatientOptionsMenuId === patient.id && (
+                          <div className="options-menu">
+                            <button onClick={() => handleDeletePatient(patient.id)}>Delete</button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))
                 ) : (
@@ -197,7 +190,7 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
                 )}
               </div>
             )}
-            <button className="create-patient-btn" onClick={handleOpenCreatePatientModal}>
+            <button className="create-patient-btn" onClick={onOpenPatientSelectionModal}>
               + Create Patient
             </button>
           </div>
@@ -223,7 +216,7 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
         <div className="sidebar-closed" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
           <div className="sidebar-toggle-container">
             {isHovered ? (
-              <Squash toggled={isSidebarOpen} toggle={handleToggleSidebar} color="#16AC9F" className="sidebar-toggle-button" />
+              <Squash toggled={isSidebarOpen} toggle={onToggleSidebar} color="#16AC9F" className="sidebar-toggle-button" />
             ) : (
               <img
                 src={logoIcon}
@@ -240,8 +233,8 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
         </div>
       )}
       <div className="sidebar-footer">
-        <button className="account-btn" onClick={() => setIsAccountMenuOpen(prev => !prev)}>
-          <img src={isDarkMode? userIconDark : userIconLight} alt="Account" className="account-icon" />
+        <button className="account-btn" onMouseEnter={() => setUserIcon(userIconHover)} onMouseLeave={() => setUserIcon(isDarkMode ? userIconDark : userIconLight)} onClick={() => setIsAccountMenuOpen(prev => !prev)}>
+          <img src={userIcon} alt="Account" className="account-icon" />
           {isSidebarOpen && <span>Account</span>}
         </button>
       </div>
@@ -255,36 +248,6 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
         user={user}
         onLogout={onLogout}
       />
-
-      {isCreatePatientModalOpen && (
-        <div className="create-patient-modal-overlay">
-          <div className="create-patient-form">
-            <h2>Create New Patient</h2>
-            <input
-              type="text"
-              placeholder="Full Name"
-              value={newPatientName}
-              onChange={(e) => setNewPatientName(e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="Age"
-              value={newPatientAge}
-              onChange={(e) => setNewPatientAge(parseInt(e.target.value) || '')}
-            />
-            <select value={newPatientSex} onChange={(e) => setNewPatientSex(e.target.value)}>
-              <option value="">Select Sex</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-            <div className="modal-actions">
-              <button onClick={handleCreatePatientInModal}>Create</button>
-              <button onClick={handleCloseCreatePatientModal}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
     </aside>
   );
 };

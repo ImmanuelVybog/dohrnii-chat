@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import './Home.css';
 import QuestionInput from '../components/QuestionInput';
 import AccountPopup from '../components/AccountPopup';
+import QuickClinicalActions from '../components/QuickClinicalActions';
 import dohrniiHeroIcon from '../assets/images/Dohrnii Home Chat Icon.svg';
 import clinicalReasoningIcon from '../assets/images/clinical-reasoning-icon.svg';
 import visitNotesIcon from '../assets/images/visit-notes-icon.svg';
@@ -42,11 +43,19 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
 
 
 
+
+
+
     const handleSuggestionClick = (suggestion) => {
     setCurrentQuestion(suggestion);
     handleQuestionSubmit(suggestion);
     setConversationStarted(true);
     };
+
+  const handleQuickActionClick = (message) => {
+    setCurrentQuestion(message);
+    handleQuestionSubmit(message);
+  };
 
   const handleQuestionSubmit = (newQuestion) => {
     setChatMessages((prevMessages) => [...prevMessages, { type: 'user', content: newQuestion }]);
@@ -55,51 +64,232 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
 
     // Simulate AI response with references
     let aiResponseContent;
-    if (excludeContext || chatContext.type === 'GENERAL_CHAT') {
-      aiResponseContent = `This is a simulated AI answer for: "${newQuestion}". In General Chat mode, responses are generic and do not use patient context.`;
-    } else if (chatContext.type === 'SAVED_PATIENT_CHAT' && selectedPatient) {
-      aiResponseContent = `This is a simulated AI answer for: "${newQuestion}" in the context of patient ${selectedPatient.name} (ID: ${selectedPatient.id}, Age: ${selectedPatient.age}, Sex: ${selectedPatient.sex}). The AI is referencing the patient's data.`;
-    } else if (chatContext.type === 'TEMPORARY_PATIENT_CHAT' && chatContext.temporaryPatientContext) {
-      const tempPatient = chatContext.temporaryPatientContext;
-      aiResponseContent = `This is a simulated AI answer for: "${newQuestion}" using temporary patient context (Age: ${tempPatient.age}, Sex: ${tempPatient.sex}, Chief Complaint: ${tempPatient.chiefComplaint}). The AI is referencing this temporary data.`;
-    } else if (newQuestion === 'What is the first-line empiric antibiotic for neutropenic fever?') {
-            aiResponseContent = `
-        <p>Monotherapy with an antipseudomonal beta-lactam agent is the first-line empiric antibiotic for neutropenic fever.</p>
-        <h3>Recommended First-Line Agents</h3>
-        <ul>
-          <li>Cefepime 2000 mg IV every 8 hours</li>
-          <li>Piperacillin-tazobactam 4000/500 mg IV every 6 hours</li>
-          <li>Ceftazidime 2000 mg IV every 8 hours</li>
-          <li>Meropenem 1000 mg IV every 6 hours (second-line or for high-risk patients)</li>
-          <li>Imipenem-cilastatin 500/500 mg IV every 6 hours (second-line or for high-risk patients)</li>
-        </ul>
-        <h3>Key Principles</h3>
-        <ul>
-          <li>Empiric antibiotics should be administered within 1 hour of presentation after obtaining appropriate cultures.</li>
-          <li>Monotherapy is preferred over combination therapy for initial empiric treatment in most patients.</li>
-          <li>The choice among first-line agents should be guided by local antibiotic resistance patterns, patient-specific risk factors, and previous colonization or infection history.</li>
-          <li>Vancomycin or other anti-Gram-positive coverage is NOT recommended as part of routine initial empiric therapy unless specific indications exist (catheter-related infection, skin/soft tissue infection, severe pneumonia, or hemodynamic instability).</li>
-          <li>Patients already on fluoroquinolone prophylaxis should not receive a fluoroquinolone as part of empiric therapy.</li>
-        </ul>
-        <h3>Risk-Based Modifications</h3>
-        <ul>
-          <li>High-risk patients (expected neutropenia >7 days) require inpatient IV therapy with the agents listed above.</li>
-          <li>Low-risk patients (MASCC score ≥21) may be candidates for oral outpatient therapy with ciprofloxacin plus amoxicillin-clavulanate after initial observation.</li>
-          <li>Patients colonized with resistant organisms (ESBL, carbapenem-resistant bacteria) may require carbapenem therapy or other targeted agents as initial empiric treatment.</li>
-        </ul>
-        <p>Would you like me to discuss modifications to empiric therapy based on specific clinical scenarios or patient risk factors?</p>
-      `;
-    } else {
-      aiResponseContent = `This is a simulated AI answer for: "${newQuestion}".\n\nReferences:\n1. Reference A: https://example.com/referenceA\n2. Reference B: https://example.com/referenceB`;
-    }
+    let aiReferences = [];
 
-    const aiReferences = [
-      { id: 1, title: '2024 update of the AGIHO guideline on diagnosis and empirical treatment of fever of unknown origin (FUO) in adult neutropenic patients with solid tumours and hematological malignancies.', journal: 'The Lancet regional health. Europe. 2025.', authors: 'Sandherr M, Stemler J, Schalk E et al.', year: '2025', url: 'https://example.com/ref1', tags: ['Newly Published'] },
-      { id: 2, title: 'Clinical practice guideline for the use of antimicrobial agents in neutropenic patients with cancer: 2010 update by the infectious diseases society of america.', journal: 'Clinical infectious diseases : an official publication of the Infectious Diseases Society of America. 2011.', authors: 'Freifeld AG, Bow EJ, Sepkowitz KA et al.', year: '2011', url: 'https://example.com/ref2', tags: ['High Impact', 'Highly Cited'] },
-      { id: 3, title: 'Outpatient Management of Fever and Neutropenia in Adults Treated for Malignancy: American Society of Clinical Oncology and Infectious Diseases Society of America Clinical Practice Guideline Update.', journal: 'Journal of clinical oncology : official journal of the American Society of Clinical Oncology. 2018.', authors: 'Taplitz RA, Kennedy EB, Bow EJ et al.', year: '2018', url: 'https://example.com/ref3', tags: ['Guideline', 'High Impact', 'Highly Cited'] },
-      { id: 4, title: 'Rapid Fire: Infectious Disease Emergencies in Patients with Cancer.', journal: 'Emergency medicine clinics of North America. 2018.', authors: 'Charshafian S, Liang SY', year: '2018', url: 'https://example.com/ref4', tags: [] },
-      { id: 5, title: 'Management of fever and neutropenia in patients with cancer.', journal: 'Journal of oncology practice. 2015.', authors: 'Klastersky J', year: '2015', url: 'https://example.com/ref5', tags: ['Guideline', 'High Impact', 'Highly Cited'] },
-    ];
+    switch (newQuestion) {
+      case 'Draft a differential diagnosis based on the current patient context.':
+        aiResponseContent = `**Differential Diagnosis for Current Patient Context:**
+
+Based on the available patient information, here are some potential differential diagnoses to consider:
+
+1.  **Community-Acquired Pneumonia (CAP):** Given symptoms like cough, fever, and potential respiratory distress.
+    *   *Key considerations:* Chest X-ray findings, oxygen saturation, sputum culture.
+    *   *References:*
+        *   Mandell, Douglas, and Bennett's Principles and Practice of Infectious Diseases. 9th ed.
+        *   IDSA Guidelines for the Management of CAP in Adults.
+
+2.  **Acute Bronchitis:** If cough is prominent but without clear evidence of pneumonia.
+    *   *Key considerations:* Viral prodrome, absence of infiltrates on imaging.
+    *   *References:*
+        *   UpToDate: Acute bronchitis in adults.
+
+3.  **Congestive Heart Failure (CHF) Exacerbation:** If there's a history of cardiac issues and new or worsening dyspnea.
+    *   *Key considerations:* Jugular venous distension, peripheral edema, BNP levels, echocardiogram.
+    *   *References:*
+        *   ACC/AHA Guidelines for the Management of Heart Failure.
+
+4.  **Pulmonary Embolism (PE):** Especially if there are risk factors (e.g., recent surgery, immobility, malignancy) and sudden onset dyspnea/chest pain.
+    *   *Key considerations:* D-dimer, CT pulmonary angiography.
+    *   *References:*
+        *   ACCP Guidelines for Antithrombotic Therapy and Prevention of Thrombosis.
+
+*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
+        aiReferences = [
+          { id: 1, title: 'IDSA Guidelines for the Management of Community-Acquired Pneumonia in Adults', journal: 'Clinical Infectious Diseases', authors: 'Metlay JP, et al.', year: '2019', url: 'https://www.idsociety.org/CAPguidelines', tags: ['Guideline', 'Infectious Disease'] },
+          { id: 2, title: 'ACC/AHA Guideline for the Management of Heart Failure', journal: 'Journal of the American College of Cardiology', authors: 'Yancy CW, et al.', year: '2017', url: 'https://www.ahajournals.org/heartfailureguideline', tags: ['Guideline', 'Cardiology'] },
+        ];
+        break;
+
+      case 'Suggest initial diagnostic workup based on the current patient context.':
+        aiResponseContent = `**Initial Diagnostic Workup for Current Patient Context:**
+
+Based on the available patient information, here's a suggested initial diagnostic workup:
+
+1.  **Laboratory Tests:**
+    *   Complete Blood Count (CBC) with differential
+    *   Basic Metabolic Panel (BMP)
+    *   Liver Function Tests (LFTs)
+    *   Inflammatory markers (CRP, ESR)
+    *   Cardiac enzymes (if chest pain/dyspnea)
+    *   D-dimer (if PE suspected)
+    *   Blood cultures (if fever/sepsis suspected)
+
+2.  **Imaging Studies:**
+    *   Chest X-ray (CXR) - PA and Lateral
+    *   Electrocardiogram (ECG)
+    *   Consider Point-of-Care Ultrasound (POCUS) for cardiac or pulmonary assessment.
+
+3.  **Other:**
+    *   Urinalysis and urine culture (if UTI suspected)
+    *   Sputum gram stain and culture (if productive cough)
+
+*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
+        aiReferences = [
+          { id: 1, title: 'Emergency Medicine: A Comprehensive Study Guide', journal: 'McGraw Hill', authors: 'Tintinalli JE, et al.', year: '2020', url: 'https://accessmedicine.mhmedical.com/tintinalli', tags: ['Textbook', 'Emergency Medicine'] },
+          { id: 2, title: 'Clinical Decision Support: The Road to Better Patient Care', journal: 'Elsevier', authors: 'Greenes RA, et al.', year: '2014', url: 'https://www.elsevier.com/clinical-decision-support', tags: ['Review', 'Health Informatics'] },
+        ];
+        break;
+
+      case 'Propose a management plan for a specific condition.':
+        aiResponseContent = `**Proposed Management Plan for [Specific Condition - e.g., Community-Acquired Pneumonia]:**
+
+Assuming a diagnosis of Community-Acquired Pneumonia (CAP) in an adult patient with no significant comorbidities and outpatient management is appropriate:
+
+1.  **Antibiotic Therapy:**
+    *   **First-line:** Amoxicillin 1g TID OR Doxycycline 100mg BID OR Azithromycin 500mg on day 1, then 250mg daily for 4 days.
+    *   *Duration:* Typically 5-7 days, or until afebrile for 48-72 hours.
+
+2.  **Symptomatic Treatment:**
+    *   Antipyretics/Analgesics: Acetaminophen or Ibuprofen for fever and pain.
+    *   Cough suppressants: As needed for bothersome cough.
+    *   Hydration: Encourage oral fluid intake.
+
+3.  **Monitoring & Follow-up:**
+    *   Educate patient on warning signs (worsening dyspnea, persistent fever, altered mental status) requiring immediate medical attention.
+    *   Follow-up in 24-48 hours (phone call or in-person) to assess response to treatment.
+    *   Consider repeat Chest X-ray in 4-6 weeks for patients over 50 years old or smokers to rule out underlying malignancy.
+
+*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
+        aiReferences = [
+          { id: 1, title: 'IDSA/ATS Guidelines for the Management of Community-Acquired Pneumonia in Adults', journal: 'Clinical Infectious Diseases', authors: 'Metlay JP, et al.', year: '2019', url: 'https://www.idsociety.org/CAPguidelines', tags: ['Guideline', 'Infectious Disease'] },
+          { id: 2, title: 'NICE Guideline: Pneumonia (community-acquired): antimicrobial prescribing', journal: 'National Institute for Health and Care Excellence', authors: 'NICE', year: '2019', url: 'https://www.nice.org.uk/guidance/ng138', tags: ['Guideline', 'UK Healthcare'] },
+        ];
+        break;
+
+      case 'Summarize key patient information for handover.':
+        aiResponseContent = `**Patient Handover Summary:**
+
+**Patient Name:** [Patient Name from Context, e.g., John Doe]
+**Age/Sex:** [Age/Sex from Context, e.g., 68M]
+**Chief Complaint:** [Chief Complaint from Context, e.g., Shortness of breath]
+**Brief HPI:** [Brief History of Present Illness from Context, e.g., 3 days of progressive dyspnea, productive cough, subjective fevers. No chest pain. Denies recent travel or sick contacts.]
+**Relevant PMH:** [Relevant Past Medical History from Context, e.g., CAD, HTN, Type 2 DM, COPD]
+**Current Status:** [e.g., Alert and oriented x3, tachypneic at rest (RR 24), O2 sat 92% on room air, coarse breath sounds bilaterally. Afebrile.]
+**Pending/Recent Labs/Imaging:** [e.g., CXR shows bilateral lower lobe infiltrates. CBC: WBC 14.5, Hgb 13.2. BMP WNL. Blood cultures sent.]
+**Assessment:** [e.g., Community-Acquired Pneumonia, COPD exacerbation]
+**Plan:** [e.g., Start IV Ceftriaxone and Azithromycin. Respiratory treatments. Monitor O2 sats. Consult Pulmonology.]
+
+*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
+        aiReferences = [
+          { id: 1, title: 'SBAR Communication: An Effective Tool for Handoff in Nursing', journal: 'Journal of Nursing Care Quality', authors: 'Haig KM, et al.', year: '2006', url: 'https://journals.lww.com/jncq/Abstract/2006/07000/SBAR_Communication__An_Effective_Tool_for_Handoff.10.aspx', tags: ['Communication', 'Nursing'] },
+          { id: 2, title: 'Patient Handoffs: A Review of the Literature', journal: 'Journal of Hospital Medicine', authors: 'Starmer AJ, et al.', year: '2013', url: 'https://www.journalofhospitalmedicine.com/jhospmed/article/123456/patient-handoffs-review-literature', tags: ['Patient Safety', 'Review'] },
+        ];
+        break;
+
+      case 'Draft a patient education summary.':
+        aiResponseContent = `**Patient Education Summary for [Condition - e.g., New Diagnosis of Type 2 Diabetes]:**
+
+**What is Type 2 Diabetes?**
+Type 2 diabetes is a condition where your body either doesn't produce enough insulin or doesn't use insulin properly. Insulin is a hormone that helps sugar (glucose) get into your cells to be used for energy. When this process doesn't work well, sugar builds up in your blood, which can lead to health problems over time.
+
+**Key Management Strategies:**
+
+1.  **Healthy Eating:** Focus on a balanced diet with plenty of vegetables, lean proteins, and whole grains. Limit sugary drinks, processed foods, and unhealthy fats. Consider consulting with a dietitian.
+2.  **Regular Physical Activity:** Aim for at least 150 minutes of moderate-intensity aerobic activity per week (e.g., brisk walking, swimming).
+3.  **Medications:** Take your prescribed medications (e.g., metformin, insulin) exactly as directed. Understand their purpose and potential side effects.
+4.  **Blood Glucose Monitoring:** Regularly check your blood sugar levels as advised by your doctor. This helps you understand how food, activity, and medication affect your glucose.
+5.  **Foot Care:** Inspect your feet daily for cuts, sores, or blisters. Wear comfortable, well-fitting shoes.
+6.  **Regular Check-ups:** Attend all appointments with your healthcare team, including eye exams and kidney function tests.
+
+**When to Seek Medical Attention:**
+Contact your doctor if you experience symptoms of very high or very low blood sugar, or any new concerning symptoms.
+
+*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
+        aiReferences = [
+          { id: 1, title: 'American Diabetes Association: Standards of Medical Care in Diabetes', journal: 'Diabetes Care', authors: 'ADA', year: '2024', url: 'https://diabetesjournals.org/care/issue/current', tags: ['Guideline', 'Endocrinology'] },
+          { id: 2, title: 'National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK): Diabetes Information', journal: 'NIH', authors: 'NIDDK', year: 'Current', url: 'https://www.niddk.nih.gov/health-information/diabetes', tags: ['Patient Education', 'Government Resource'] },
+        ];
+        break;
+
+      case 'Find evidence-based guidelines for [condition/treatment].':
+        aiResponseContent = `**Evidence-Based Guidelines for [Condition/Treatment - e.g., Hypertension Management]:**
+
+Here are some prominent evidence-based guidelines for hypertension management:
+
+1.  **2017 ACC/AHA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults:**
+    *   *Key recommendations:* Defines hypertension as BP ≥130/80 mmHg. Emphasizes lifestyle modifications and provides algorithms for pharmacologic treatment based on risk.
+    *   *Source:* American College of Cardiology / American Heart Association
+    *   *Link:* [https://www.ahajournals.org/doi/full/10.1161/HYP.0000000000000065](https://www.ahajournals.org/doi/full/10.1161/HYP.0000000000000065)
+
+2.  **NICE Guideline: Hypertension in adults: diagnosis and management (NG136):**
+    *   *Key recommendations:* Focuses on clinic and ambulatory/home BP monitoring for diagnosis. Provides guidance on drug treatment and monitoring.
+    *   *Source:* National Institute for Health and Care Excellence (UK)
+    *   *Link:* [https://www.nice.org.uk/guidance/ng136](https://www.nice.org.uk/guidance/ng136)
+
+3.  **ESH/ESC Guidelines for the management of arterial hypertension:**
+    *   *Key recommendations:* European guidelines offering comprehensive advice on diagnosis, treatment, and follow-up of hypertension.
+    *   *Source:* European Society of Hypertension / European Society of Cardiology
+    *   *Link:* [https://academic.oup.com/eurheartj/article/39/33/3021/5081210](https://academic.oup.com/eurheartj/article/39/33/3021/5081210)
+
+*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
+        aiReferences = [
+          { id: 1, title: '2017 ACC/AHA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults', journal: 'Hypertension', authors: 'Whelton PK, et al.', year: '2018', url: 'https://www.ahajournals.org/doi/full/10.1161/HYP.0000000000000065', tags: ['Guideline', 'Cardiology'] },
+          { id: 2, title: 'NICE Guideline: Hypertension in adults: diagnosis and management (NG136)', journal: 'NICE', authors: 'NICE', year: '2019', url: 'https://www.nice.org.uk/guidance/ng136', tags: ['Guideline', 'UK Healthcare'] },
+        ];
+        break;
+
+      case 'Explain a medical concept or term.':
+        aiResponseContent = `**Explanation of [Medical Concept/Term - e.g., "Myocardial Infarction"]:**
+
+A **myocardial infarction (MI)**, commonly known as a **heart attack**, occurs when blood flow to a part of the heart muscle is blocked for a prolonged period, usually by a blood clot. This blockage prevents oxygen from reaching the heart muscle, leading to damage or death of the heart tissue.
+
+**Key Points:**
+
+*   **Cause:** Most commonly caused by a rupture of an atherosclerotic plaque in a coronary artery, leading to clot formation.
+*   **Symptoms:** Can include chest pain (often described as pressure, tightness, or squeezing), shortness of breath, pain radiating to the arm (especially left), jaw, back, or stomach, sweating, nausea, and lightheadedness.
+*   **Diagnosis:** Typically involves an electrocardiogram (ECG) to detect electrical changes in the heart, and blood tests to measure cardiac enzymes (e.g., troponin), which are released when heart muscle is damaged.
+*   **Treatment:** Immediate treatment focuses on restoring blood flow (e.g., angioplasty with stent placement, thrombolytic medications) and managing symptoms. Long-term management involves medications (e.g., antiplatelets, statins, beta-blockers) and lifestyle changes.
+
+*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
+        aiReferences = [
+          { id: 1, title: 'Braunwald\'s Heart Disease: A Textbook of Cardiovascular Medicine', journal: 'Elsevier', authors: 'Zipes DP, et al.', year: '2018', url: 'https://www.elsevier.com/braunwalds-heart-disease', tags: ['Textbook', 'Cardiology'] },
+          { id: 2, title: 'AHA: About Heart Attacks', journal: 'American Heart Association', authors: 'AHA', year: 'Current', url: 'https://www.heart.org/en/health-topics/heart-attack/about-heart-attacks', tags: ['Patient Education', 'Cardiology'] },
+        ];
+        break;
+
+      case 'Provide a drug-drug interaction check for [medications].':
+        aiResponseContent = `**Drug-Drug Interaction Check for [Medications - e.g., Warfarin and Trimethoprim-Sulfamethoxazole]:**
+
+**Medications:**
+1.  **Warfarin (Coumadin)**: Anticoagulant
+2.  **Trimethoprim-Sulfamethoxazole (Bactrim)**: Antibiotic
+
+**Interaction:**
+**Severity:** Major
+**Mechanism:** Trimethoprim-sulfamethoxazole can inhibit the metabolism of warfarin (specifically via CYP2C9 inhibition) and also displace warfarin from plasma protein binding sites. Both mechanisms lead to increased levels of active warfarin in the blood.
+**Effect:** Significantly increases the anticoagulant effect of warfarin, leading to a **higher risk of bleeding**.
+
+**Recommendations:**
+*   **Avoid concomitant use if possible.**
+*   If co-administration is unavoidable, **close monitoring of INR (International Normalized Ratio) is essential**, typically daily for the first few days, then every 2-3 days.
+*   **Adjust warfarin dose downwards** significantly (e.g., by 30-50%) when starting trimethoprim-sulfamethoxazole, and titrate based on INR.
+*   Educate the patient on signs and symptoms of bleeding (e.g., unusual bruising, nosebleeds, blood in urine/stool, prolonged bleeding from cuts).
+*   Consider alternative antibiotics if appropriate.
+
+*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official drug interaction databases and patient-specific data.*`;
+        aiReferences = [
+          { id: 1, title: 'Lexicomp Drug Interactions', journal: 'Wolters Kluwer', authors: 'Lexicomp', year: 'Current', url: 'https://www.wolterskluwer.com/en/solutions/lexicomp', tags: ['Drug Database', 'Pharmacology'] },
+          { id: 2, title: 'UpToDate: Warfarin: Drug interactions', journal: 'UpToDate', authors: 'Crowther MA, et al.', year: 'Current', url: 'https://www.uptodate.com/contents/warfarin-drug-interactions', tags: ['Clinical Resource', 'Pharmacology'] },
+        ];
+        break;
+
+      default:
+        if (excludeContext || chatContext.type === 'GENERAL_CHAT') {
+          aiResponseContent = `This is a simulated AI answer for: "${newQuestion}". In General Chat mode, responses are generic and do not use patient context.`;
+        } else if (chatContext.type === 'SAVED_PATIENT_CHAT' && selectedPatient) {
+          aiResponseContent = `This is a simulated AI answer for: "${newQuestion}" in the context of patient ${selectedPatient.name} (ID: ${selectedPatient.id}, Age: ${selectedPatient.age}, Sex: ${selectedPatient.sex}). The AI is referencing the patient's data.`;
+        } else if (chatContext.type === 'TEMPORARY_PATIENT_CHAT' && chatContext.temporaryPatientContext) {
+          const tempPatient = chatContext.temporaryPatientContext;
+          aiResponseContent = `This is a simulated AI answer for: "${newQuestion}" using temporary patient context (Age: ${tempPatient.age}, Sex: ${tempPatient.sex}, Chief Complaint: ${tempPatient.chiefComplaint}). The AI is referencing this temporary data.`;
+        } else {
+          aiResponseContent = `This is a simulated AI answer for: "${newQuestion}".\n\nReferences:\n1. Reference A: https://example.com/referenceA\n2. Reference B: https://example.com/referenceB`;
+        }
+        aiReferences = [
+          { id: 1, title: '2024 update of the AGIHO guideline on diagnosis and empirical treatment of fever of unknown origin (FUO) in adult neutropenic patients with solid tumours and hematological malignancies.', journal: 'The Lancet regional health. Europe. 2025.', authors: 'Sandherr M, Stemler J, Schalk E et al.', year: '2025', url: 'https://example.com/ref1', tags: ['Newly Published'] },
+          { id: 2, title: 'Clinical practice guideline for the use of antimicrobial agents in neutropenic patients with cancer: 2010 update by the infectious diseases society of america.', journal: 'Clinical infectious diseases : an official publication of the Infectious Diseases Society of America. 2011.', authors: 'Freifeld AG, Bow EJ, Sepkowitz KA et al.', year: '2011', url: 'https://example.com/ref2', tags: ['High Impact', 'Highly Cited'] },
+        ];
+        break;
+    }
 
     // Add a placeholder for the AI response and start typing animation
     setChatMessages((prevMessages) => {
@@ -116,6 +306,15 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
   useEffect(() => {
     if (typingMessageIndex !== null && displayedAiResponse.length > 0) {
       let i = 0;
+      // Define a threshold for "first few lines" (e.g., first 3 newlines or 150 characters)
+      const newlineIndices = [];
+      let pos = displayedAiResponse.indexOf('\n');
+      while (pos !== -1 && newlineIndices.length < 3) {
+        newlineIndices.push(pos);
+        pos = displayedAiResponse.indexOf('\n', pos + 1);
+      }
+      const threshold = newlineIndices.length === 3 ? newlineIndices[2] : Math.min(150, displayedAiResponse.length);
+
       const typingInterval = setInterval(() => {
         setChatMessages((prevMessages) => {
           const newMessages = [...prevMessages];
@@ -124,13 +323,20 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
           }
           return newMessages;
         });
-        i++;
-        if (i > displayedAiResponse.length) {
+
+        // Determine how many characters to add in this step
+        // Slow for the first few lines, then significantly faster
+        const increment = i < threshold ? 1 : 15;
+        i += increment;
+
+        if (i >= displayedAiResponse.length) {
           clearInterval(typingInterval);
           setChatMessages((prevMessages) => {
             const newMessages = [...prevMessages];
             if (newMessages[typingMessageIndex]) {
               newMessages[typingMessageIndex].animating = false;
+              // Ensure the full content is set correctly at the end
+              newMessages[typingMessageIndex].content = displayedAiResponse;
             }
             return newMessages;
           });
@@ -178,7 +384,7 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
   const handleEditPatient = (patientId) => {
     // This will likely navigate to an edit page or open an edit modal
     console.log(`Edit patient with ID: ${patientId}`);
-    navigate(`/patient/${patientId}/edit`); // Example navigation
+    navigate(`/patient/${patientId}/edit`);
     handleClosePatientDetailModal();
   };
 
@@ -242,12 +448,8 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
                 closeConfirmationModal={closeConfirmationModal}
                 activatePatientContextInSession={activatePatientContextInSession}
                 deactivatePatientContextInSession={deactivatePatientContextInSession}
-                handleToggleSidebar={handleToggleSidebar} />   
-              <div className="suggestion-buttons">
-                  <button onClick={() => handleSuggestionClick('Symptoms of diabetes?')} className="suggestion-button">Symptoms of diabetes?</button>
-                  <button onClick={() => handleSuggestionClick('How does high BP affect the body?')} className="suggestion-button">How does high BP affect the body?</button>
-                  <button onClick={() => handleSuggestionClick('What should I know about antibiotics?')} className="suggestion-button">What should I know about antibiotics?</button>
-              </div>
+                handleToggleSidebar={handleToggleSidebar} />
+              <QuickClinicalActions onActionClick={handleQuickActionClick} />
               <div className="explore-section">
                 <h2 className="explore-title">Explore what Dohrnii can help with</h2>
                 <div className="explore-cards">
@@ -405,13 +607,12 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
               </div>
               <div className="question-input-container fixed-bottom">
                 <QuestionInput onQuestionSubmit={handleQuestionSubmit} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion} isChatMode={true} onExcludeContextChange={setExcludeContext} excludeContext={excludeContext} openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} handleToggleSidebar={handleToggleSidebar} />
+                <QuickClinicalActions onActionClick={handleQuickActionClick} />
               </div>
             </div>
           )}
         </div>
         </div>
-
-        
       </div>
 
       <AccountPopup isOpen={isAccountPopupOpen} onClose={handleCloseAccountPopup} user={user} onLogout={onLogout} />

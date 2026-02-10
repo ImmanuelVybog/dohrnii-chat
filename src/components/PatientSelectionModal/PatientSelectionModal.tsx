@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './PatientSelectionModal.css';
-import { getAllPatients, setActivePatient, addPatient } from '../../services/patientService';
+import { getAllPatients, setActivePatient, addPatient, deletePatient } from '../../services/patientService';
 import { Patient, Sex, UploadedFile } from '../../types/patient';
 import { usePatientContext } from '../../context/PatientContext';
 import CustomSelect from '../shared/CustomSelect';
@@ -9,14 +9,14 @@ interface PatientSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   openConfirmationModal: (patientId: string, isNewPatient: boolean) => void;
-  activatePatientContextInSession: () => void;
 }
 
-const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, onClose, openConfirmationModal, activatePatientContextInSession }) => {
-  const { onUpdatePatient } = usePatientContext();
+
+const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, onClose, openConfirmationModal }) => {
+  const { onUpdatePatient, activatePatientContextInSession } = usePatientContext();
   const [allPatients, setAllPatients] = useState<Patient[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isCreatePatientFormOpen, setIsCreatePatientFormOpen] = useState(false);
+  const [isUploadContextModalOpen, setIsUploadContextModalOpen] = useState(false);
   const [newPatientName, setNewPatientName] = useState('');
   const [newPatientAge, setNewPatientAge] = useState<number | ''>('');
   const [newPatientSex, setNewPatientSex] = useState<Sex | ''>('');
@@ -27,7 +27,10 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [manualTextContext, setManualTextContext] = useState('');
   const [useAsCurrentContext, setUseAsCurrentContext] = useState(true);
+  const [openPatientOptionsMenuId, setOpenPatientOptionsMenuId] = useState<string | null>(null);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+  const uploadContextModalRef = useRef<HTMLDivElement>(null);
 
   // Utility to generate a unique ID
   const generateUniqueId = (): string => {
@@ -38,7 +41,21 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
     if (isOpen) {
       loadPatients();
     }
-  }, [isOpen]);
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+      if (isUploadContextModalOpen && uploadContextModalRef.current && !uploadContextModalRef.current.contains(event.target as Node)) {
+        handleCloseUploadContextModal();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, isUploadContextModalOpen, onClose]);
 
   const sexOptions = [
     { value: '', label: 'Select' },
@@ -57,7 +74,7 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
     const newlyActivePatient = getAllPatients().find(p => p.id === patientId);
     if (newlyActivePatient) {
       onUpdatePatient(newlyActivePatient);
-      activatePatientContextInSession();
+      activatePatientContextInSession(newlyActivePatient.id);
     }
     onClose();
   };
@@ -78,22 +95,22 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
       onUpdatePatient(patient);
       openConfirmationModal(patient.id, true);
       if (useAsCurrentContext) {
-        activatePatientContextInSession();
+        activatePatientContextInSession(patient.id);
       }
       loadPatients();
-      handleCloseCreatePatientForm();
+      handleCloseUploadContextModal();
       onClose();
     } else {
       alert('Please fill in all patient details.');
     }
   };
 
-  const handleOpenCreatePatientForm = () => {
-    setIsCreatePatientFormOpen(true);
+  const handleOpenUploadContextModal = () => {
+    setIsUploadContextModalOpen(true);
   };
 
-  const handleCloseCreatePatientForm = () => {
-    setIsCreatePatientFormOpen(false);
+  const handleCloseUploadContextModal = () => {
+    setIsUploadContextModalOpen(false);
     setNewPatientName('');
     setNewPatientAge('');
     setNewPatientSex('');
@@ -103,6 +120,17 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
     setKeyPastEvents([]);
     setUploadedFiles([]); // Clear uploaded files on form close
     setManualTextContext('');
+  };
+
+  const handleTogglePatientOptionsMenu = (patientId: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent triggering handleSelectPatient
+    setOpenPatientOptionsMenuId(openPatientOptionsMenuId === patientId ? null : patientId);
+  };
+
+  const handleDeletePatient = (patientId: string) => {
+    deletePatient(patientId);
+    loadPatients(); // Reload patients after deletion
+    setOpenPatientOptionsMenuId(null); // Close the options menu
   };
 
   const handleFileProcessing = (files: FileList) => {
@@ -199,7 +227,7 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
 
   return (
     <div className={`patient-selection-modal-overlay ${isOpen ? 'open' : ''}`}>
-      <div className={`patient-selection-modal ${isOpen ? 'open' : ''}`}>
+      <div className={`patient-selection-modal ${isOpen ? 'open' : ''}`} ref={modalRef}>
         <div className="modal-header">
           <div className="modal-header-content">
             <h2>Create Patient</h2>
@@ -223,19 +251,34 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
                   className="patient-item"
                   onClick={() => handleSelectPatient(patient.id)}
                 >
-                  {patient.fullName} · {patient.age}{patient.sex?.charAt(0) || ''}
+                  <div className="patient-info">
+                    {patient.fullName} · {patient.age}{patient.sex?.charAt(0) || ''}
+                  </div>
+                  <div className="patient-options">
+                    <button
+                      className="options-button"
+                      onClick={(e) => handleTogglePatientOptionsMenu(patient.id, e)}
+                    >
+                      &#8226;&#8226;&#8226;
+                    </button>
+                    {openPatientOptionsMenuId === patient.id && (
+                      <div className="options-menu">
+                        <button onClick={() => handleDeletePatient(patient.id)}>Delete</button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))
             ) : (
               <div className="patient-item no-patients">No patients found.</div>
             )}
           </div>
-          <button className="create-patient-btn" onClick={handleOpenCreatePatientForm}>
+          <button className="create-patient-btn" onClick={handleOpenUploadContextModal}>
             + Create New Patient
           </button>
 
-          {isCreatePatientFormOpen && (
-            <div className="create-patient-form">
+          {isUploadContextModalOpen && (
+            <div className="create-patient-form" ref={uploadContextModalRef}>
               <h3>Create New Patient</h3>
               <div className="form-section">
                 <h2>BASIC INFO</h2>
@@ -266,7 +309,7 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
                   <CustomSelect
                     options={sexOptions}
                     value={newPatientSex}
-                    onChange={setNewPatientSex}
+                     onChange={(value: string) => setNewPatientSex(value as "" | Sex)}
                     placeholder="Select"
                   />
                 </div>
@@ -369,7 +412,7 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
                   Use this patient as current context after creation
                 </label>
                 <button className="primary-button" onClick={handleCreatePatient}>Create</button>
-                <button className="secondary-button" onClick={handleCloseCreatePatientForm}>Cancel</button>
+                <button className="secondary-button" onClick={handleCloseUploadContextModal}>Cancel</button>
               </div>
             </div>
           )}

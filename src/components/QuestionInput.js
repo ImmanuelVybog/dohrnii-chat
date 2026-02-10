@@ -1,8 +1,26 @@
 import { useEffect, useState, useMemo } from 'react';
 import './QuestionInput.css';
-import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPatientSelector';
+import GlobalPatientSelector from './GlobalPatientSelector/GlobalPatientSelector';
 
-const QuestionInput = ({ onQuestionSubmit, currentQuestion, setCurrentQuestion, isChatMode, onExcludeContextChange, excludeContext, openConfirmationModal, isPatientContextActiveInSession, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, activatePatientContextInSession, deactivatePatientContextInSession, handleToggleSidebar }) => {
+const QuestionInput = ({ 
+  onQuestionSubmit,
+  currentQuestion,
+  setCurrentQuestion,
+  isChatMode,
+  onExcludeContextChange,
+  excludeContext,
+  openConfirmationModal,
+  isPatientContextActiveInSession,
+  isConfirmationModalOpen,
+  patientToConfirmId,
+  isConfirmingNewPatient,
+  closeConfirmationModal,
+  activatePatientContextInSession,
+  deactivatePatientContextInSession,
+  handleToggleSidebar,
+  isPatientSelectionModalOpen,
+  onClosePatientSelectionModal
+}) => {
   const question = currentQuestion;
   const setQuestion = setCurrentQuestion;
 
@@ -80,14 +98,13 @@ const QuestionInput = ({ onQuestionSubmit, currentQuestion, setCurrentQuestion, 
         </div>
         <div className="question-input-button-container">
           <GlobalPatientSelector
-          isConfirmationModalOpen={isConfirmationModalOpen}
-          patientToConfirmId={patientToConfirmId}
-          isConfirmingNewPatient={isConfirmingNewPatient}
-          openConfirmationModal={openConfirmationModal}
-          closeConfirmationModal={closeConfirmationModal}
-          isPatientContextActiveInSession={isPatientContextActiveInSession}
-          activatePatientContextInSession={activatePatientContextInSession}
-          deactivatePatientContextInSession={deactivatePatientContextInSession}
+            isOpen={isPatientSelectionModalOpen}
+            onClose={onClosePatientSelectionModal}
+            isConfirmationModalOpen={isConfirmationModalOpen}
+            patientToConfirmId={patientToConfirmId}
+            isConfirmingNewPatient={isConfirmingNewPatient}
+            openConfirmationModal={openConfirmationModal}
+            closeConfirmationModal={closeConfirmationModal}
           />
           <button type="submit" className="question-input-button">Ask Dohrnii</button>
         </div>

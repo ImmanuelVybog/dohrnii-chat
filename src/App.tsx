@@ -15,38 +15,22 @@ import Layout from './components/Layout';
 import { PatientProvider } from './context/PatientContext';
 import './App.css';
 
-type OpenConfirmationModalType = (patientId: string, isNewPatient: boolean) => void;
+
 
 interface PageProps {
-  openConfirmationModal: OpenConfirmationModalType;
-  isPatientContextActiveInSession: boolean;
-  isConfirmationModalOpen: boolean;
-  patientToConfirmId: string | null;
-  isConfirmingNewPatient: boolean;
-  closeConfirmationModal: () => void;
-  activatePatientContextInSession: () => void;
-  deactivatePatientContextInSession: () => void;
   isSidebarOpen: boolean;
   handleToggleSidebar: () => void;
-  isAuthenticated: boolean; // Added
-  user: any; // Added
-  onLogout: () => void; // Added
+  isAuthenticated: boolean;
+  user: any | null;
+  onLogout: () => void;
+  openPatientSelectionModal: () => void;
+  isPatientSelectionModalOpen: boolean;
 }
 
-const TypedHome = Home as React.FC<PageProps>;
-const TypedClinicalReasoning = ClinicalReasoning as React.FC<PageProps>;
-const TypedVisitNotes = VisitNotes as React.FC<PageProps>;
-const TypedDrugSafety = DrugSafety as React.FC<PageProps>;
-const TypedGuidelines = Guidelines as React.FC<PageProps>;
-const TypedCalculators = Calculators as React.FC<PageProps>;
-const TypedDifferentialDiagnosis = DifferentialDiagnosis as React.FC<PageProps>;
-
 function App() {
-  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  const [patientToConfirmId, setPatientToConfirmId] = useState<string | null>(null);
-  const [isConfirmingNewPatient, setIsConfirmingNewPatient] = useState(false);
-  const [isPatientContextActiveInSession, setIsPatientContextActiveInSession] = useState(false);
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isPatientSelectionModalOpen, setIsPatientSelectionModalOpen] = useState(false);
   const navigate = useNavigate();
 
   // Authentication states
@@ -78,60 +62,39 @@ function App() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const openConfirmationModal = (patientId: string | null, isNewPatient: boolean) => {
-    const idToConfirm = patientId === null ? getActivePatient()?.id : patientId;
-    if (idToConfirm) {
-      setPatientToConfirmId(idToConfirm);
-      setIsConfirmingNewPatient(isNewPatient);
-      setIsConfirmationModalOpen(true);
-    } else {
-      console.log("No patient to confirm, modal not opened.");
-    }
+  const openPatientSelectionModal = () => {
+    setIsPatientSelectionModalOpen(true);
   };
 
-  const closeConfirmationModal = () => {
-    setIsConfirmationModalOpen(false);
-    setPatientToConfirmId(null);
-    setIsConfirmingNewPatient(false);
+  const closePatientSelectionModal = () => {
+    setIsPatientSelectionModalOpen(false);
   };
 
-  const activatePatientContextInSession = () => {
-    setIsPatientContextActiveInSession(true);
-  };
 
-  const deactivatePatientContextInSession = () => {
-    setIsPatientContextActiveInSession(false);
-  };
 
   return (
     <ThemeProvider>
       <PatientProvider>
       {isAuthenticated ? (
         <Layout
-          isConfirmationModalOpen={isConfirmationModalOpen}
-          patientToConfirmId={patientToConfirmId}
-          isConfirmingNewPatient={isConfirmingNewPatient}
-          openConfirmationModal={openConfirmationModal}
-          closeConfirmationModal={closeConfirmationModal}
-          isPatientContextActiveInSession={isPatientContextActiveInSession}
-          activatePatientContextInSession={activatePatientContextInSession}
-          deactivatePatientContextInSession={deactivatePatientContextInSession}
           isSidebarOpen={isSidebarOpen}
           handleToggleSidebar={handleToggleSidebar}
-          isAuthenticated={isAuthenticated} // Pass auth state
-          user={user} // Pass user data
-          onLogout={handleLogout} // Pass logout handler
+          isAuthenticated={isAuthenticated}
+          user={user}
+          onLogout={handleLogout}
+          openPatientSelectionModal={openPatientSelectionModal}
+          isPatientSelectionModalOpen={isPatientSelectionModalOpen}
         >
           <Routes>
-            <Route path="/home" element={<TypedHome openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />} />
-            <Route path="/" element={<TypedHome openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />} /> {/* Default route */}
+            <Route path="/home" element={<Home isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+            <Route path="/" element={<Home isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} /> {/* Default route */}
             
-            <Route path="/clinical-reasoning" element={<TypedClinicalReasoning openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />} />
-            <Route path="/visit-notes" element={<TypedVisitNotes openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />} />
-            <Route path="/drug-safety" element={<TypedDrugSafety openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />} />
-            <Route path="/guidelines" element={<TypedGuidelines openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />} />
-            <Route path="/calculators" element={<TypedCalculators openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />} />
-            <Route path="/differential-diagnosis" element={<TypedDifferentialDiagnosis openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />} />
+            <Route path="/clinical-reasoning" element={<ClinicalReasoning isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+            <Route path="/visit-notes" element={<VisitNotes isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+            <Route path="/drug-safety" element={<DrugSafety isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user as any} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+            <Route path="/guidelines" element={<Guidelines isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user as any} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+            <Route path="/calculators" element={<Calculators isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user as any} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+            <Route path="/differential-diagnosis" element={<DifferentialDiagnosis isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
           </Routes>
         </Layout>
       ) : (

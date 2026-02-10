@@ -1,14 +1,24 @@
+import React, { useState, useEffect } from 'react';
 import './AccountMenuPopup.css';
 import settingsIconLight from '../assets/images/settings-icon-light.svg';
 import settingsIconDark from '../assets/images/settings-icon-dark.svg';
+import settingsIconHover from '../assets/images/settings-icon-hover.svg';
 import logoutIconLight from '../assets/images/logout-icon-light.svg';
 import logoutIconDark from '../assets/images/logout-icon-dark.svg';
+import logoutIconHover from '../assets/images/logout-icon-hover.svg';
 import { useTheme } from '../context/ThemeContext';
 
 
 
 const AccountMenuPopup = ({ isOpen, onClose, onOpenAccountPopup, user, onLogout }) => {
   const { isDarkMode } = useTheme();
+  const [settingsIconSrc, setSettingsIconSrc] = useState(isDarkMode ? settingsIconDark : settingsIconLight);
+  const [logoutIconSrc, setLogoutIconSrc] = useState(isDarkMode ? logoutIconDark : logoutIconLight);
+
+  useEffect(() => {
+    setSettingsIconSrc(isDarkMode ? settingsIconDark : settingsIconLight);
+    setLogoutIconSrc(isDarkMode ? logoutIconDark : logoutIconLight);
+  }, [isDarkMode]);
   if (!isOpen) return null;
 
   return (
@@ -21,13 +31,13 @@ const AccountMenuPopup = ({ isOpen, onClose, onOpenAccountPopup, user, onLogout 
             <div className="account-handle">@{user?.username || 'guest'}</div>
           </div>
         </div>
-        <div className="menu-section">
-          <button className="menu-item account-btn" onClick={onOpenAccountPopup}>
-            <img src={isDarkMode ? settingsIconDark : settingsIconLight} alt="Settings" className="account-icon" />
+        <div className="account-menu-section">
+          <button className="account-btn" onMouseEnter={() => setSettingsIconSrc(settingsIconHover)} onMouseLeave={() => setSettingsIconSrc(isDarkMode ? settingsIconDark : settingsIconLight)} onClick={onOpenAccountPopup}>
+            <img src={settingsIconSrc} alt="Settings" className="account-icon" />
             <span>Settings</span>
           </button>
-          <button className="menu-item account-btn" onClick={onLogout}>
-            <img src={isDarkMode ? logoutIconDark : logoutIconLight} alt="Log out" className="account-icon" />
+          <button className="account-btn" onMouseEnter={() => setLogoutIconSrc(logoutIconHover)} onMouseLeave={() => setLogoutIconSrc(isDarkMode ? logoutIconDark : logoutIconLight)} onClick={onLogout}>
+            <img src={logoutIconSrc} alt="Log out" className="account-icon" />
             <span>Log out</span>
           </button>
         </div>

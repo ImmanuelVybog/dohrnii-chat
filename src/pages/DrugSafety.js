@@ -7,7 +7,17 @@ import EmptyState from '../components/shared/EmptyState';
 import './DrugSafety.css';
 import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPatientSelector';
 
-const DrugSafety = ({ openConfirmationModal, isPatientContextActiveInSession, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, activatePatientContextInSession, deactivatePatientContextInSession, handleToggleSidebar, }) => {
+/**
+ * @param {object} props
+ * @param {boolean} props.isSidebarOpen
+ * @param {function} props.handleToggleSidebar
+ * @param {boolean} props.isAuthenticated
+ * @param {object | null} props.user
+ * @param {function} props.onLogout
+ * @param {function} props.openPatientSelectionModal
+ * @param {boolean} props.isPatientSelectionModalOpen
+ */
+const DrugSafety = ({ isSidebarOpen, handleToggleSidebar, isAuthenticated, user, onLogout, openPatientSelectionModal, isPatientSelectionModalOpen }) => {
   const { selectedPatient } = usePatientContext();
 
   const [medications, setMedications] = useState([]);
@@ -93,16 +103,7 @@ const DrugSafety = ({ openConfirmationModal, isPatientContextActiveInSession, is
 
       <div className="form-container">
         <div className="form-section">
-          <GlobalPatientSelector
-          isConfirmationModalOpen={isConfirmationModalOpen}
-          patientToConfirmId={patientToConfirmId}
-          isConfirmingNewPatient={isConfirmingNewPatient}
-          openConfirmationModal={openConfirmationModal}
-          closeConfirmationModal={closeConfirmationModal}
-          isPatientContextActiveInSession={isPatientContextActiveInSession}
-          activatePatientContextInSession={activatePatientContextInSession}
-          deactivatePatientContextInSession={deactivatePatientContextInSession}
-        />
+          <GlobalPatientSelector />
         </div>
         <div className="form-section">
           <h2>Medications</h2>

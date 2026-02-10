@@ -6,22 +6,28 @@ import { usePatientContext } from '../../context/PatientContext';
 import PatientSelectionModal from '../PatientSelectionModal/PatientSelectionModal';
 import Tooltip from '../shared/Tooltip';
 
-interface GlobalPatientSelectorProps {
-  isConfirmationModalOpen: boolean;
-  patientToConfirmId: string | null;
-  isConfirmingNewPatient: boolean;
-  openConfirmationModal: (patientId: string, isNewPatient: boolean) => void;
-  closeConfirmationModal: () => void;
-  isPatientContextActiveInSession: boolean;
-  activatePatientContextInSession: () => void;
-  deactivatePatientContextInSession: () => void;
-}
+interface GlobalPatientSelectorProps {}
 
-const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = ({ isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, openConfirmationModal, closeConfirmationModal, isPatientContextActiveInSession, activatePatientContextInSession, deactivatePatientContextInSession }) => {
-  const { onUpdatePatient } = usePatientContext();
+const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = () => {
+  const { onUpdatePatient, isPatientContextActiveInSession, activatePatientContextInSession, deactivatePatientContextInSession } = usePatientContext();
 
   const [currentActivePatient, setCurrentActivePatient] = useState<Patient | null>(null);
   const [isPatientSelectionModalOpen, setIsPatientSelectionModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [patientToConfirmId, setPatientToConfirmId] = useState<string | null>(null);
+  const [isConfirmingNewPatient, setIsConfirmingNewPatient] = useState(false);
+
+  const openConfirmationModal = (patientId: string, isNewPatient: boolean) => {
+    setPatientToConfirmId(patientId);
+    setIsConfirmingNewPatient(isNewPatient);
+    setIsConfirmationModalOpen(true);
+  };
+
+  const closeConfirmationModal = () => {
+    setIsConfirmationModalOpen(false);
+    setPatientToConfirmId(null);
+    setIsConfirmingNewPatient(false);
+  };
 
   useEffect(() => {
     setCurrentActivePatient(getActivePatient());
@@ -33,7 +39,11 @@ const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = ({ isConfirm
       const newlyActivePatient = getActivePatient();
       if (newlyActivePatient) {
         onUpdatePatient(newlyActivePatient);
-        activatePatientContextInSession();
+        if (typeof activatePatientContextInSession === 'function' && typeof newlyActivePatient.id === 'string') {
+              activatePatientContextInSession(newlyActivePatient.id);
+            } else {
+              console.error('Invalid call to activatePatientContextInSession: missing function or valid patient ID');
+            }
       }
       setCurrentActivePatient(getActivePatient()); // Reload to update active patient
     }
@@ -87,7 +97,6 @@ const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = ({ isConfirm
         isOpen={isPatientSelectionModalOpen}
         onClose={handleClosePatientSelectionModal}
         openConfirmationModal={openConfirmationModal}
-        activatePatientContextInSession={activatePatientContextInSession}
       />
 
       {isConfirmationModalOpen && patientToConfirmId && (

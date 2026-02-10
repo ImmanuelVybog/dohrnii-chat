@@ -229,6 +229,11 @@ body {
   width: calc(100% - 60px);
 }
 
+.main-content.sidebar-open {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+}
+
 .main-content.patient-sidebar-open {
   margin-left: 250px;
   width: calc(100% - 250px);

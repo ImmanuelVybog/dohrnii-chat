@@ -1,0 +1,146 @@
+.quick-clinical-actions-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px 15px;
+  background-color: transparent;
+  margin-bottom: 5px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.primary-actions-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 8px;
+  align-items: center;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  padding-bottom: 4px;
+  overflow: visible;
+}
+
+.primary-actions-row::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.quick-clinical-action-button {
+  white-space: nowrap;
+  background-color: var(--suggestion-button-bg);
+  border: 1px solid var(--suggestion-button-border);
+  color: var(--suggestion-button-text);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: "Google Sans Flex", sans-serif;
+  font-size: 0.85rem;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quick-clinical-action-button:hover {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.more-button.active {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+.more-arrow {
+  width: 10px;
+  height: 10px;
+  transition: transform 0.2s ease;
+  filter: var(--icon-filter);
+}
+
+.more-button.active .more-arrow {
+  filter: brightness(0) invert(1);
+}
+
+.more-actions-container {
+  position: relative;
+}
+
+.more-actions-popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: var(--background-color);
+  border: 1px solid var(--suggestion-button-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  min-width: 180px;
+  z-index: 1000;
+  animation: popover-fade-in 0.2s ease-out;
+}
+
+@keyframes popover-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popover-action-item {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  padding: 10px 14px;
+  text-align: left;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: "Google Sans Flex", sans-serif;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.popover-action-item:hover {
+  background-color: var(--suggestion-button-bg);
+  color: var(--primary-color);
+}
+
+/* Dark mode adjustments */
+body.dark-mode .quick-clinical-action-button {
+  background-color: var(--dark-button-background);
+  color: var(--dark-button-text-color);
+  border: 1px solid var(--dark-button-border-color);
+}
+
+body.dark-mode .quick-clinical-action-button:hover,
+body.dark-mode .more-button.active {
+  background-color: var(--dark-button-hover-background);
+  border-color: var(--dark-button-hover-border-color);
+  color: var(--dark-button-hover-text-color);
+}
+
+body.dark-mode .more-actions-popover {
+  background-color: #242626;
+  border-color: #3d3f40;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .popover-action-item {
+  color: #e3e3e3;
+}
+
+body.dark-mode .popover-action-item:hover {
+  background-color: #3d3f40;
+}

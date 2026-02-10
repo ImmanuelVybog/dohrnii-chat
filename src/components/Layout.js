@@ -3,10 +3,12 @@ import Sidebar from './Sidebar';
 import AccountPopup from './AccountPopup';
 import { ThemeProvider } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
+import { usePatientContext } from '../context/PatientContext';
 import './Layout.css';
 
-const Layout = ({ children, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, openConfirmationModal, closeConfirmationModal, isPatientContextActiveInSession, activatePatientContextInSession, deactivatePatientContextInSession, isSidebarOpen, handleToggleSidebar, isAuthenticated, user, onLogout }) => {
+const Layout = ({ children, isSidebarOpen, handleToggleSidebar, isAuthenticated, user, onLogout, openPatientSelectionModal, isPatientSelectionModalOpen }) => {
   const [isAccountPopupOpen, setIsAccountPopupOpen] = useState(false);
+  const { onClosePatientSelectionModal } = usePatientContext();
 
   const navigate = useNavigate();
 
@@ -47,23 +49,14 @@ const Layout = ({ children, isConfirmationModalOpen, patientToConfirmId, isConfi
           <Sidebar
               questions={mockQuestions}
               onQuestionSelect={handleQuestionSelect}
-              isOpen={isSidebarOpen}
+              isSidebarOpen={isSidebarOpen}
               onToggleSidebar={handleToggleSidebar}
               onOpenAccountPopup={handleOpenAccountPopup}
               onGoHome={handleGoHome}
               user={user}
               onLogout={onLogout}
               onNewChat={handleNewChat}
-              isConfirmationModalOpen={isConfirmationModalOpen}
-              patientToConfirmId={patientToConfirmId}
-              isConfirmingNewPatient={isConfirmingNewPatient}
-              openConfirmationModal={openConfirmationModal}
-              closeConfirmationModal={closeConfirmationModal}
-              isPatientContextActiveInSession={isPatientContextActiveInSession}
-              activatePatientContextInSession={activatePatientContextInSession}
-              deactivatePatientContextInSession={deactivatePatientContextInSession}
-              isSidebarOpen={isSidebarOpen}
-              handleToggleSidebar={handleToggleSidebar}
+              onOpenPatientSelectionModal={openPatientSelectionModal}
             />
 
           <div className={`main-content ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>

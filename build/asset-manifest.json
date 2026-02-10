@@ -1,19 +1,21 @@
 {
   "files": {
-    "main.css": "/static/css/main.94f67f0f.css",
-    "main.js": "/static/js/main.d86fc823.js",
+    "main.css": "/static/css/main.63d3c005.css",
+    "main.js": "/static/js/main.dec68964.js",
     "static/js/453.22888298.chunk.js": "/static/js/453.22888298.chunk.js",
     "static/media/Dohrnii Home Chat Icon.svg": "/static/media/Dohrnii Home Chat Icon.7e53f0ea71a30f5b8a97dfaae9f88196.svg",
     "static/media/Dohrnii Logo.svg": "/static/media/Dohrnii Logo.cc07ec3fb2659147a9e86bcb674c91a1.svg",
     "static/media/Dohrnii Logo Icon.svg": "/static/media/Dohrnii Logo Icon.f8095a9a6585bb154939195ba8bf34c2.svg",
     "static/media/general-icon-dark.svg": "/static/media/general-icon-dark.8bf5440e42a515e777ad1b395b03ca06.svg",
     "static/media/general-icon.svg": "/static/media/general-icon.513912267acdba32e8b132bd2cd097db.svg",
+    "static/media/logout-icon-hover.svg": "/static/media/logout-icon-hover.c442889683707fa79a284c6db780e66b.svg",
     "static/media/logout-icon-light.svg": "/static/media/logout-icon-light.65f1e5b152f824f608d0f79de5f3697d.svg",
     "static/media/logout-icon-dark.svg": "/static/media/logout-icon-dark.29f6a10684a6926e1ce579e7f6cdef31.svg",
     "static/media/notifications-icon-dark.svg": "/static/media/notifications-icon-dark.9ebe127c2520d6d47e516d3baba4900e.svg",
     "static/media/notifications-icon.svg": "/static/media/notifications-icon.2f90fe32b44395780a55b8ff2ccad829.svg",
     "static/media/up icon.svg": "/static/media/up icon.2c0ac873df228c5d29a7d76da0c6c02b.svg",
     "static/media/down icon.svg": "/static/media/down icon.49eb1f14305b3e29473bb6fcd7743e09.svg",
+    "static/media/settings-icon-hover.svg": "/static/media/settings-icon-hover.01d2f716403e6b45abc53b4650af8da9.svg",
     "static/media/settings-icon-light.svg": "/static/media/settings-icon-light.7c3e3b4e5801fca65572f0d4be94d34e.svg",
     "static/media/settings-icon-dark.svg": "/static/media/settings-icon-dark.2cc83fcee8717981f677f6a504e44c25.svg",
     "static/media/account-icon-dark.svg": "/static/media/account-icon-dark.54737f4c777a710f0f9d2d110e66e0a1.svg",
@@ -28,14 +30,15 @@
     "static/media/differential-diagnosis-icon.svg": "/static/media/differential-diagnosis-icon.54640c9d83ff9ac7bbf6e5d110554d34.svg",
     "static/media/lets-icons--chat-plus.svg": "/static/media/lets-icons--chat-plus.871609a73b9958ff38a181577bc11b67.svg",
     "static/media/drug-safety-icon.svg": "/static/media/drug-safety-icon.a5796d10097ed0f404f876842aab67fb.svg",
+    "static/media/user-icon-hover.svg": "/static/media/user-icon-hover.8c06c565962c29c2a7c0fbe0b8bb4b77.svg",
     "static/media/user-icon-dark.svg": "/static/media/user-icon-dark.59487cfdd490b11290ac65321eb10d09.svg",
     "static/media/user-icon-light.svg": "/static/media/user-icon-light.d1e9a9277d9df0969feb7e1949cb806b.svg",
-    "main.94f67f0f.css.map": "/static/css/main.94f67f0f.css.map",
-    "main.d86fc823.js.map": "/static/js/main.d86fc823.js.map",
+    "main.63d3c005.css.map": "/static/css/main.63d3c005.css.map",
+    "main.dec68964.js.map": "/static/js/main.dec68964.js.map",
     "453.22888298.chunk.js.map": "/static/js/453.22888298.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.94f67f0f.css",
-    "static/js/main.d86fc823.js"
+    "static/css/main.63d3c005.css",
+    "static/js/main.dec68964.js"
   ]
 }

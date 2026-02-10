@@ -53,7 +53,17 @@ const specialtyOptions = [
   // Add more specialties as needed
 ];
 
-const Guidelines = ({ openConfirmationModal, isPatientContextActiveInSession, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, activatePatientContextInSession, deactivatePatientContextInSession, handleToggleSidebar }) => {
+/**
+ * @param {object} props
+ * @param {boolean} props.isSidebarOpen
+ * @param {function} props.handleToggleSidebar
+ * @param {boolean} props.isAuthenticated
+ * @param {object | null} props.user
+ * @param {function} props.onLogout
+ * @param {function} props.openPatientSelectionModal
+ * @param {boolean} props.isPatientSelectionModalOpen
+ */
+const Guidelines = ({ isSidebarOpen, handleToggleSidebar, isAuthenticated, user, onLogout, openPatientSelectionModal, isPatientSelectionModalOpen }) => {
   const { selectedPatient } = usePatientContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('');
@@ -113,16 +123,7 @@ const Guidelines = ({ openConfirmationModal, isPatientContextActiveInSession, is
 
       <div className="form-container">
         <div className="form-section">
-          <GlobalPatientSelector
-          isConfirmationModalOpen={isConfirmationModalOpen}
-          patientToConfirmId={patientToConfirmId}
-          isConfirmingNewPatient={isConfirmingNewPatient}
-          openConfirmationModal={openConfirmationModal}
-          closeConfirmationModal={closeConfirmationModal}
-          isPatientContextActiveInSession={isPatientContextActiveInSession}
-          activatePatientContextInSession={activatePatientContextInSession}
-          deactivatePatientContextInSession={deactivatePatientContextInSession}
-        />
+          <GlobalPatientSelector />
         </div>
         <div className="form-section">
           <h2>Search for Guidelines</h2>
