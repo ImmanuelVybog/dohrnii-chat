@@ -6,6 +6,10 @@ import ResultCard from '../components/shared/ResultCard';
 import EmptyState from '../components/shared/EmptyState';
 import './DrugSafety.css';
 import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPatientSelector';
+import referencesIconLight from '../assets/images/references-icon-light.svg';
+import referencesIconDark from '../assets/images/references-icon-dark.svg';
+import { useTheme } from '../context/ThemeContext';
+import { apiClient } from '../services/apiClient';
 
 /**
  * @param {object} props
@@ -19,17 +23,24 @@ import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPat
  */
 const DrugSafety = ({ isSidebarOpen, handleToggleSidebar, isAuthenticated, user, onLogout, openPatientSelectionModal, isPatientSelectionModalOpen }) => {
   const { selectedPatient } = usePatientContext();
+  const { theme } = useTheme();
 
   const [medications, setMedications] = useState([]);
   const [patientConditions, setPatientConditions] = useState([]);
   const [allergies, setAllergies] = useState([]);
   const [interactionResults, setInteractionResults] = useState([]);
+  const [references, setReferences] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [autoFilledFields, setAutoFilledFields] = useState({});
+
+  const [aiResponse, setAiResponse] = useState('');
 
   useEffect(() => {
     if (selectedPatient) {
       setPatientConditions(selectedPatient.chronicConditions ? selectedPatient.chronicConditions.map(condition => condition.name) : []);
-      setAllergies(selectedPatient.allergies ? selectedPatient.allergies.map(allergy => allergy.name) : []);
+      setMedications(selectedPatient.longTermMedications ? selectedPatient.longTermMedications.map(m => m.name) : []);
+      setAllergies(selectedPatient.allergies ? selectedPatient.allergies.map(allergy => allergy.substance) : []);
     } else {
       setPatientConditions([]);
       setAllergies([]);
@@ -44,58 +55,37 @@ const DrugSafety = ({ isSidebarOpen, handleToggleSidebar, isAuthenticated, user,
     setter((prevTags) => prevTags.filter((t) => t !== tag));
   };
 
-  const handleCheckDrugSafety = () => {
+  const handleCheckDrugSafety = async () => {
+    if (medications.length === 0) {
+      alert('Please add at least one medication to check.');
+      return;
+    }
+
     setLoading(true);
-    setInteractionResults([]); // Clear previous results
+    setError(null);
+    setInteractionResults([]);
 
-    // Simulate API call for drug interaction check
-    setTimeout(() => {
-      const mockResults = [];
-
-      if (medications.includes('Warfarin') && medications.includes('Aspirin')) {
-        mockResults.push({
-          medications: 'Warfarin + Aspirin',
-          severity: 'high',
-          description: 'Increased risk of bleeding.',
-          recommendation: 'Avoid concomitant use or monitor INR closely.',
-        });
+    try {
+      const data = await apiClient.checkDrugInteractions(medications, selectedPatient);
+      if (data.ok) {
+        setInteractionResults(data.structured?.summary || []);
+        // data.content already contains formatted HTML from apiClient
+        setAiResponse(data.content);
+        setReferences(data.references || []);
+      } else {
+        setError(data.content || 'An unexpected error occurred.');
       }
-
-      if (medications.includes('Metformin') && patientConditions.includes('Renal Impairment')) {
-        mockResults.push({
-          medications: 'Metformin + Renal Impairment',
-          severity: 'medium',
-          description: 'Increased risk of lactic acidosis.',
-          recommendation: 'Adjust Metformin dose or consider alternative in severe cases.',
-        });
-      }
-
-      if (medications.includes('Penicillin') && allergies.includes('Penicillin')) {
-        mockResults.push({
-          medications: 'Penicillin + Penicillin Allergy',
-          severity: 'high',
-          description: 'Severe allergic reaction (anaphylaxis) possible.',
-          recommendation: 'Absolutely contraindicated. Use alternative antibiotic.',
-        });
-      }
-
-      if (mockResults.length === 0 && medications.length > 0) {
-        mockResults.push({
-          medications: 'No significant interactions found',
-          severity: 'low',
-          description: 'Based on the provided inputs, no significant drug-drug or drug-condition interactions were identified.',
-          recommendation: 'Continue to monitor patient and review full medication history.',
-        });
-      }
-
-      setInteractionResults(mockResults);
+    } catch (err) {
+      console.error('Error checking drug safety:', err);
+      setError('System encountered an issue. Please try again.');
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
 
   return (
-    <div className="drug-safety-container">
+    <div className="workspaces-container">
       <div className="page-header">
         <h1>Drug Safety / Interaction Checker</h1>
         <p>Check for potential drug-drug and drug-condition interactions</p>
@@ -108,18 +98,21 @@ const DrugSafety = ({ isSidebarOpen, handleToggleSidebar, isAuthenticated, user,
         <div className="form-section">
           <h2>Medications</h2>
           <TagInput
+            id="medications-input"
             label="Medications"
-            placeholder="Add a medication (e.g., Warfarin, Metformin)"
+            placeholder="(e.g., Aspirin, Insulin, Metformin) (Type and press enter)"
             tags={medications}
             onAddTag={(tag) => handleAddTag(tag, setMedications)}
             onRemoveTag={(tag) => handleRemoveTag(tag, setMedications)}
+            className={autoFilledFields.medications ? 'auto-filled' : ''}
           />
         </div>
         <div className="form-section">
           <h2>Patient Conditions (Optional)</h2>
           <TagInput
+            id="conditions-input"
             label="Conditions"
-            placeholder="Add a patient condition (e.g., Renal Impairment)"
+            placeholder="(e.g., Renal Impairment, Asthma) (Type and press enter)"
             tags={patientConditions}
             onAddTag={(tag) => handleAddTag(tag, setPatientConditions)}
             onRemoveTag={(tag) => handleRemoveTag(tag, setPatientConditions)}
@@ -128,8 +121,9 @@ const DrugSafety = ({ isSidebarOpen, handleToggleSidebar, isAuthenticated, user,
         <div className="form-section">
           <h2>Allergies (Optional)</h2>
           <TagInput
+            id="allergies-input"
             label="Allergies"
-            placeholder="Add an allergy (e.g., Penicillin)"
+            placeholder="(e.g., Penicillin, Aspirin) (Type and press enter)"
             tags={allergies}
             onAddTag={(tag) => handleAddTag(tag, setAllergies)}
             onRemoveTag={(tag) => handleRemoveTag(tag, setAllergies)}
@@ -142,29 +136,77 @@ const DrugSafety = ({ isSidebarOpen, handleToggleSidebar, isAuthenticated, user,
         />
       </div>
 
+      {error && (
+        <div className="error-message-container">
+          <p className="error-message">{error}</p>
+          <button className="retry-button" onClick={handleCheckDrugSafety}>Retry</button>
+        </div>
+      )}
+
       <div className="interaction-results-section">
         <h2>Interaction Results</h2>
         {loading && <p>Checking for interactions...</p>}
-        {!loading && interactionResults.length === 0 && medications.length > 0 && (
+        {!loading && interactionResults.length === 0 && medications.length > 0 && !aiResponse && (
           <EmptyState message="No significant interactions found for the provided medications." />
         )}
         {!loading && interactionResults.length === 0 && medications.length === 0 && (
           <EmptyState message="Add medications to check for interactions." />
         )}
+        
+        {!loading && aiResponse && (
+          <div className="ai-response-markdown">
+            <ResultCard 
+              title="Clinical Summary"
+              content={<div className="markdown-content" dangerouslySetInnerHTML={{ __html: aiResponse }} />}
+            />
+          </div>
+        )}
+
         {!loading && interactionResults.map((result, index) => (
           <ResultCard
             key={index}
-            title={result.medications}
+            title={result.name}
             severity={result.severity}
             content={
               <>
-                <p><strong>Severity:</strong> {result.severity.charAt(0).toUpperCase() + result.severity.slice(1)}</p>
-                <p><strong>Description:</strong> {result.description}</p>
-                <p><strong>Recommendation:</strong> {result.recommendation}</p>
+                <p><strong>Severity:</strong> {result.severity}</p>
+                <p><strong>Explanation:</strong> {result.explanation}</p>
               </>
             }
           />
         ))}
+
+        {references && references.length > 0 && (
+          <div className="citations-section" style={{ marginTop: '2rem' }}>
+            <h4 className="citations-title">
+              <img src={theme === 'light' ? referencesIconLight : referencesIconDark} alt="References" />
+              References
+            </h4>
+            <div className="citations-list">
+              {references.map((citation) => (
+                <div className="citation-card" key={citation.id}>
+                  <div className="citation-header">
+                    <span className="citation-number">{citation.id}.</span>
+                    <a href={citation.url} target="_blank" rel="noopener noreferrer" className="citation-title">
+                      {citation.title}
+                    </a>
+                  </div>
+                  <div className="citation-meta">
+                    {citation.authors}
+                  </div>
+                  <div className="citation-journal-year">
+                    {citation.journal} • {citation.year}
+                  </div>
+                  {citation.tags && citation.tags.length > 0 && (
+                    <div className="citation-tags">
+                      {citation.tags.map(tag => <span className="citation-tag" key={tag}>{tag}</span>)}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

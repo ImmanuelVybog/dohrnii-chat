@@ -12,6 +12,7 @@ import { ThemeProvider } from './context/ThemeContext';
 
 import Layout from './components/Layout';
 import { PatientProvider } from './context/PatientContext';
+import { ChatProvider } from './context/ChatContext';
 import './App.css';
 
 
@@ -60,32 +61,34 @@ function App() {
   return (
     <ThemeProvider>
       <PatientProvider>
-      {isAuthenticated ? (
-        <Layout
-          isSidebarOpen={isSidebarOpen}
-          handleToggleSidebar={handleToggleSidebar}
-          isAuthenticated={isAuthenticated}
-          user={user}
-          onLogout={handleLogout}
-          openPatientSelectionModal={openPatientSelectionModal}
-          isPatientSelectionModalOpen={isPatientSelectionModalOpen}
-        >
-          <Routes>
-            <Route path="/home" element={<Home isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
-            <Route path="/" element={<Home isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} /> {/* Default route */}
-            
-            <Route path="/clinical-reasoning" element={<ClinicalReasoning isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
-            <Route path="/visit-notes" element={<VisitNotes isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
-            <Route path="/drug-safety" element={<DrugSafety isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user as any} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
-            <Route path="/guidelines" element={<Guidelines isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user as any} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
-            <Route path="/calculators" element={<Calculators isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user as any} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
-            <Route path="/differential-diagnosis" element={<DifferentialDiagnosis isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
-          </Routes>
-        </Layout>
-      ) : (
-        <Login onLogin={handleLogin} />
-      )}
-    </PatientProvider>
+        <ChatProvider user={user}>
+          {isAuthenticated ? (
+            <Layout
+              isSidebarOpen={isSidebarOpen}
+              handleToggleSidebar={handleToggleSidebar}
+              isAuthenticated={isAuthenticated}
+              user={user}
+              onLogout={handleLogout}
+              openPatientSelectionModal={openPatientSelectionModal}
+              isPatientSelectionModalOpen={isPatientSelectionModalOpen}
+            >
+              <Routes>
+                <Route path="/home" element={<Home isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+                <Route path="/" element={<Home isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} /> {/* Default route */}
+                
+                <Route path="/clinical-reasoning" element={<ClinicalReasoning isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+                <Route path="/visit-notes" element={<VisitNotes isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+                <Route path="/drug-safety" element={<DrugSafety isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user as any} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+                <Route path="/guidelines" element={<Guidelines isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user as any} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+                <Route path="/calculators" element={<Calculators isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user as any} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+                <Route path="/differential-diagnosis" element={<DifferentialDiagnosis isSidebarOpen={isSidebarOpen} handleToggleSidebar={handleToggleSidebar} isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} openPatientSelectionModal={openPatientSelectionModal} isPatientSelectionModalOpen={isPatientSelectionModalOpen} />} />
+              </Routes>
+            </Layout>
+          ) : (
+            <Login onLogin={handleLogin} />
+          )}
+        </ChatProvider>
+      </PatientProvider>
     </ThemeProvider>
   );
 }

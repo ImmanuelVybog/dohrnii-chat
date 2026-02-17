@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './CustomSelect.css';
 
-const CustomSelect = ({ options, value, onChange, placeholder }) => {
+const CustomSelect = ({ options, value, onChange, placeholder, className, 'aria-labelledby': ariaLabelledBy }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
 
@@ -31,17 +31,27 @@ const CustomSelect = ({ options, value, onChange, placeholder }) => {
   }, []);
 
   return (
-    <div className={`custom-select-container ${isOpen ? 'open' : ''}`} ref={selectRef}>
+    <div 
+      className={`custom-select-container ${isOpen ? 'open' : ''} ${className || ''}`} 
+      ref={selectRef}
+      role="combobox"
+      aria-expanded={isOpen}
+      aria-haspopup="listbox"
+      aria-labelledby={ariaLabelledBy}
+      tabIndex={0}
+    >
       <div className="custom-select-header" onClick={handleToggle}>
         <span className="custom-select-value">{displayValue}</span>
         <span className="custom-select-arrow"></span>
       </div>
-      <div className="custom-select-options">
+      <div className="custom-select-options" role="listbox">
         {options.map((option) => (
           <div
             key={option.value}
             className={`custom-select-option ${option.value === value ? 'selected' : ''}`}
             onClick={() => handleOptionClick(option.value)}
+            role="option"
+            aria-selected={option.value === value}
           >
             {option.label}
           </div>

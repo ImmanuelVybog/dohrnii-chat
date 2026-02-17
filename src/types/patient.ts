@@ -29,6 +29,7 @@ export interface UploadedFile {
   id: string;
   name: string;
   type: string; // e.g., 'PDF', 'JPG', 'PNG', 'TXT'
+  size: number; // Size in bytes
   url: string; // URL to access the file
   uploadedAt: string;
   extractedText?: string; // Optional: Stores text extracted via OCR or direct text file reading

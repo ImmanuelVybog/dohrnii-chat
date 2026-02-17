@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AccountMenuPopup from './AccountMenuPopup';
 import './Sidebar.css';
 import logo from '../assets/images/Dohrnii Logo.svg';
@@ -12,21 +12,34 @@ import userIconHover from '../assets/images/user-icon-hover.svg';
 import { Squash } from 'hamburger-react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { usePatientContext } from '../context/PatientContext';
-import { getAllPatients, setActivePatient, getActivePatient, deletePatient } from '../services/patientService';
+import { setActivePatient, getActivePatient, deletePatient } from '../services/patientService';
 import { useTheme } from '../context/ThemeContext';
+import GlobalPatientSelector from './GlobalPatientSelector/GlobalPatientSelector';
 
 
 
-const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, user, onLogout, onNewChat, initialExpandQuestionHistory, isSidebarOpen, onToggleSidebar, onOpenPatientSelectionModal }) => {
+const Sidebar = ({ questions, activeConversationId, onQuestionSelect, onOpenAccountPopup, onGoHome, user, onLogout, onNewChat, initialExpandQuestionHistory, isSidebarOpen, onToggleSidebar, onOpenPatientSelectionModal,
+  isChatMode,
+  onExcludeContextChange,
+  excludeContext,
+  openConfirmationModal,
+  isConfirmationModalOpen,
+  patientToConfirmId,
+  isConfirmingNewPatient,
+  closeConfirmationModal,
+  handleToggleSidebar,
+  isPatientSelectionModalOpen,
+  onClosePatientSelectionModal }) => {
     const navigate = useNavigate();
     const [isHovered, setIsHovered] = useState(false);
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
-    const { onUpdatePatient } = usePatientContext();
-    const [allPatients, setAllPatients] = useState([]);
-    const [activePatientId, setActivePatientId] = useState(null);
+    const [accountButtonRect, setAccountButtonRect] = useState(null);
+    const [isUploadContextModalOpen, setIsUploadContextModalOpen] = useState(false);
+    const { allPatients, refreshPatients, onUpdatePatient, activePatientId, activatePatientContextInSession, deactivatePatientContextInSession } = usePatientContext();
     const { isDarkMode } = useTheme();
     const [openPatientOptionsMenuId, setOpenPatientOptionsMenuId] = useState(null);
     const [userIcon, setUserIcon] = useState(isDarkMode ? userIconDark : userIconLight);
+    const accountButtonRef = useRef(null);
 
     useEffect(() => {
       setUserIcon(isDarkMode ? userIconDark : userIconLight);
@@ -42,40 +55,21 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
     const [isQuestionHistoryExpanded, setIsQuestionHistoryExpanded] = useState(true);
 
     useEffect(() => {
-      loadPatients();
-    }, [isSidebarOpen]);
-
-    useEffect(() => {
-      const currentActive = getActivePatient();
-      if (currentActive) {
-        setActivePatientId(currentActive.id);
-      } else {
-        setActivePatientId(null);
-      }
-    }, [onUpdatePatient]);
-
-    const loadPatients = () => {
-      const patients = getAllPatients();
-      setAllPatients(patients);
-      const currentActive = getActivePatient();
-      if (currentActive) {
-        setActivePatientId(currentActive.id);
-      }
-    };
+      refreshPatients();
+    }, [isSidebarOpen, refreshPatients]);
 
     const handleSelectPatient = (patientId) => {
       setActivePatient(patientId);
       const newlyActivePatient = getActivePatient();
       if (newlyActivePatient) {
         onUpdatePatient(newlyActivePatient);
+        activatePatientContextInSession(patientId);
       }
-      setActivePatientId(patientId);
     };
 
-    // These are now controlled by App.tsx
-    // const handleTogglePatientSection = () => {
-    //   setIsPatientSectionExpanded(!isPatientSectionExpanded);
-    // };
+    const handleOpenUploadContextModal = () => {
+      setIsUploadContextModalOpen(true);
+    };
 
     const handleToggleQuestionHistory = () => {
       setIsQuestionHistoryExpanded(!isQuestionHistoryExpanded);
@@ -93,7 +87,11 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
 
   const handleDeletePatient = (patientId) => {
     deletePatient(patientId);
-    loadPatients(); // Reload patients after deletion
+    if (activePatientId === patientId) {
+      onUpdatePatient(null);
+      deactivatePatientContextInSession();
+    }
+    refreshPatients(); // Reload patients after deletion
     setOpenPatientOptionsMenuId(null); // Close the options menu
   };
 
@@ -101,17 +99,19 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
   return (
     <aside className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
       {isSidebarOpen && (
+        <div className="sidebar-header">
+          <img
+            src={logo}
+            alt="VY LABS DOHRNII Logo"
+            className="app-logo"
+            onClick={handleGoHome}
+            style={{ cursor: 'pointer' }}
+          />
+          <Squash toggled={isSidebarOpen} toggle={onToggleSidebar} color="#16AC9F" className="sidebar-toggle-button" />
+        </div>
+      )}
+      {isSidebarOpen && (
         <div className="sidebar-content">
-          <div className="sidebar-header">
-            <img
-              src={logo}
-              alt="VY LABS DOHRNII Logo"
-              className="app-logo"
-              onClick={handleGoHome}
-              style={{ cursor: 'pointer' }}
-            />
-            <Squash toggled={isSidebarOpen} toggle={onToggleSidebar} color="#16AC9F" className="sidebar-toggle-button" />
-          </div>
           <button className="new-chat-btn" onClick={onNewChat}>
               <img src={newChatIcon} alt="New Chat" className="new-chat-icon" />
               <span className="new-chat-text">New Chat</span>
@@ -190,9 +190,16 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
                 )}
               </div>
             )}
-            <button className="create-patient-btn" onClick={onOpenPatientSelectionModal}>
-              + Create Patient
-            </button>
+            <GlobalPatientSelector
+              isOpen={isPatientSelectionModalOpen}
+              onClose={onClosePatientSelectionModal}
+              isConfirmationModalOpen={isConfirmationModalOpen}
+              patientToConfirmId={patientToConfirmId}
+              isConfirmingNewPatient={isConfirmingNewPatient}
+              openConfirmationModal={openConfirmationModal}
+              closeConfirmationModal={closeConfirmationModal}
+              isSidebarButton={true}
+            />
           </div>
 
           <div className="question-history">
@@ -204,7 +211,12 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
               <ul className="question-list">
                 {questions.map((conv) => (
                   <li key={conv.id} className="question-item">
-                    <button onClick={() => onQuestionSelect(conv.id)}>{conv.title}</button>
+                    <button 
+                      className={conv.id === activeConversationId ? 'active-link' : ''}
+                      onClick={() => onQuestionSelect(conv.id)}
+                    >
+                      {conv.title}
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -233,9 +245,20 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
         </div>
       )}
       <div className="sidebar-footer">
-        <button className="account-btn" onMouseEnter={() => setUserIcon(userIconHover)} onMouseLeave={() => setUserIcon(isDarkMode ? userIconDark : userIconLight)} onClick={() => setIsAccountMenuOpen(prev => !prev)}>
+        <button
+          className="account-btn"
+          ref={accountButtonRef}
+          onMouseEnter={() => setUserIcon(userIconHover)}
+          onMouseLeave={() => setUserIcon(isDarkMode ? userIconDark : userIconLight)}
+          onClick={() => {
+            if (accountButtonRef.current) {
+              setAccountButtonRect(accountButtonRef.current.getBoundingClientRect());
+            }
+            setIsAccountMenuOpen(prev => !prev);
+          }}
+        >
           <img src={userIcon} alt="Account" className="account-icon" />
-          {isSidebarOpen && <span>Account</span>}
+          {isSidebarOpen && <span className="account-text">Account</span>}
         </button>
       </div>
       <AccountMenuPopup
@@ -247,6 +270,7 @@ const Sidebar = ({ questions, onQuestionSelect, onOpenAccountPopup, onGoHome, us
         }}
         user={user}
         onLogout={onLogout}
+        buttonRect={accountButtonRect}
       />
     </aside>
   );

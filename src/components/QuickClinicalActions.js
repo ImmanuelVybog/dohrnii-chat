@@ -3,7 +3,7 @@ import './QuickClinicalActions.css';
 import downIcon from '../assets/images/down icon.svg';
 import upIcon from '../assets/images/up icon.svg';
 
-const QuickClinicalActions = ({ onActionClick, isChatMode }) => {
+const QuickClinicalActions = ({ onActionClick, isChatMode, isLoading }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const popoverRef = useRef(null);
 
@@ -47,6 +47,8 @@ const QuickClinicalActions = ({ onActionClick, isChatMode }) => {
             key={index}
             className="quick-clinical-action-button"
             onClick={() => handleActionClick(action.message)}
+            disabled={isLoading}
+            style={isLoading ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
           >
             {action.label}
           </button>
@@ -55,6 +57,8 @@ const QuickClinicalActions = ({ onActionClick, isChatMode }) => {
           <button
             className={`quick-clinical-action-button more-button ${isPopoverOpen ? 'active' : ''}`}
             onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+            disabled={isLoading}
+            style={isLoading ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
           >
             More
             <img 
@@ -71,6 +75,7 @@ const QuickClinicalActions = ({ onActionClick, isChatMode }) => {
                   key={index}
                   className="popover-action-item"
                   onClick={() => handleActionClick(action.message)}
+                  disabled={isLoading}
                 >
                   {action.label}
                 </button>

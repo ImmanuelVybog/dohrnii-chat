@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Chat.css';
 import QuestionInput from './QuestionInput';
 import AnswerBubble from './AnswerBubble';
-import { generateAnswer } from '../services/api';
+import { apiClient } from '../services/apiClient';
 import { usePatientContext } from '../context/PatientContext';
 
 const Chat = ({ user }) => {
@@ -35,14 +35,18 @@ const Chat = ({ user }) => {
     setIsLoading(true);
 
     try {
-      const response = await generateAnswer(question, selectedPatient);
+      const response = await apiClient.chat(question, selectedPatient);
       
+      if (!response.ok) {
+        throw new Error(response.content);
+      }
+
       const answerMessage = {
         id: Date.now() + 1,
         type: 'answer',
-        content: response.answer,
-        citations: response.citations,
-        hasSufficientEvidence: response.hasSufficientEvidence,
+        content: response.content,
+        citations: response.references || [],
+        hasSufficientEvidence: true,
         timestamp: new Date().toISOString()
       };
 
@@ -52,9 +56,9 @@ const Chat = ({ user }) => {
       const historyItem = {
         id: Date.now(),
         question: question,
-        answer: response.answer,
-        citations: response.citations,
-        hasSufficientEvidence: response.hasSufficientEvidence,
+        answer: response.content,
+        citations: response.references || [],
+        hasSufficientEvidence: true,
         timestamp: new Date().toISOString()
       };
 
@@ -63,7 +67,7 @@ const Chat = ({ user }) => {
       const errorMessage = {
         id: Date.now() + 1,
         type: 'error',
-        content: 'Sorry, I encountered an error while processing your question. Please try again.',
+        content: error.message || 'Sorry, I encountered an error while processing your question. Please try again.',
         timestamp: new Date().toISOString()
       };
       setMessages(prev => [...prev, errorMessage]);

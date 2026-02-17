@@ -100,6 +100,24 @@
 }
 
 .modal-actions button:last-child:hover {
-  background-color: var(--primary-color-dark);
-  border-color: var(--primary-color-dark);
+  background-color: var(--primary-hover-color);
+}
+
+/* Responsive Design */
+@media (max-width: 1366px) {
+  .patient-selection-modal {
+    width: 50%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .patient-selection-modal {
+    width: 60%;
+  }
+}
+
+@media (max-width: 768px) {
+  .patient-selection-modal {
+    width: 70%;
+  }
 }

@@ -7,6 +7,10 @@ import EmptyState from '../components/shared/EmptyState';
 import CustomSelect from '../components/shared/CustomSelect';
 import './DifferentialDiagnosis.css';
 import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPatientSelector';
+import referencesIconLight from '../assets/images/references-icon-light.svg';
+import referencesIconDark from '../assets/images/references-icon-dark.svg';
+import { useTheme } from '../context/ThemeContext';
+import { apiClient } from '../services/apiClient';
 
 const sexOptions = [
   { value: '', label: 'Select' },
@@ -27,6 +31,7 @@ const sexOptions = [
  */
 const DifferentialDiagnosis = ({ isSidebarOpen, handleToggleSidebar, isAuthenticated, user, onLogout, openPatientSelectionModal, isPatientSelectionModalOpen }) => {
   const { selectedPatient } = usePatientContext();
+  const { theme } = useTheme();
 
   const [symptoms, setSymptoms] = useState([]);
   const [age, setAge] = useState('');
@@ -54,8 +59,11 @@ const DifferentialDiagnosis = ({ isSidebarOpen, handleToggleSidebar, isAuthentic
   const [imaging, setImaging] = useState([]);
   const [medicalHistory, setMedicalHistory] = useState([]);
   const [diagnosisResults, setDiagnosisResults] = useState([]);
+  const [references, setReferences] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [error, setError] = useState(null);
+  const [aiResponse, setAiResponse] = useState('');
 
   const handleAddTag = (tag, setter) => {
     setter((prevTags) => [...prevTags, tag]);
@@ -65,70 +73,38 @@ const DifferentialDiagnosis = ({ isSidebarOpen, handleToggleSidebar, isAuthentic
     setter((prevTags) => prevTags.filter((t) => t !== tag));
   };
 
-  const handleGenerateDiagnosis = () => {
+  const handleGenerateDiagnosis = async () => {
+    if (symptoms.length === 0) {
+      alert('Please add at least one symptom.');
+      return;
+    }
+
     setLoading(true);
     setSearched(true);
-    setDiagnosisResults([]); // Clear previous results
+    setError(null);
+    setDiagnosisResults([]);
 
-    // Simulate API call for differential diagnosis
-    setTimeout(() => {
-      console.log('Symptoms:', symptoms);
-      console.log('Age:', age);
-      console.log('Sex:', sex);
-      console.log('Temperature:', temperature);
-      console.log('Heart Rate:', heartRate);
-      console.log('Blood Pressure:', bloodPressure);
-      console.log('Respiratory Rate:', respiratoryRate);
-      console.log('Oxygen Saturation:', oxygenSaturation);
-      console.log('Physical Exam:', physicalExam);
-      console.log('Labs:', labs);
-      console.log('Imaging:', imaging);
-      console.log('Medical History:', medicalHistory);
+    const userInput = `Symptoms: ${symptoms.join(', ')}. Age: ${age}. Sex: ${sex}. Vitals: T:${temperature}, HR:${heartRate}, BP:${bloodPressure}, RR:${respiratoryRate}, SpO2:${oxygenSaturation}. Physical Exam: ${physicalExam.join(', ')}. Labs: ${labs.join(', ')}. Imaging: ${imaging.join(', ')}. Medical History: ${medicalHistory.join(', ')}.`;
 
-      const mockResults = [];
-
-      if (symptoms.includes('chest pain') && symptoms.includes('shortness of breath')) {
-        mockResults.push({
-          condition: 'Myocardial Infarction',
-          probability: 'High',
-          description: 'Acute chest pain radiating to the left arm, often accompanied by shortness of breath.',
-          management: 'Immediate medical attention, ECG, cardiac enzymes, aspirin, nitrates.',
-        });
-        mockResults.push({
-          condition: 'Pulmonary Embolism',
-          probability: 'Medium',
-          description: 'Sudden onset of shortness of breath and pleuritic chest pain, often with risk factors for DVT.',
-          management: 'Anticoagulation, oxygen, thrombolysis in severe cases.',
-        });
-      } else if (symptoms.includes('fever') && symptoms.includes('cough')) {
-        mockResults.push({
-          condition: 'Pneumonia',
-          probability: 'High',
-          description: 'Fever, cough with sputum, and difficulty breathing. Often associated with lung crackles.',
-          management: 'Antibiotics, supportive care, oxygen if needed.',
-        });
-        mockResults.push({
-          condition: 'Bronchitis',
-          probability: 'Medium',
-          description: 'Persistent cough, often with sputum, and sometimes fever. Usually viral.',
-          management: 'Symptomatic treatment, rest, fluids.',
-        });
-      } else if (symptoms.length > 0) {
-        mockResults.push({
-          condition: 'General Illness',
-          probability: 'Low',
-          description: 'Non-specific symptoms, further investigation may be required.',
-          management: 'Symptomatic relief, monitor for worsening symptoms.',
-        });
+    try {
+      const data = await apiClient.draftDDx(userInput, selectedPatient);
+      if (data.ok) {
+        setDiagnosisResults(data.structured?.differentials || []);
+        setAiResponse(data.content);
+        setReferences(data.references || []);
+      } else {
+        setError(data.content || 'An unexpected error occurred.');
       }
-
-      setDiagnosisResults(mockResults);
+    } catch (err) {
+      console.error('Error generating diagnosis:', err);
+      setError('System encountered an issue. Please try again.');
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   return (
-    <div className="differential-diagnosis-container">
+    <div className="workspaces-container">
       <div className="page-header">
         <h1>Differential Diagnosis Assistant</h1>
         <p>Get a list of possible conditions based on your symptoms and patient context</p>
@@ -142,7 +118,7 @@ const DifferentialDiagnosis = ({ isSidebarOpen, handleToggleSidebar, isAuthentic
           <h2>Symptoms</h2>
           <TagInput
             label="Symptoms"
-            placeholder="Add a symptom (e.g., fever, cough, chest pain)"
+            placeholder="(e.g., fever, cough, chest pain) (Type and press enter)"
             tags={symptoms}
             onAddTag={(tag) => handleAddTag(tag, setSymptoms)}
             onRemoveTag={(tag) => handleRemoveTag(tag, setSymptoms)}
@@ -233,7 +209,7 @@ const DifferentialDiagnosis = ({ isSidebarOpen, handleToggleSidebar, isAuthentic
           <h2>Physical Exam Findings (Optional)</h2>
           <TagInput
             label="Physical Exam Findings"
-            placeholder="Add a physical exam finding (e.g., crackles, murmur, rash)"
+            placeholder="Add a physical exam finding (e.g., crackles, murmur, rash) (Type and press enter)"
             tags={physicalExam}
             onAddTag={(tag) => handleAddTag(tag, setPhysicalExam)}
             onRemoveTag={(tag) => handleRemoveTag(tag, setPhysicalExam)}
@@ -243,7 +219,7 @@ const DifferentialDiagnosis = ({ isSidebarOpen, handleToggleSidebar, isAuthentic
           <h2>Lab Results (Optional)</h2>
           <TagInput
             label="Lab Results"
-            placeholder="Add a lab result (e.g., elevated WBC, low hemoglobin)"
+            placeholder="(e.g., elevated WBC, low hemoglobin) (Type and press enter)"
             tags={labs}
             onAddTag={(tag) => handleAddTag(tag, setLabs)}
             onRemoveTag={(tag) => handleRemoveTag(tag, setLabs)}
@@ -253,7 +229,7 @@ const DifferentialDiagnosis = ({ isSidebarOpen, handleToggleSidebar, isAuthentic
           <h2>Medical History (Optional)</h2>
           <TagInput
             label="Medical History"
-            placeholder="Add relevant medical history (e.g., hypertension, diabetes)"
+            placeholder="(e.g., hypertension, diabetes) (Type and press enter)"
             tags={medicalHistory}
             onAddTag={(tag) => handleAddTag(tag, setMedicalHistory)}
             onRemoveTag={(tag) => handleRemoveTag(tag, setMedicalHistory)}
@@ -263,7 +239,7 @@ const DifferentialDiagnosis = ({ isSidebarOpen, handleToggleSidebar, isAuthentic
           <h2>Imaging Findings (Optional)</h2>
           <TagInput
             label="Imaging Findings"
-            placeholder="Add an imaging finding (e.g., CXR consolidation, CT mass)"
+            placeholder="(e.g., CXR consolidation, CT mass)"
             tags={imaging}
             onAddTag={(tag) => handleAddTag(tag, setImaging)}
             onRemoveTag={(tag) => handleRemoveTag(tag, setImaging)}
@@ -276,31 +252,79 @@ const DifferentialDiagnosis = ({ isSidebarOpen, handleToggleSidebar, isAuthentic
         />
       </div>
 
+      {error && (
+        <div className="error-message-container">
+          <p className="error-message">{error}</p>
+        </div>
+      )}
+
       <div className="diagnosis-results-section">
         <h2>Differential Diagnosis Results</h2>
         {loading && <p>Generating diagnoses...</p>}
-        {!loading && searched && diagnosisResults.length === 0 && (
+        {!loading && searched && diagnosisResults.length === 0 && !aiResponse && (
           <EmptyState message="No differential diagnoses found for the provided information." />
         )}
         {!loading && !searched && (
           <EmptyState message="Add symptoms to generate a differential diagnosis." />
         )}
+        
+        {!loading && aiResponse && (
+          <div className="ai-response-markdown">
+            <ResultCard 
+              title="Clinical Reasoning Summary"
+              content={<div className="markdown-content" dangerouslySetInnerHTML={{ __html: aiResponse }} />}
+            />
+          </div>
+        )}
+
         {!loading && diagnosisResults.length > 0 && (
           <div className="diagnosis-list">
             {diagnosisResults.map((result, index) => (
               <ResultCard
                 key={index}
                 title={result.condition}
-                severity={result.probability === 'High' ? 'high' : result.probability === 'Medium' ? 'medium' : 'low'}
+                severity={result.probability === 'High' ? 'high' : result.probability === 'Moderate' ? 'medium' : 'low'}
                 content={
                   <>
                     <p><strong>Probability:</strong> {result.probability}</p>
-                    <p><strong>Description:</strong> {result.description}</p>
-                    <p><strong>Management:</strong> {result.management}</p>
+                    <p><strong>Rationale:</strong> {result.rationale}</p>
+                    <p><strong>Recommended Workup:</strong> {result.workup}</p>
                   </>
                 }
               />
             ))}
+          </div>
+        )}
+
+        {references && references.length > 0 && (
+          <div className="citations-section" style={{ marginTop: '2rem' }}>
+            <h4 className="citations-title">
+              <img src={theme === 'light' ? referencesIconLight : referencesIconDark} alt="References" />
+              References
+            </h4>
+            <div className="citations-list">
+              {references.map((citation) => (
+                <div className="citation-card" key={citation.id}>
+                  <div className="citation-header">
+                    <span className="citation-number">{citation.id}.</span>
+                    <a href={citation.url} target="_blank" rel="noopener noreferrer" className="citation-title">
+                      {citation.title}
+                    </a>
+                  </div>
+                  <div className="citation-meta">
+                    {citation.authors}
+                  </div>
+                  <div className="citation-journal-year">
+                    {citation.journal} • {citation.year}
+                  </div>
+                  {citation.tags && citation.tags.length > 0 && (
+                    <div className="citation-tags">
+                      {citation.tags.map(tag => <span className="citation-tag" key={tag}>{tag}</span>)}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

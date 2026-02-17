@@ -7,7 +7,7 @@
 .main-content {
   flex-grow: 1;
   height: 100vh;
-  overflow: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   padding: 0; /* Removing padding to allow internal scroll */

@@ -5,10 +5,10 @@
   justify-content: center;
   padding: 40px 20px;
   text-align: center;
-  color: #6c757d;
-  background-color: #f8f9fa;
-  border: 1px dashed #dee2e6;
-  border-radius: 8px;
+  color: var(--general-chat-helper-text-color);
+  background-color: var(--general-chat-info-bg);
+  border: 1px dashed var(--general-chat-info-border);
+  border-radius: 20px;
   margin: 20px 0;
 }
 

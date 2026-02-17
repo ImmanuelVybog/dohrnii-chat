@@ -10,7 +10,7 @@ import { useTheme } from '../context/ThemeContext';
 
 
 
-const AccountMenuPopup = ({ isOpen, onClose, onOpenAccountPopup, user, onLogout }) => {
+const AccountMenuPopup = ({ isOpen, onClose, onOpenAccountPopup, user, onLogout, buttonRect }) => {
   const { isDarkMode } = useTheme();
   const [settingsIconSrc, setSettingsIconSrc] = useState(isDarkMode ? settingsIconDark : settingsIconLight);
   const [logoutIconSrc, setLogoutIconSrc] = useState(isDarkMode ? logoutIconDark : logoutIconLight);
@@ -20,6 +20,8 @@ const AccountMenuPopup = ({ isOpen, onClose, onOpenAccountPopup, user, onLogout 
     setLogoutIconSrc(isDarkMode ? logoutIconDark : logoutIconLight);
   }, [isDarkMode]);
   if (!isOpen) return null;
+
+
 
   return (
     <div className="account-menu-overlay" onClick={onClose}>
@@ -32,12 +34,12 @@ const AccountMenuPopup = ({ isOpen, onClose, onOpenAccountPopup, user, onLogout 
           </div>
         </div>
         <div className="account-menu-section">
-          <button className="account-btn" onMouseEnter={() => setSettingsIconSrc(settingsIconHover)} onMouseLeave={() => setSettingsIconSrc(isDarkMode ? settingsIconDark : settingsIconLight)} onClick={onOpenAccountPopup}>
-            <img src={settingsIconSrc} alt="Settings" className="account-icon" />
+          <button className="settings-btn" onMouseEnter={() => setSettingsIconSrc(settingsIconHover)} onMouseLeave={() => setSettingsIconSrc(isDarkMode ? settingsIconDark : settingsIconLight)} onClick={() => { setSettingsIconSrc(isDarkMode ? settingsIconDark : settingsIconLight); onOpenAccountPopup(); }}>
+            <img src={settingsIconSrc} alt="Settings" className="settings-icon" />
             <span>Settings</span>
           </button>
-          <button className="account-btn" onMouseEnter={() => setLogoutIconSrc(logoutIconHover)} onMouseLeave={() => setLogoutIconSrc(isDarkMode ? logoutIconDark : logoutIconLight)} onClick={onLogout}>
-            <img src={logoutIconSrc} alt="Log out" className="account-icon" />
+          <button className="logout-btn" onMouseEnter={() => setLogoutIconSrc(logoutIconHover)} onMouseLeave={() => setLogoutIconSrc(isDarkMode ? logoutIconDark : logoutIconLight)} onClick={() => { setLogoutIconSrc(isDarkMode ? logoutIconDark : logoutIconLight); onLogout(); }}>
+            <img src={logoutIconSrc} alt="Log out" className="logout-icon" />
             <span>Log out</span>
           </button>
         </div>

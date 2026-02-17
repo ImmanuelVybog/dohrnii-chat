@@ -43,10 +43,30 @@
   gap: 6px;
 }
 
+.more-actions-container button{
+  white-space: nowrap;
+  background: none;
+  border: 1px solid transparent;
+  color: var(--suggestion-button-text);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: "Google Sans Flex", sans-serif;
+  font-size: 0.85rem;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .quick-clinical-action-button:hover {
-  border-color: var(--primary-color);
-  background-color: var(--primary-color);
-  color: #fff;
+  white-space: nowrap;
+  background-color: var(--suggestion-button-bg);
+  border: 1px solid var(--suggestion-button-border);
+  color: var(--suggestion-button-text);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: all 0.2s ease-in-out;
 }
 
 .more-button.active {
@@ -56,8 +76,8 @@
 }
 
 .more-arrow {
-  width: 10px;
-  height: 10px;
+  width: 16px;
+  height: 16px;
   transition: transform 0.2s ease;
   filter: var(--icon-filter);
 }
@@ -159,4 +179,15 @@ body.dark-mode .popover-action-item {
 
 body.dark-mode .popover-action-item:hover {
   background-color: #3d3f40;
+}
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+
+  .primary-actions-row {
+    flex-wrap: wrap;
+    justify-content: center;
+
+  }
 }

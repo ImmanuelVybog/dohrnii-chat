@@ -71,118 +71,29 @@ body {
   background: #9ca3af;
 }
 
-.citations-title {
-  display: flex;
-  align-items: center;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--citations-title-color);
-  margin-bottom: 1.5rem;
-  gap: 0.5rem;
-}
-
-.citations-title svg {
-  margin-right: 0.5rem;
-  color: var(--citations-title-icon-color);
-}
-
-.citations-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.citation-card {
-  background-color: var(--citation-card-bg);
-  border: 1px solid var(--citation-card-border);
-  border-radius: 1rem;
-  padding: 1rem;
-  transition: all 0.2s ease-in-out;
-}
-
-.citation-card:hover {
-  box-shadow: var(--citation-card-hover-shadow);
-  border-color: var(--citation-card-hover-border);
-}
-
-.citation-header {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 0.5rem;
-}
-
-.citation-number {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #16AC9F;
-  margin-right: 0.5rem;
-  flex-shrink: 0;
-}
-
-.citation-title {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #16AC9F;
-  text-decoration: none;
-  line-height: 1.4;
-}
-
-.citation-title:hover {
-  text-decoration: underline;
-  color: #29d1c3;
-}
-
-.citation-meta,
-.citation-journal-year {
-  font-size: 0.9rem;
-  color: var(--citation-meta-color);
-  margin-left: calc(1rem + 0.5rem); /* Align with title after number */
-  line-height: 1.3;
-}
-
-.citation-journal-year {
-  margin-top: 0.2rem;
-}
-
-.citation-tags {
-  margin-top: 0.8rem;
-  margin-left: calc(1rem + 0.5rem); /* Align with title after number */
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.citation-tag {
-  padding: 0.3rem 0.7rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  white-space: nowrap;
-  background-color: var(--suggestion-button-bg);
-  border: 1px solid var(--suggestion-button-border);
-  color: var(--suggestion-button-text);
-  border-radius: 20px;
-  cursor: pointer;
-  font-family: "Google Sans Flex", sans-serif;
-  transition: all 0.2s ease-in-out;
-}
-
-
-
 .user-message {
   align-self: flex-end;
   background: var(--chat-bubble-user);
   color: var(--chat-text-user);
-  border-radius: 16px;
-    width: fit-content;
-  width: 70%;
-  
+  border-radius: 18px;
+  width: max-content;
+  max-width: 70%;
   word-wrap: break-word;
   white-space: pre-wrap;
 }
 
-.user-message p {
+.user-message-short {
+  border-radius: 24px;
+}
+
+.user-message-long {
+  border-radius: 18px;
+}
+
+.user-message p,
+.user-message div {
   margin: 0;
-  padding: 10px 14px;
+  padding: 0.75rem 1rem;
   line-height: 1.5;
   font-weight: 400;
   font-size: 1rem;
@@ -199,16 +110,37 @@ body {
   margin-top: 1rem;
 }
 
-.ai-message p {
+.ai-message p,
+.ai-message div {
   text-align: left;
   line-height: calc(1.5/1);
   font-weight: 400;
+  font-size: 1rem;
+}
+
+.ai-message p strong {
+  font-size: 1.125rem;
+  font-weight: 600;
 }
 
 .ai-message h4 {
   text-align: left;
   line-height: 1.5;
   font-weight: 500;
+  font-size: 1.125rem;
+  margin: 0.75rem 0 0.25rem 0;
+}
+
+.ai-message h5 {
+  text-align: left;
+  line-height: 1.5;
+  font-weight: 500;
+  font-size: 1.125rem;
+  margin: 2rem 0 0.25rem 0;
+}
+
+.ai-message small {
+  font-size: 1rem;
 }
 
 .ai-message ul {
@@ -598,7 +530,6 @@ body {
   justify-content: space-between;
   padding: 0.5rem;
   background-color: var(--background-color);
-  border-radius: 2rem;
   margin: 2rem auto 1.5rem auto;
   max-width: 800px;
   width: calc(100% - 4rem);
@@ -726,4 +657,47 @@ body {
 .temporary-patient-action-button.cancel:hover {
   background-color: var(--temporary-action-cancel-hover-bg);
   border-color: var(--temporary-action-cancel-hover-border);
+}
+
+.structured-response a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.dark-mode .structured-response {
+  background-color: #242626;
+  border-color: #009688;
+}
+
+.structured-response h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.structured-response ul {
+  margin-bottom: 0;
+  padding-left: 1.5rem;
+}
+
+.structured-response li {
+  margin-bottom: 0.5rem;
+}
+
+.structured-response li:last-child {
+  margin-bottom: 0;
+}
+
+.severity-high {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.severity-medium {
+  color: #ffc107;
+  font-weight: bold;
+}
+
+.severity-low {
+  color: #28a745;
+  font-weight: bold;
 }

@@ -1,17 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './GlobalPatientSelector.css';
 import { getActivePatient, setActivePatient, clearActivePatient } from '../../services/patientService.js';
 import { Patient } from '../../types/patient';
 import { usePatientContext } from '../../context/PatientContext';
 import PatientSelectionModal from '../PatientSelectionModal/PatientSelectionModal';
 import Tooltip from '../shared/Tooltip';
+import plusIcon from '../../assets/images/plus-icon.svg';
 
-interface GlobalPatientSelectorProps {}
+interface GlobalPatientSelectorProps {
+  isSidebarButton?: boolean;
+}
 
-const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = () => {
-  const { onUpdatePatient, isPatientContextActiveInSession, activatePatientContextInSession, deactivatePatientContextInSession } = usePatientContext();
+const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = ({ isSidebarButton }) => {
+  const { 
+    selectedPatient, 
+    onUpdatePatient, 
+    isPatientContextActiveInSession, 
+    activatePatientContextInSession, 
+    deactivatePatientContextInSession 
+  } = usePatientContext();
 
-  const [currentActivePatient, setCurrentActivePatient] = useState<Patient | null>(null);
   const [isPatientSelectionModalOpen, setIsPatientSelectionModalOpen] = useState(false);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [patientToConfirmId, setPatientToConfirmId] = useState<string | null>(null);
@@ -29,10 +37,6 @@ const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = () => {
     setIsConfirmingNewPatient(false);
   };
 
-  useEffect(() => {
-    setCurrentActivePatient(getActivePatient());
-  }, []);
-
   const handleConfirmPatientSelection = () => {
     if (patientToConfirmId) {
       setActivePatient(patientToConfirmId);
@@ -45,7 +49,6 @@ const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = () => {
               console.error('Invalid call to activatePatientContextInSession: missing function or valid patient ID');
             }
       }
-      setCurrentActivePatient(getActivePatient()); // Reload to update active patient
     }
     closeConfirmationModal();
   };
@@ -57,26 +60,24 @@ const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = () => {
   const handleDetachPatient = () => {
     clearActivePatient();
     onUpdatePatient(null);
-    setCurrentActivePatient(null);
     deactivatePatientContextInSession();
   };
 
-  const handleOpenPatientSelectionModal = () => {
+  const handleOpenPatientSelectionModal = useCallback(() => {
     setIsPatientSelectionModalOpen(true);
-  };
+  }, []);
 
-  const handleClosePatientSelectionModal = () => {
+  const handleClosePatientSelectionModal = useCallback(() => {
     setIsPatientSelectionModalOpen(false);
-    setCurrentActivePatient(getActivePatient()); // Refresh active patient after modal closes
-  };
+  }, []);
 
   return (
     <div className="global-patient-selector">
-      {currentActivePatient && isPatientContextActiveInSession ? (
+      {selectedPatient && isPatientContextActiveInSession ? (
         <div className="active-patient-container">
           <button className="active-patient-display">
             <span>
-              Patient: {currentActivePatient.fullName} · {currentActivePatient.age}{currentActivePatient.sex?.charAt(0) || ''}
+              Patient: {selectedPatient.fullName} · {selectedPatient.age}{selectedPatient.sex?.charAt(0) || ''}
             </span>
           </button>
           <button className="detach-patient-btn" onClick={handleDetachPatient}>
@@ -85,11 +86,18 @@ const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = () => {
         </div>
       ) : (
         <>
+          {isSidebarButton ? (
+            <button className="sidebar-create-patient-button" onClick={handleOpenPatientSelectionModal}>
+              <img src={plusIcon} alt="Create Patient" className="plus-icon" />
+              Create Patient
+            </button>
+          ) : (
           <Tooltip text="Link a patient profile to get personalized clinical recommendations">
-            <button className="use-patient-context-cta" onClick={handleOpenPatientSelectionModal}>
+            <button className={isSidebarButton ? "sidebar-create-patient-button" : "use-patient-context-cta"} onClick={handleOpenPatientSelectionModal}>
               Use patient context
             </button>
           </Tooltip>
+          )}
         </>
       )}
 

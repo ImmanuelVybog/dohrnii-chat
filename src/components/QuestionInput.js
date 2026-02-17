@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
 import './QuestionInput.css';
 import GlobalPatientSelector from './GlobalPatientSelector/GlobalPatientSelector';
+import stopIcon from '../assets/images/Stop-rounded.svg';
 
 const QuestionInput = ({ 
   onQuestionSubmit,
@@ -19,7 +20,9 @@ const QuestionInput = ({
   deactivatePatientContextInSession,
   handleToggleSidebar,
   isPatientSelectionModalOpen,
-  onClosePatientSelectionModal
+  onClosePatientSelectionModal,
+  isLoading,
+  onStop
 }) => {
   const question = currentQuestion;
   const setQuestion = setCurrentQuestion;
@@ -47,6 +50,11 @@ const QuestionInput = ({
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      
+      // Focus the textarea when question is updated (e.g. via quick actions)
+      if (question) {
+        textareaRef.current.focus();
+      }
     }
   }, [question]);
 
@@ -87,6 +95,7 @@ const QuestionInput = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isLoading) return;
     if (question.trim()) {
       onQuestionSubmit(question);
       setQuestion('');
@@ -95,6 +104,7 @@ const QuestionInput = ({
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleSubmit(e);
     }
   };
@@ -109,6 +119,7 @@ const QuestionInput = ({
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             onKeyDown={handleKeyDown}
+            disabled={isLoading}
             placeholder={isChatMode ? "Ask Dohrnii anything" : prefix + animatedText}
             className={`question-input-field ${isChatMode ? '' : 'animated-placeholder'}`}
           />
@@ -123,7 +134,24 @@ const QuestionInput = ({
             openConfirmationModal={openConfirmationModal}
             closeConfirmationModal={closeConfirmationModal}
           />
-          <button type="submit" className="question-input-button">Ask Dohrnii</button>
+          <button 
+            type={isLoading ? "button" : "submit"} 
+            className={`question-input-button ${isLoading ? 'stop-button' : ''}`}
+            onClick={isLoading ? (e) => { e.preventDefault(); onStop(); } : undefined}
+            disabled={!isLoading && !question.trim()}
+          >
+            {isLoading ? (
+              <span className="button-content stop">
+                <span className="stop-icon-symbol">
+                  <img src={stopIcon} alt="Stop" />
+                </span>
+              </span>
+            ) : (
+              <span className="button-content send">
+                Ask Dohrnii
+              </span>
+            )}
+          </button>
         </div>
       </form>
     </div>

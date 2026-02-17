@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import './TagInput.css';
 
 interface TagInputProps {
@@ -7,10 +7,15 @@ interface TagInputProps {
   tags: string[];
   onAddTag: (tag: string) => void;
   onRemoveTag: (tag: string) => void;
+  id?: string;
+  className?: string;
 }
 
-const TagInput: React.FC<TagInputProps> = ({ label, placeholder, tags, onAddTag, onRemoveTag }) => {
+const TagInput: React.FC<TagInputProps> = ({ label, placeholder, tags, onAddTag, onRemoveTag, id, className }) => {
   const [inputValue, setInputValue] = useState('');
+  const generatedId = useId();
+  const inputId = id || generatedId;
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -32,7 +37,7 @@ const TagInput: React.FC<TagInputProps> = ({ label, placeholder, tags, onAddTag,
 
   return (
     <div className="tag-input-container">
-      <label className="tag-input-label">{label}</label>
+      <label htmlFor={inputId} className="tag-input-label">{label}</label>
       <div className="tag-input-field">
         {tags.map((tag) => (
           <span key={tag} className="tag">
@@ -43,6 +48,8 @@ const TagInput: React.FC<TagInputProps> = ({ label, placeholder, tags, onAddTag,
           </span>
         ))}
         <input
+          id={inputId}
+          name={inputId}
           type="text"
           value={inputValue}
           onChange={handleInputChange}

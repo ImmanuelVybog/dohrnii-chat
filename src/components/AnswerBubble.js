@@ -1,7 +1,12 @@
 import React from 'react';
 import './AnswerBubble.css';
+import { useTheme } from '../context/ThemeContext';
+import referencesIconLight from '../assets/images/references-icon-light.svg';
+import referencesIconDark from '../assets/images/references-icon-dark.svg';
 
 const AnswerBubble = ({ message, isLoading }) => {
+  const { theme } = useTheme();
+
   const renderContent = (content, citations) => {
     if (!citations || citations.length === 0) {
       return <div dangerouslySetInnerHTML={{ __html: content }} />;
@@ -59,6 +64,33 @@ const AnswerBubble = ({ message, isLoading }) => {
           ) : (
             <>
               {renderContent(message.content, message.citations)}
+              {message.citations && message.citations.length > 0 && (
+                <div className="citations-section">
+                  <h4 className="citations-title">
+                    <img src={theme === 'light' ? referencesIconLight : referencesIconDark} alt="References" />
+                    References
+                  </h4>
+                  <div className="citations-list">
+                    {message.citations.map((citation) => (
+                      <div className="citation-card" key={citation.id}>
+                        <div className="citation-header">
+                          <span className="citation-number">{citation.id}.</span>
+                          <a href={citation.url} target="_blank" rel="noopener noreferrer" className="citation-title">
+                            {citation.title}
+                          </a>
+                        </div>
+                        <div className="citation-meta">{citation.authors}</div>
+                        <div className="citation-journal-year">{citation.journal} • {citation.year}</div>
+                        {citation.tags && citation.tags.length > 0 && (
+                          <div className="citation-tags">
+                            {citation.tags.map(tag => <span className="citation-tag" key={tag}>{tag}</span>)}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           )}
         </div>

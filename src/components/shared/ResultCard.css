@@ -1,24 +1,25 @@
 .result-card {
-  background-color: #fff;
+  background-color: var(--citation-card-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
   margin-bottom: 24px;
   position: relative;
+  border: 1px solid var(--citation-card-border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* .result-card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-bottom: 20px;
-  position: relative;
-} */
+.result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
 .result-card-title {
   font-size: 1rem;
   font-weight: 600;
   margin-top: 0;
   margin-bottom: 10px;
-  color: #333;
+  color: var(--text-color);
 }
 
 .result-card-low .result-card-title {
@@ -35,6 +36,7 @@
 
 .result-card-content p {
   margin-bottom: 8px;
+  color: var(--text-color);
 }
 
 .result-card-content p:last-child {
@@ -43,7 +45,7 @@
 
 .result-card-content strong {
   font-weight: 600;
-  color: #333;
+  color: var(--text-color);
 }
 
 .result-card-content ul {
@@ -103,14 +105,19 @@
 
 /* Dark mode styles */
 .dark-mode .result-card {
-  background-color: #222;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  background-color: #242626;
+  border-color: #363a3a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .dark-mode .result-card-title {
-  color: #eee;
+  color: #ffffff;
 }
 
 .dark-mode .result-card-content {
-  color: #ddd;
+  color: #e0e0e0;
+}
+
+.dark-mode .result-card-content strong {
+  color: #ffffff;
 }

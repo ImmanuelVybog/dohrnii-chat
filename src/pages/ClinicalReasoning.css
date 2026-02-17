@@ -74,7 +74,7 @@
 .ai-response-section {
   margin-top: 40px;
   border-radius: calc(0.75rem + 8px);
-  border: 1px solid rgb(231 236 239);
+  border: 1px solid var(--border-color);
   background-color: var(--card);
   padding: 1.5rem;
   box-shadow: var(--shadow-soft);
@@ -82,7 +82,7 @@
 
 .ai-response-section h2 {
   font-size: 18px;
-  color: #0f172a;
+  color: var(--text-color);
   font-weight: 600;
   text-align: left;
 }
@@ -191,14 +191,4 @@
 
 .dark-mode .reset-scenario-button:hover {
   background-color: #4a5568;
-}
-
-.auto-filled {
-  border: 1px solid #4CAF50 !important;
-  background-color: #e8f5e9 !important;
-}
-
-.dark-mode .auto-filled {
-  border: 1px solid #81c784 !important;
-  background-color: #388e3c !important;
 }

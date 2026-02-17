@@ -14,31 +14,57 @@ import referencesIconLight from '../assets/images/references-icon-light.svg';
 import referencesIconDark from '../assets/images/references-icon-dark.svg';
 import { useTheme } from '../context/ThemeContext';
 import { usePatientContext } from '../context/PatientContext';
+import { useChatContext } from '../context/ChatContext';
 import { addPatient, setActivePatient } from '../services/patientService';
 import { useNavigate } from 'react-router-dom';
 import PatientDetailModal from '../components/PatientDetailModal/PatientDetailModal';
 import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPatientSelector';
+import { apiClient } from '../services/apiClient';
 
-
-
-
-const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient, closeConfirmationModal, activatePatientContextInSession, deactivatePatientContextInSession, isSidebarOpen, handleToggleSidebar, handleExpandPatientSection, isAuthenticated, user, onLogout }) => {
-
+const Home = ({ openConfirmationModal, isConfirmationModalOpen, patientToConfirmId, isConfirmingNewPatient,  closeConfirmationModal, isSidebarOpen, handleToggleSidebar, handleExpandPatientSection, isAuthenticated, user, onLogout }) => {
   const navigate = useNavigate();
   const { theme, isDarkMode } = useTheme();
-  const [chatMessages, setChatMessages] = useState([]);
-
+  const { selectedPatient, onUpdatePatient, activatePatientContextInSession, deactivatePatientContextInSession, isPatientContextActiveInSession } = usePatientContext();
+  const { messages: contextMessages, addMessage, startNewChat } = useChatContext();
+  
   const [currentQuestion, setCurrentQuestion] = useState('');
-
-  const [conversationStarted, setConversationStarted] = useState(false);
-  const [typingMessageIndex, setTypingMessageIndex] = useState(null);
+  // conversationStarted derived from messages length or pending message
+  const [pendingAiMessage, setPendingAiMessage] = useState(null);
   const [displayedAiResponse, setDisplayedAiResponse] = useState('');
+  
+  const chatMessages = [...contextMessages, ...(pendingAiMessage ? [pendingAiMessage] : [])];
+  const conversationStarted = chatMessages.length > 0;
+
   const [isAccountPopupOpen, setIsAccountPopupOpen] = useState(false);
   const [excludeContext, setExcludeContext] = useState(false);
   const [chatContext, setChatContext] = useState({ type: 'GENERAL_CHAT' });
   const [isPatientDetailModalOpen, setIsPatientDetailModalOpen] = useState(false);
   const [patientToView, setPatientToView] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const conversationContainerRef = useRef(null);
+  const abortControllerRef = useRef(null);
+
+  const isGenerating = isLoading || (pendingAiMessage && pendingAiMessage.animating);
+
+  const handleStopResponse = () => {
+    // 1. Abort API call if in progress
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    
+    // 2. Stop loading state
+    setIsLoading(false);
+
+    // 3. Finalize partial message if animating
+    if (pendingAiMessage && pendingAiMessage.animating) {
+      const partialMsg = { ...pendingAiMessage, animating: false };
+      addMessage(partialMsg);
+      setPendingAiMessage(null);
+      setDisplayedAiResponse('');
+    }
+  };
 
   const scrollToBottom = () => {
     if (conversationContainerRef.current) {
@@ -53,262 +79,234 @@ const Home = ({ openConfirmationModal, isPatientContextActiveInSession, isConfir
     if (conversationStarted) {
       scrollToBottom();
     }
-  }, [chatMessages, conversationStarted, displayedAiResponse]);
+  }, [chatMessages.length, conversationStarted, displayedAiResponse, pendingAiMessage]);
 
 
   const handleQuickActionClick = (message) => {
     setCurrentQuestion(message);
-    handleQuestionSubmit(message);
   };
 
-  const handleQuestionSubmit = (newQuestion) => {
-    setChatMessages((prevMessages) => [...prevMessages, { type: 'user', content: newQuestion }]);
+  const handleQuestionSubmit = async (newQuestion) => {
+    // Prevent multiple requests
+    if (isGenerating) return;
+
+    // Add user message to context
+    addMessage({ type: 'user', content: newQuestion });
     setCurrentQuestion('');
-    setConversationStarted(true);
+    
+    setIsLoading(true);
+    setError(null);
 
-    // Simulate AI response with references
-    let aiResponseContent;
-    let aiReferences = [];
+    // Create new AbortController
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
 
-    switch (newQuestion) {
-      case 'Draft a differential diagnosis based on the current patient context.':
-        aiResponseContent = `**Differential Diagnosis for Current Patient Context:**
+    try {
+      let response;
+      
+      // Check for abort before API call (sanity check)
+      if (signal.aborted) return;
 
-Based on the available patient information, here are some potential differential diagnoses to consider:
+      switch (newQuestion) {
+        case 'Draft a differential diagnosis based on the current patient context.':
+          response = await apiClient.draftDDx(newQuestion, selectedPatient, signal);
+          break;
+        case 'Propose a management plan for a specific condition.':
+          response = await apiClient.draftAssessmentPlan(newQuestion, selectedPatient, signal);
+          break;
+        case 'Summarize key patient information for handover.':
+          response = await apiClient.draftHandoverSummary(newQuestion, selectedPatient, signal);
+          break;
+        case 'Draft a patient education summary.':
+          response = await apiClient.draftPatientHandout(newQuestion, selectedPatient, signal);
+          break;
+        case 'Suggest initial diagnostic workup based on the current patient context.':
+          response = await apiClient.draftDiagnosticWorkup(newQuestion, selectedPatient, signal);
+          break;
+        case 'Find evidence-based guidelines for [condition/treatment].':
+          response = await apiClient.searchGuidelines(newQuestion, selectedPatient, signal);
+          break;
+        case 'Explain a medical concept or term.':
+          response = await apiClient.explainConcept(newQuestion, selectedPatient, signal);
+          break;
+        case 'Provide a drug-drug interaction check for [medications].':
+          response = await apiClient.checkDrugInteractions([], selectedPatient, signal);
+          break;
+        default:
+          response = await apiClient.generateClinicalReasoning({
+            userInput: newQuestion,
+            patientContext: apiClient.formatPatientContext(selectedPatient)
+          }, selectedPatient, signal);
+      }
 
-1.  **Community-Acquired Pneumonia (CAP):** Given symptoms like cough, fever, and potential respiratory distress.
-    *   *Key considerations:* Chest X-ray findings, oxygen saturation, sputum culture.
-    *   *References:*
-        *   Mandell, Douglas, and Bennett's Principles and Practice of Infectious Diseases. 9th ed.
-        *   IDSA Guidelines for the Management of CAP in Adults.
+      // Check for abort after API call
+      if (signal.aborted) return;
 
-2.  **Acute Bronchitis:** If cough is prominent but without clear evidence of pneumonia.
-    *   *Key considerations:* Viral prodrome, absence of infiltrates on imaging.
-    *   *References:*
-        *   UpToDate: Acute bronchitis in adults.
+      if (response.ok) {
+          let aiResponseContent = response.content;
+          const aiReferences = response.references || [];
+          const structured = response.structured;
 
-3.  **Congestive Heart Failure (CHF) Exacerbation:** If there's a history of cardiac issues and new or worsening dyspnea.
-    *   *Key considerations:* Jugular venous distension, peripheral edema, BNP levels, echocardiogram.
-    *   *References:*
-        *   ACC/AHA Guidelines for the Management of Heart Failure.
+          // ... (existing structured response formatting logic) ...
+          if (structured && (!aiResponseContent || aiResponseContent.length < 50)) {
+            if (structured.differentials) {
+              aiResponseContent = `
+                <div class="structured-response">
+                  <h4>Differential Diagnosis</h4>
+                  <ul>
+                    ${structured.differentials.map(d => `
+                      <li>
+                        <strong>${d.condition}</strong> (${d.probability} Probability)
+                        <br/><small>${d.rationale}</small>
+                        ${d.workup ? `<br/><small><strong>Suggested Workup:</strong> ${d.workup}</small>` : ''}
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+              `;
+            } else if (structured.assessment && structured.plan && Array.isArray(structured.plan)) {
+              aiResponseContent = `
+                <div class="structured-response">
+                  <h4>Assessment & Plan</h4>
+                  <p><strong>Assessment:</strong> ${structured.assessment}</p>
+                  <p><strong>Plan:</strong></p>
+                  <ul>
+                    ${structured.plan.map(p => `<li>${p}</li>`).join('')}
+                  </ul>
+                </div>
+              `;
+            } else if (structured.assessment && typeof structured.assessment === 'string' && !structured.plan) {
+              // Handle Clinical Reasoning direct content if passed as structured
+              aiResponseContent = `
+                <div class="structured-response">
+                  <h4>Clinical Assessment</h4>
+                  <p>${structured.assessment}</p>
+                  ${structured.diagnosis ? `
+                    <p><strong>Primary Diagnosis:</strong> ${structured.diagnosis.main || structured.diagnosis}</p>
+                  ` : ''}
+                  ${structured.treatment ? `<p><strong>Treatment:</strong> ${structured.treatment}</p>` : ''}
+                </div>
+              `;
+            } else if (structured.situation && structured.recommendation) {
+              aiResponseContent = `
+                <div class="structured-response">
+                  <h4>Handover Summary</h4>
+                  <p><strong>Situation:</strong> ${structured.situation}</p>
+                  <p><strong>Background:</strong> ${structured.background}</p>
+                  <p><strong>Assessment:</strong> ${structured.assessment}</p>
+                  <p><strong>Recommendation:</strong> ${structured.recommendation}</p>
+                </div>
+              `;
+            } else if (structured.overview && structured.whenToCallNurse) {
+              aiResponseContent = `
+                <div class="structured-response">
+                  <h4>Patient Education: ${structured.title}</h4>
+                  <p>${structured.overview}</p>
+                  <p><strong>What we are doing:</strong> ${structured.whatWeAreDoing}</p>
+                  <p><strong>When to call your nurse:</strong> ${structured.whenToCallNurse}</p>
+                </div>
+              `;
+            } else if (structured.labs && structured.imaging) {
+              aiResponseContent = `
+                <div class="structured-response">
+                  <h4>Recommended Diagnostic Workup</h4>
+                  <p><strong>Labs:</strong> ${structured.labs.join(', ')}</p>
+                  <p><strong>Imaging:</strong> ${structured.imaging.join(', ')}</p>
+                  ${structured.advanced ? `<p><strong>Advanced:</strong> ${structured.advanced.join(', ')}</p>` : ''}
+                </div>
+              `;
+            } else if (structured.results && Array.isArray(structured.results)) {
+              aiResponseContent = `
+                <div class="structured-response">
+                  <h4>Search Results / Calculation</h4>
+                  <ul>
+                    ${structured.results.map(r => `
+                      <li>
+                        <strong>${r.title || r.concept || 'Result'}:</strong> ${r.value || r.definition || r.summary || ''}
+                        ${r.unit ? ` ${r.unit}` : ''}
+                        ${r.link ? `<br/><a href="${r.link}" target="_blank">View Source</a>` : ''}
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+              `;
+            } else if (structured.summary && Array.isArray(structured.summary)) {
+              aiResponseContent = `
+                <div class="structured-response">
+                  <h4>Drug Interaction Check</h4>
+                  <ul>
+                    ${structured.summary.map(s => `
+                      <li>
+                        <strong class="severity-${s.severity}">${s.name}</strong>: ${s.explanation}
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+              `;
+            } else if (structured.concept && structured.definition) {
+              aiResponseContent = `
+                <div class="structured-response">
+                  <h4>Clinical Concept: ${structured.concept}</h4>
+                  <p>${structured.definition}</p>
+                  <p><strong>Clinical Significance:</strong> ${structured.significance}</p>
+                  ${structured.normalRange ? `<p><strong>Normal Range:</strong> ${structured.normalRange}</p>` : ''}
+                </div>
+              `;
+            }
+          } else if (typeof aiResponseContent === 'object' && aiResponseContent !== null) {
+            // Fallback for generateClinicalReasoning direct content if it's still an object
+            const { assessment, diagnosis, plan, treatment } = aiResponseContent;
+            aiResponseContent = `
+              <div class="structured-response">
+                <p><strong>Assessment:</strong> ${assessment || ''}</p>
+                ${diagnosis ? `
+                  <p><strong>Primary Diagnosis:</strong> ${diagnosis.main || diagnosis}</p>
+                  ${diagnosis.differential ? `<p><strong>Differential:</strong> ${diagnosis.differential.join(', ')}</p>` : ''}
+                ` : ''}
+                ${plan ? `<p><strong>Plan:</strong> ${plan}</p>` : ''}
+                ${treatment ? `<p><strong>Treatment:</strong> ${treatment}</p>` : ''}
+              </div>
+            `.trim();
+          }
 
-4.  **Pulmonary Embolism (PE):** Especially if there are risk factors (e.g., recent surgery, immobility, malignancy) and sudden onset dyspnea/chest pain.
-    *   *Key considerations:* D-dimer, CT pulmonary angiography.
-    *   *References:*
-        *   ACCP Guidelines for Antithrombotic Therapy and Prevention of Thrombosis.
+          // Check for abort again before starting animation
+          if (signal.aborted) return;
 
-*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
-        aiReferences = [
-          { id: 1, title: 'IDSA Guidelines for the Management of Community-Acquired Pneumonia in Adults', journal: 'Clinical Infectious Diseases', authors: 'Metlay JP, et al.', year: '2019', url: 'https://www.idsociety.org/CAPguidelines', tags: ['Guideline', 'Infectious Disease'] },
-          { id: 2, title: 'ACC/AHA Guideline for the Management of Heart Failure', journal: 'Journal of the American College of Cardiology', authors: 'Yancy CW, et al.', year: '2017', url: 'https://www.ahajournals.org/heartfailureguideline', tags: ['Guideline', 'Cardiology'] },
-        ];
-        break;
-
-      case 'Suggest initial diagnostic workup based on the current patient context.':
-        aiResponseContent = `**Initial Diagnostic Workup for Current Patient Context:**
-
-Based on the available patient information, here's a suggested initial diagnostic workup:
-
-1.  **Laboratory Tests:**
-    *   Complete Blood Count (CBC) with differential
-    *   Basic Metabolic Panel (BMP)
-    *   Liver Function Tests (LFTs)
-    *   Inflammatory markers (CRP, ESR)
-    *   Cardiac enzymes (if chest pain/dyspnea)
-    *   D-dimer (if PE suspected)
-    *   Blood cultures (if fever/sepsis suspected)
-
-2.  **Imaging Studies:**
-    *   Chest X-ray (CXR) - PA and Lateral
-    *   Electrocardiogram (ECG)
-    *   Consider Point-of-Care Ultrasound (POCUS) for cardiac or pulmonary assessment.
-
-3.  **Other:**
-    *   Urinalysis and urine culture (if UTI suspected)
-    *   Sputum gram stain and culture (if productive cough)
-
-*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
-        aiReferences = [
-          { id: 1, title: 'Emergency Medicine: A Comprehensive Study Guide', journal: 'McGraw Hill', authors: 'Tintinalli JE, et al.', year: '2020', url: 'https://accessmedicine.mhmedical.com/tintinalli', tags: ['Textbook', 'Emergency Medicine'] },
-          { id: 2, title: 'Clinical Decision Support: The Road to Better Patient Care', journal: 'Elsevier', authors: 'Greenes RA, et al.', year: '2014', url: 'https://www.elsevier.com/clinical-decision-support', tags: ['Review', 'Health Informatics'] },
-        ];
-        break;
-
-      case 'Propose a management plan for a specific condition.':
-        aiResponseContent = `**Proposed Management Plan for [Specific Condition - e.g., Community-Acquired Pneumonia]:**
-
-Assuming a diagnosis of Community-Acquired Pneumonia (CAP) in an adult patient with no significant comorbidities and outpatient management is appropriate:
-
-1.  **Antibiotic Therapy:**
-    *   **First-line:** Amoxicillin 1g TID OR Doxycycline 100mg BID OR Azithromycin 500mg on day 1, then 250mg daily for 4 days.
-    *   *Duration:* Typically 5-7 days, or until afebrile for 48-72 hours.
-
-2.  **Symptomatic Treatment:**
-    *   Antipyretics/Analgesics: Acetaminophen or Ibuprofen for fever and pain.
-    *   Cough suppressants: As needed for bothersome cough.
-    *   Hydration: Encourage oral fluid intake.
-
-3.  **Monitoring & Follow-up:**
-    *   Educate patient on warning signs (worsening dyspnea, persistent fever, altered mental status) requiring immediate medical attention.
-    *   Follow-up in 24-48 hours (phone call or in-person) to assess response to treatment.
-    *   Consider repeat Chest X-ray in 4-6 weeks for patients over 50 years old or smokers to rule out underlying malignancy.
-
-*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
-        aiReferences = [
-          { id: 1, title: 'IDSA/ATS Guidelines for the Management of Community-Acquired Pneumonia in Adults', journal: 'Clinical Infectious Diseases', authors: 'Metlay JP, et al.', year: '2019', url: 'https://www.idsociety.org/CAPguidelines', tags: ['Guideline', 'Infectious Disease'] },
-          { id: 2, title: 'NICE Guideline: Pneumonia (community-acquired): antimicrobial prescribing', journal: 'National Institute for Health and Care Excellence', authors: 'NICE', year: '2019', url: 'https://www.nice.org.uk/guidance/ng138', tags: ['Guideline', 'UK Healthcare'] },
-        ];
-        break;
-
-      case 'Summarize key patient information for handover.':
-        aiResponseContent = `**Patient Handover Summary:**
-
-**Patient Name:** [Patient Name from Context, e.g., John Doe]
-**Age/Sex:** [Age/Sex from Context, e.g., 68M]
-**Chief Complaint:** [Chief Complaint from Context, e.g., Shortness of breath]
-**Brief HPI:** [Brief History of Present Illness from Context, e.g., 3 days of progressive dyspnea, productive cough, subjective fevers. No chest pain. Denies recent travel or sick contacts.]
-**Relevant PMH:** [Relevant Past Medical History from Context, e.g., CAD, HTN, Type 2 DM, COPD]
-**Current Status:** [e.g., Alert and oriented x3, tachypneic at rest (RR 24), O2 sat 92% on room air, coarse breath sounds bilaterally. Afebrile.]
-**Pending/Recent Labs/Imaging:** [e.g., CXR shows bilateral lower lobe infiltrates. CBC: WBC 14.5, Hgb 13.2. BMP WNL. Blood cultures sent.]
-**Assessment:** [e.g., Community-Acquired Pneumonia, COPD exacerbation]
-**Plan:** [e.g., Start IV Ceftriaxone and Azithromycin. Respiratory treatments. Monitor O2 sats. Consult Pulmonology.]
-
-*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
-        aiReferences = [
-          { id: 1, title: 'SBAR Communication: An Effective Tool for Handoff in Nursing', journal: 'Journal of Nursing Care Quality', authors: 'Haig KM, et al.', year: '2006', url: 'https://journals.lww.com/jncq/Abstract/2006/07000/SBAR_Communication__An_Effective_Tool_for_Handoff.10.aspx', tags: ['Communication', 'Nursing'] },
-          { id: 2, title: 'Patient Handoffs: A Review of the Literature', journal: 'Journal of Hospital Medicine', authors: 'Starmer AJ, et al.', year: '2013', url: 'https://www.journalofhospitalmedicine.com/jhospmed/article/123456/patient-handoffs-review-literature', tags: ['Patient Safety', 'Review'] },
-        ];
-        break;
-
-      case 'Draft a patient education summary.':
-        aiResponseContent = `**Patient Education Summary for [Condition - e.g., New Diagnosis of Type 2 Diabetes]:**
-
-**What is Type 2 Diabetes?**
-Type 2 diabetes is a condition where your body either doesn't produce enough insulin or doesn't use insulin properly. Insulin is a hormone that helps sugar (glucose) get into your cells to be used for energy. When this process doesn't work well, sugar builds up in your blood, which can lead to health problems over time.
-
-**Key Management Strategies:**
-
-1.  **Healthy Eating:** Focus on a balanced diet with plenty of vegetables, lean proteins, and whole grains. Limit sugary drinks, processed foods, and unhealthy fats. Consider consulting with a dietitian.
-2.  **Regular Physical Activity:** Aim for at least 150 minutes of moderate-intensity aerobic activity per week (e.g., brisk walking, swimming).
-3.  **Medications:** Take your prescribed medications (e.g., metformin, insulin) exactly as directed. Understand their purpose and potential side effects.
-4.  **Blood Glucose Monitoring:** Regularly check your blood sugar levels as advised by your doctor. This helps you understand how food, activity, and medication affect your glucose.
-5.  **Foot Care:** Inspect your feet daily for cuts, sores, or blisters. Wear comfortable, well-fitting shoes.
-6.  **Regular Check-ups:** Attend all appointments with your healthcare team, including eye exams and kidney function tests.
-
-**When to Seek Medical Attention:**
-Contact your doctor if you experience symptoms of very high or very low blood sugar, or any new concerning symptoms.
-
-*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
-        aiReferences = [
-          { id: 1, title: 'American Diabetes Association: Standards of Medical Care in Diabetes', journal: 'Diabetes Care', authors: 'ADA', year: '2024', url: 'https://diabetesjournals.org/care/issue/current', tags: ['Guideline', 'Endocrinology'] },
-          { id: 2, title: 'National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK): Diabetes Information', journal: 'NIH', authors: 'NIDDK', year: 'Current', url: 'https://www.niddk.nih.gov/health-information/diabetes', tags: ['Patient Education', 'Government Resource'] },
-        ];
-        break;
-
-      case 'Find evidence-based guidelines for [condition/treatment].':
-        aiResponseContent = `**Evidence-Based Guidelines for [Condition/Treatment - e.g., Hypertension Management]:**
-
-Here are some prominent evidence-based guidelines for hypertension management:
-
-1.  **2017 ACC/AHA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults:**
-    *   *Key recommendations:* Defines hypertension as BP ≥130/80 mmHg. Emphasizes lifestyle modifications and provides algorithms for pharmacologic treatment based on risk.
-    *   *Source:* American College of Cardiology / American Heart Association
-    *   *Link:* [https://www.ahajournals.org/doi/full/10.1161/HYP.0000000000000065](https://www.ahajournals.org/doi/full/10.1161/HYP.0000000000000065)
-
-2.  **NICE Guideline: Hypertension in adults: diagnosis and management (NG136):**
-    *   *Key recommendations:* Focuses on clinic and ambulatory/home BP monitoring for diagnosis. Provides guidance on drug treatment and monitoring.
-    *   *Source:* National Institute for Health and Care Excellence (UK)
-    *   *Link:* [https://www.nice.org.uk/guidance/ng136](https://www.nice.org.uk/guidance/ng136)
-
-3.  **ESH/ESC Guidelines for the management of arterial hypertension:**
-    *   *Key recommendations:* European guidelines offering comprehensive advice on diagnosis, treatment, and follow-up of hypertension.
-    *   *Source:* European Society of Hypertension / European Society of Cardiology
-    *   *Link:* [https://academic.oup.com/eurheartj/article/39/33/3021/5081210](https://academic.oup.com/eurheartj/article/39/33/3021/5081210)
-
-*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
-        aiReferences = [
-          { id: 1, title: '2017 ACC/AHA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults', journal: 'Hypertension', authors: 'Whelton PK, et al.', year: '2018', url: 'https://www.ahajournals.org/doi/full/10.1161/HYP.0000000000000065', tags: ['Guideline', 'Cardiology'] },
-          { id: 2, title: 'NICE Guideline: Hypertension in adults: diagnosis and management (NG136)', journal: 'NICE', authors: 'NICE', year: '2019', url: 'https://www.nice.org.uk/guidance/ng136', tags: ['Guideline', 'UK Healthcare'] },
-        ];
-        break;
-
-      case 'Explain a medical concept or term.':
-        aiResponseContent = `**Explanation of [Medical Concept/Term - e.g., "Myocardial Infarction"]:**
-
-A **myocardial infarction (MI)**, commonly known as a **heart attack**, occurs when blood flow to a part of the heart muscle is blocked for a prolonged period, usually by a blood clot. This blockage prevents oxygen from reaching the heart muscle, leading to damage or death of the heart tissue.
-
-**Key Points:**
-
-*   **Cause:** Most commonly caused by a rupture of an atherosclerotic plaque in a coronary artery, leading to clot formation.
-*   **Symptoms:** Can include chest pain (often described as pressure, tightness, or squeezing), shortness of breath, pain radiating to the arm (especially left), jaw, back, or stomach, sweating, nausea, and lightheadedness.
-*   **Diagnosis:** Typically involves an electrocardiogram (ECG) to detect electrical changes in the heart, and blood tests to measure cardiac enzymes (e.g., troponin), which are released when heart muscle is damaged.
-*   **Treatment:** Immediate treatment focuses on restoring blood flow (e.g., angioplasty with stent placement, thrombolytic medications) and managing symptoms. Long-term management involves medications (e.g., antiplatelets, statins, beta-blockers) and lifestyle changes.
-
-*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official guidelines and patient-specific data.*`;
-        aiReferences = [
-          { id: 1, title: 'Braunwald\'s Heart Disease: A Textbook of Cardiovascular Medicine', journal: 'Elsevier', authors: 'Zipes DP, et al.', year: '2018', url: 'https://www.elsevier.com/braunwalds-heart-disease', tags: ['Textbook', 'Cardiology'] },
-          { id: 2, title: 'AHA: About Heart Attacks', journal: 'American Heart Association', authors: 'AHA', year: 'Current', url: 'https://www.heart.org/en/health-topics/heart-attack/about-heart-attacks', tags: ['Patient Education', 'Cardiology'] },
-        ];
-        break;
-
-      case 'Provide a drug-drug interaction check for [medications].':
-        aiResponseContent = `**Drug-Drug Interaction Check for [Medications - e.g., Warfarin and Trimethoprim-Sulfamethoxazole]:**
-
-**Medications:**
-1.  **Warfarin (Coumadin)**: Anticoagulant
-2.  **Trimethoprim-Sulfamethoxazole (Bactrim)**: Antibiotic
-
-**Interaction:**
-**Severity:** Major
-**Mechanism:** Trimethoprim-sulfamethoxazole can inhibit the metabolism of warfarin (specifically via CYP2C9 inhibition) and also displace warfarin from plasma protein binding sites. Both mechanisms lead to increased levels of active warfarin in the blood.
-**Effect:** Significantly increases the anticoagulant effect of warfarin, leading to a **higher risk of bleeding**.
-
-**Recommendations:**
-*   **Avoid concomitant use if possible.**
-*   If co-administration is unavoidable, **close monitoring of INR (International Normalized Ratio) is essential**, typically daily for the first few days, then every 2-3 days.
-*   **Adjust warfarin dose downwards** significantly (e.g., by 30-50%) when starting trimethoprim-sulfamethoxazole, and titrate based on INR.
-*   Educate the patient on signs and symptoms of bleeding (e.g., unusual bruising, nosebleeds, blood in urine/stool, prolonged bleeding from cuts).
-*   Consider alternative antibiotics if appropriate.
-
-*Please note: This is a simulated response for educational purposes and should not be used for actual patient care. Always refer to official drug interaction databases and patient-specific data.*`;
-        aiReferences = [
-          { id: 1, title: 'Lexicomp Drug Interactions', journal: 'Wolters Kluwer', authors: 'Lexicomp', year: 'Current', url: 'https://www.wolterskluwer.com/en/solutions/lexicomp', tags: ['Drug Database', 'Pharmacology'] },
-          { id: 2, title: 'UpToDate: Warfarin: Drug interactions', journal: 'UpToDate', authors: 'Crowther MA, et al.', year: 'Current', url: 'https://www.uptodate.com/contents/warfarin-drug-interactions', tags: ['Clinical Resource', 'Pharmacology'] },
-        ];
-        break;
-
-      default:
-        if (excludeContext || chatContext.type === 'GENERAL_CHAT') {
-          aiResponseContent = `This is a simulated AI answer for: "${newQuestion}". In General Chat mode, responses are generic and do not use patient context.`;
-        } else if (chatContext.type === 'SAVED_PATIENT_CHAT' && selectedPatient) {
-          aiResponseContent = `This is a simulated AI answer for: "${newQuestion}" in the context of patient ${selectedPatient.name} (ID: ${selectedPatient.id}, Age: ${selectedPatient.age}, Sex: ${selectedPatient.sex}). The AI is referencing the patient's data.`;
-        } else if (chatContext.type === 'TEMPORARY_PATIENT_CHAT' && chatContext.temporaryPatientContext) {
-          const tempPatient = chatContext.temporaryPatientContext;
-          aiResponseContent = `This is a simulated AI answer for: "${newQuestion}" using temporary patient context (Age: ${tempPatient.age}, Sex: ${tempPatient.sex}, Chief Complaint: ${tempPatient.chiefComplaint}). The AI is referencing this temporary data.`;
+          // Initialize pending AI message
+          setPendingAiMessage({ type: 'ai', content: '', fullHtmlContent: aiResponseContent, references: aiReferences, animating: true });
+          
+          setTimeout(() => {
+            if (!signal.aborted) {
+              setDisplayedAiResponse(aiResponseContent);
+            }
+          }, 500);
         } else {
-          aiResponseContent = `This is a simulated AI answer for: "${newQuestion}".\n\nReferences:\n1. Reference A: https://example.com/referenceA\n2. Reference B: https://example.com/referenceB`;
-        }
-        aiReferences = [
-          { id: 1, title: '2024 update of the AGIHO guideline on diagnosis and empirical treatment of fever of unknown origin (FUO) in adult neutropenic patients with solid tumours and hematological malignancies.', journal: 'The Lancet regional health. Europe. 2025.', authors: 'Sandherr M, Stemler J, Schalk E et al.', year: '2025', url: 'https://example.com/ref1', tags: ['Newly Published'] },
-          { id: 2, title: 'Clinical practice guideline for the use of antimicrobial agents in neutropenic patients with cancer: 2010 update by the infectious diseases society of america.', journal: 'Clinical infectious diseases : an official publication of the Infectious Diseases Society of America. 2011.', authors: 'Freifeld AG, Bow EJ, Sepkowitz KA et al.', year: '2011', url: 'https://example.com/ref2', tags: ['High Impact', 'Highly Cited'] },
-        ];
-        break;
+        if (signal.aborted) return;
+        const errorContent = response.content || 'System encountered an issue. Please try again.';
+        setError(errorContent);
+        // Add error message to context directly
+        addMessage({ type: 'ai', content: errorContent, error: true });
+      }
+
+    } catch (err) {
+      if (signal.aborted) return;
+      console.error('Error in handleQuestionSubmit:', err);
+      const errorMessage = 'System encountered an issue. Please try again.';
+      setError(errorMessage);
+      addMessage({ type: 'ai', content: errorMessage, error: true });
+    } finally {
+      // Only turn off isLoading if we haven't been aborted (abort handler handles it)
+      // or if we are just finishing normally. 
+      // Actually, if we are aborted, the abort handler sets isLoading(false).
+      // If we finish normally, we set isLoading(false).
+      if (!signal.aborted) {
+        setIsLoading(false);
+      }
     }
-
-    // Add a placeholder for the AI response and start typing animation
-    setChatMessages((prevMessages) => {
-      const newMessages = [...prevMessages, { type: 'ai', content: '', fullHtmlContent: aiResponseContent, references: aiReferences, animating: true }];
-      setTypingMessageIndex(newMessages.length - 1);
-      return newMessages;
-    });
-
-    setTimeout(() => {
-      setDisplayedAiResponse(aiResponseContent);
-    }, 500); // Simulate a small delay before AI starts typing
   };
 
   useEffect(() => {
-    if (typingMessageIndex !== null && displayedAiResponse.length > 0) {
+    if (pendingAiMessage?.animating && displayedAiResponse.length > 0) {
       let i = 0;
       // Define a threshold for "first few lines" (e.g., first 3 newlines or 150 characters)
       const newlineIndices = [];
@@ -320,58 +318,55 @@ A **myocardial infarction (MI)**, commonly known as a **heart attack**, occurs w
       const threshold = newlineIndices.length === 3 ? newlineIndices[2] : Math.min(150, displayedAiResponse.length);
 
       const typingInterval = setInterval(() => {
-        setChatMessages((prevMessages) => {
-          const newMessages = [...prevMessages];
-          if (newMessages[typingMessageIndex]) {
-            newMessages[typingMessageIndex].content = displayedAiResponse.substring(0, i);
-          }
-          return newMessages;
-        });
-
-        // Determine how many characters to add in this step
-        // Slow for the first few lines, then significantly faster
-        const increment = i < threshold ? 1 : 15;
-        i += increment;
+        let nextI = i;
+        if (displayedAiResponse[i] === '<') {
+            const tagEnd = displayedAiResponse.indexOf('>', i);
+            if (tagEnd !== -1) {
+            nextI = tagEnd + 1;
+            } else {
+            nextI = i + 1;
+            }
+        } else {
+            // Determine how many characters to add in this step
+            // Slow for the first few lines, then significantly faster
+            const increment = i < threshold ? 1 : 15;
+            nextI = i + increment;
+        }
+        
+        i = nextI;
 
         if (i >= displayedAiResponse.length) {
-          clearInterval(typingInterval);
-          setChatMessages((prevMessages) => {
-            const newMessages = [...prevMessages];
-            if (newMessages[typingMessageIndex]) {
-              newMessages[typingMessageIndex].animating = false;
-              // Ensure the full content is set correctly at the end
-              newMessages[typingMessageIndex].content = displayedAiResponse;
+            clearInterval(typingInterval);
+            // Finalize message
+            if (pendingAiMessage) {
+                const finalMsg = { ...pendingAiMessage, content: displayedAiResponse, animating: false };
+                addMessage(finalMsg);
             }
-            return newMessages;
-          });
-          setTypingMessageIndex(null);
-          setDisplayedAiResponse('');
+            setPendingAiMessage(null);
+            setDisplayedAiResponse('');
+        } else {
+            setPendingAiMessage((prev) => {
+                if (!prev) return null;
+                return { ...prev, content: displayedAiResponse.substring(0, i) };
+            });
         }
       }, 20); // Typing speed (milliseconds per character)
 
       return () => clearInterval(typingInterval);
     }
-  }, [displayedAiResponse, typingMessageIndex]);
+  }, [displayedAiResponse, pendingAiMessage?.animating]);
 
 
-
-  const { selectedPatient } = usePatientContext();
 
   useEffect(() => {
     if (selectedPatient) {
       setChatContext({ type: 'SAVED_PATIENT_CHAT', patient: selectedPatient });
-      setChatMessages([]); // Clear chat messages when patient context changes
+      startNewChat(); // Clear chat messages when patient context changes
     } else {
       setChatContext({ type: 'GENERAL_CHAT' });
-      setChatMessages([]); // Clear chat messages when patient context changes
+      startNewChat(); // Clear chat messages when patient context changes
     }
   }, [selectedPatient]);
-
-
-
-
-
-
 
   const handleViewPatient = () => {
     if (selectedPatient) {
@@ -393,9 +388,10 @@ A **myocardial infarction (MI)**, commonly known as a **heart attack**, occurs w
   };
 
   const handleDetachPatient = () => {
-    setActivePatient(null);
+    onUpdatePatient(null);
+    deactivatePatientContextInSession();
     setChatContext({ type: 'GENERAL_CHAT' });
-    setChatMessages([]); // Clear chat messages when patient context is detached
+    startNewChat(); // Clear chat messages when patient context is detached
   };
 
   const handleSaveTemporaryPatient = () => {
@@ -415,7 +411,7 @@ A **myocardial infarction (MI)**, commonly known as a **heart attack**, occurs w
       });
       setActivePatient(newPatient.id);
       setChatContext({ type: 'SAVED_PATIENT_CHAT', patient: newPatient });
-      setChatMessages([]); // Clear chat messages after saving and switching context
+      startNewChat(); // Clear chat messages after saving and switching context
     }
   };
 
@@ -453,8 +449,15 @@ A **myocardial infarction (MI)**, commonly known as a **heart attack**, occurs w
                   closeConfirmationModal={closeConfirmationModal}
                   activatePatientContextInSession={activatePatientContextInSession}
                   deactivatePatientContextInSession={deactivatePatientContextInSession}
-                  handleToggleSidebar={handleToggleSidebar} />
-                <QuickClinicalActions onActionClick={handleQuickActionClick} isChatMode={false} />
+                  handleToggleSidebar={handleToggleSidebar}
+                  isLoading={isGenerating}
+                  onStop={handleStopResponse}
+                />
+                <QuickClinicalActions 
+                  onActionClick={handleQuickActionClick} 
+                  isChatMode={false} 
+                  isLoading={isGenerating}
+                />
               </div>
               <div className="explore-section">
                 <h2 className="explore-title">Explore what Dohrnii can help with</h2>
@@ -564,16 +567,12 @@ A **myocardial infarction (MI)**, commonly known as a **heart attack**, occurs w
               )}
               <div className="answer-display">
                 {chatMessages.map((message, index) => (
-                  <div key={index} className={message.type === 'user' ? 'user-message' : 'ai-message'}>
+                  <div key={index} className={message.type === 'user' ? `user-message ${message.content.length < 100 ? 'user-message-short' : 'user-message-long'}` : 'ai-message'}>
                     {message.type === 'user' ? (
-                      <p dangerouslySetInnerHTML={{ __html: message.content }}></p>
+                      <div dangerouslySetInnerHTML={{ __html: message.content }}></div>
                     ) : (
                       <>
-                        {message.animating ? (
-                          <p dangerouslySetInnerHTML={{ __html: message.content }}></p>
-                        ) : (
-                          <p dangerouslySetInnerHTML={{ __html: message.fullHtmlContent }}></p>
-                        )}
+                        <div dangerouslySetInnerHTML={{ __html: message.content }}></div>
                         {message.animating && <span className="typing-cursor">|</span>}
                         {!message.animating && message.references && message.references.length > 0 && (
                           <div className="citations-section">
@@ -610,13 +609,48 @@ A **myocardial infarction (MI)**, commonly known as a **heart attack**, occurs w
                     )}
                   </div>
                 ))}
+                {isLoading && (
+                  <div className="ai-message loading">
+                    <div className="loading-dots">
+                      <span></span><span></span><span></span>
+                    </div>
+                  </div>
+                )}
+                {error && (
+                  <div className="error-message-container">
+                    <p className="error-message">{error}</p>
+                    <button className="retry-button" onClick={() => handleQuestionSubmit(chatMessages[chatMessages.length - 1]?.content)}>Retry</button>
+                  </div>
+                )}
               </div>
             </div>
           )}
           {conversationStarted && (
             <div className="question-input-container fixed-bottom">
-              <QuestionInput onQuestionSubmit={handleQuestionSubmit} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion} isChatMode={true} onExcludeContextChange={setExcludeContext} excludeContext={excludeContext} openConfirmationModal={openConfirmationModal} isPatientContextActiveInSession={isPatientContextActiveInSession} isConfirmationModalOpen={isConfirmationModalOpen} patientToConfirmId={patientToConfirmId} isConfirmingNewPatient={isConfirmingNewPatient} closeConfirmationModal={closeConfirmationModal} activatePatientContextInSession={activatePatientContextInSession} deactivatePatientContextInSession={deactivatePatientContextInSession} handleToggleSidebar={handleToggleSidebar} />
-              <QuickClinicalActions onActionClick={handleQuickActionClick} isChatMode={true} />
+              <QuestionInput 
+                onQuestionSubmit={handleQuestionSubmit} 
+                currentQuestion={currentQuestion} 
+                setCurrentQuestion={setCurrentQuestion} 
+                isChatMode={true} 
+                onExcludeContextChange={setExcludeContext} 
+                excludeContext={excludeContext} 
+                openConfirmationModal={openConfirmationModal} 
+                isPatientContextActiveInSession={isPatientContextActiveInSession} 
+                isConfirmationModalOpen={isConfirmationModalOpen} 
+                patientToConfirmId={patientToConfirmId} 
+                isConfirmingNewPatient={isConfirmingNewPatient} 
+                closeConfirmationModal={closeConfirmationModal} 
+                activatePatientContextInSession={activatePatientContextInSession} 
+                deactivatePatientContextInSession={deactivatePatientContextInSession} 
+                handleToggleSidebar={handleToggleSidebar}
+                isLoading={isGenerating}
+                onStop={handleStopResponse}
+              />
+              <QuickClinicalActions 
+                onActionClick={handleQuickActionClick} 
+                isChatMode={true}
+                isLoading={isGenerating}
+              />
             </div>
           )}
         </div>

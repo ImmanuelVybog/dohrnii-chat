@@ -8,6 +8,10 @@ import './ClinicalReasoning.css';
 import CustomSelect from '../components/shared/CustomSelect';
 import { usePatientContext } from '../context/PatientContext';
 import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPatientSelector';
+import { apiClient } from '../services/apiClient';
+import referencesIconLight from '../assets/images/references-icon-light.svg';
+import referencesIconDark from '../assets/images/references-icon-dark.svg';
+import { useTheme } from '../context/ThemeContext';
 
 const clinicalScenarios = [
   {
@@ -122,10 +126,12 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
   const [scores, setScores] = useState('');
   const [clinicalQuestion, setClinicalQuestion] = useState('');
   const [aiResponse, setAiResponse] = useState(null);
+  const [references, setReferences] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { theme } = useTheme();
+  const [error, setError] = useState(null);
   const [autoFilledFields, setAutoFilledFields] = useState({});
   const [selectedScenario, setSelectedScenario] = useState(null);
-  const [usePatientContextToggle, setUsePatientContextToggle] = useState(true);
 
   useEffect(() => {
     if (selectedPatient) {
@@ -224,80 +230,44 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
     return context;
   };
 
-  const handleGenerateAssessment = () => {
+  const handleGenerateAssessment = async () => {
     setIsLoading(true);
+    setError(null);
 
-    let prompt = '';
-    if (selectedPatient) {
-      prompt += buildPatientContext(selectedPatient);
-    }
+    const payload = {
+      userInput: clinicalQuestion,
+      patientContext: apiClient.formatPatientContext(selectedPatient),
+      clinicalData: {
+        age,
+        sex,
+        chiefComplaint,
+        medicalConditions,
+        medications,
+        allergies,
+        vitals,
+        labs,
+        scores
+      }
+    };
 
-    prompt += `Clinical Scenario:\n`;
-    if (age) prompt += `Age: ${age}\n`;
-    if (sex) prompt += `Sex: ${sex}\n`;
-    if (chiefComplaint) prompt += `Chief Complaint: ${chiefComplaint}\n`;
-    if (medicalConditions.length > 0) prompt += `Medical Conditions: ${medicalConditions.join(', ')}\n`;
-    if (medications.length > 0) prompt += `Medications: ${medications.join(', ')}\n`;
-    if (allergies.length > 0) prompt += `Allergies: ${allergies.join(', ')}\n`;
-    if (vitals) prompt += `Vitals: ${vitals}\n`;
-    if (labs) prompt += `Labs: ${labs}\n`;
-    if (scores) prompt += `Scores: ${scores}\n`;
-    if (clinicalQuestion) prompt += `Clinical Question: ${clinicalQuestion}\n`;
-
-    console.log("AI Prompt:", prompt);
-
-    // Simulate API call
-    setTimeout(() => {
-      setAiResponse({
-        assessment: `Based on the provided clinical context, the patient presents with a chief complaint of ${chiefComplaint}.
-        Considering these details, and given the age (${age} years) and chief complaint, a preliminary assessment suggests a broad differential, including cardiac, pulmonary, and gastrointestinal etiologies.
-        Relevant medical history includes: ${medicalConditions.join(', ')}.
-        Current medications: ${medications.join(', ')}.
-        Known allergies: ${allergies.join(', ')}.
-        The clinical question posed was: "${clinicalQuestion}".
-        Further investigation is warranted to narrow down the diagnosis.`,
-        diagnosis: {
-          main: 'Atypical Chest Pain, likely Cardiac Ischemia',
-          differential: [
-            'Gastroesophageal Reflux Disease (GERD)',
-            'Musculoskeletal Chest Pain',
-            'Anxiety/Panic Disorder',
-            'Pneumonia'
-          ],
-          severity: 'high',
-          redFlag: true
-        },
-        plan: `<strong>1. Immediate Investigations:</strong>
-           - Electrocardiogram (ECG) to assess for acute ischemic changes.
-           - Cardiac biomarkers (Troponin I/T) to rule out myocardial injury.
-           - Chest X-ray to evaluate for pulmonary pathology (e.g., pneumonia, pneumothorax).
-           - Basic metabolic panel (BMP) and complete blood count (CBC).
-           <br/>
-        <strong>2. Management:</strong>
-           - Oxygen supplementation if SpO₂ < 94%.
-           - Intravenous access and cardiac monitoring.
-           - Pain control with nitrates (if no contraindications) or analgesics.
-           <br/>
-        <strong>3. Consultations:</strong>
-           - Cardiology consult for further evaluation and management of suspected cardiac ischemia.
-           - Gastroenterology consult if GERD is highly suspected after cardiac workup.
-           <br/>
-        <strong>4. Follow-up:</strong>
-           - Close monitoring of vital signs and symptoms.
-           - Re-evaluation of clinical status after initial interventions.`,
-        treatment: `Initial treatment focuses on stabilizing the patient and ruling out life-threatening conditions.
-        If cardiac ischemia is confirmed, management will include antiplatelet therapy (e.g., Aspirin), anticoagulation, beta-blockers, and statins, as per guideline recommendations.
-        For GERD, proton pump inhibitors (PPIs) would be initiated.
-        Musculoskeletal pain would be managed with NSAIDs and physical therapy.`,
-        evidenceSummary: `Evidence suggests that atypical presentations of cardiac events are common in older adults and women. Early and comprehensive cardiac workup is crucial to prevent adverse outcomes. Differential diagnoses should always be considered, and a systematic approach to investigation and management is recommended.`,
-        icd10Codes: ['I20.9', 'R07.4', 'K21.9'],
-      });
+    try {
+      const data = await apiClient.generateClinicalReasoning(payload);
+      if (data.ok) {
+        setAiResponse(data.content);
+        setReferences(data.references || []);
+      } else {
+        setError(data.content || 'An unexpected error occurred.');
+      }
+    } catch (err) {
+      console.error('Error generating assessment:', err);
+      setError('System encountered an issue. Please try again.');
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
   return (
-    <div className="clinical-reasoning-container">
+    <div className="workspaces-container">
       <div className="page-header">
         <h1>Clinical Reasoning</h1>
         <p>Get structured assessment and treatment plans based on patient context</p>
@@ -349,8 +319,9 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
               />
             </div>
             <div className="form-group">
-              <label htmlFor="sex">Sex</label>
+              <span id="sex-label" className="input-label">Sex</span>
               <CustomSelect
+                aria-labelledby="sex-label"
                 options={sexOptions}
                 value={sex}
                 onChange={setSex}
@@ -374,7 +345,7 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
           </div>
           <TagInput
             label="Medical Conditions"
-            placeholder="Add a medical condition"
+            placeholder="(e.g., Hypertension, Diabetes, Asthma) (Type and press enter)"
             tags={medicalConditions}
             onAddTag={(tag) => handleAddTag(tag, setMedicalConditions)}
             onRemoveTag={(tag) => handleRemoveTag(tag, setMedicalConditions)}
@@ -382,7 +353,7 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
           />
           <TagInput
             label="Medications"
-            placeholder="Add a medication"
+            placeholder="(e.g., Aspirin, Insulin, Metformin) (Type and press enter)"
             tags={medications}
             onAddTag={(tag) => handleAddTag(tag, setMedications)}
             onRemoveTag={(tag) => handleRemoveTag(tag, setMedications)}
@@ -390,7 +361,7 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
           />
           <TagInput
             label="Allergies"
-            placeholder="Add an allergy"
+            placeholder="(e.g., Shellfish, Eggs, Milk) (Type and press enter)"
             tags={allergies}
             onAddTag={(tag) => handleAddTag(tag, setAllergies)}
             onRemoveTag={(tag) => handleRemoveTag(tag, setAllergies)}
@@ -402,10 +373,12 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
           <div className="advanced-content">
               <div className="tag-input-container">
                 <div className="advanced-section-title form-group" style={{ marginBottom: '0px' }}>
-                  <h3>Vitals</h3>
+                  <h3 id="vitals-header">Vitals</h3>
                   <p className="helper-text">Recent vital signs influencing clinical risk assessment</p>
                 </div>
                 <input
+                  id="vitals-input"
+                  aria-labelledby="vitals-header"
                   type="text"
                   placeholder="e.g., BP 148/92 mmHg, HR 92 bpm, SpO₂ 97%"
                   value={vitals}
@@ -416,10 +389,12 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
 
               <div className="tag-input-container">
                 <div className="advanced-section-title form-group" style={{ marginBottom: '0px' }}>
-                  <h3>Labs</h3>
+                  <h3 id="labs-header">Labs</h3>
                   <p className="helper-text">Key laboratory values relevant to the current presentation</p>
                 </div>
                 <input
+                  id="labs-input"
+                  aria-labelledby="labs-header"
                   type="text"
                   placeholder="e.g., Troponin I 0.02 ng/mL, Creatinine 1.1 mg/dL"
                   value={labs}
@@ -431,10 +406,12 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
 
               <div className="tag-input-container">
                 <div className="advanced-section-title form-group" style={{ marginBottom: '0px' }}>
-                  <h3>Scores</h3>
+                  <h3 id="scores-header">Scores</h3>
                   <p className="helper-text">Clinical risk scores used in diagnostic or treatment decisions</p>
                 </div>
                 <input
+                  id="scores-input"
+                  aria-labelledby="scores-header"
                   type="text"
                   placeholder="e.g., HEART score 4 (moderate risk), ASCVD 18%"
                   value={scores}
@@ -446,9 +423,10 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
           </div>
         </CollapsibleSection>
         <div className="form-section">
-          <h2>Clinical Question</h2>
+          <h2 id="clinical-question-header">Clinical Question</h2>
           <div className="form-group">
             <textarea
+              aria-labelledby="clinical-question-header"
               id="clinical-question"
               value={clinicalQuestion}
               onChange={(e) => setClinicalQuestion(e.target.value)}
@@ -458,15 +436,16 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
             ></textarea>
           </div>
           <div className="clinical-reasoning-actions">
-            {selectedPatient && (
-              <label className="patient-context-toggle">
-                <input
-                  type="checkbox"
-                  checked={usePatientContextToggle}
-                  onChange={(e) => setUsePatientContextToggle(e.target.checked)}
-                />
-                Include Patient Context
-              </label>
+            {error && (
+              <div className="error-message-container">
+                <p className="error-message">{error}</p>
+                <button 
+                  className="retry-button" 
+                  onClick={handleGenerateAssessment}
+                >
+                  Retry
+                </button>
+              </div>
             )}
             <PrimaryActionButton
               onClick={handleGenerateAssessment}
@@ -481,31 +460,73 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
         <div className="ai-response-section">
           <div className="result-card-container">
             <h2>AI Generated Assessment and Plan</h2>
-            <ResultCard title="Assessment" content={<p>{aiResponse.assessment}</p>} />
-            <ResultCard
-              title="Diagnosis"
-              severity={aiResponse.diagnosis.severity}
-              redFlag={aiResponse.diagnosis.redFlag}
-              content={
-                <>
-                  <p><strong>Main Diagnosis:</strong> {aiResponse.diagnosis.main}</p>
-                  {aiResponse.diagnosis.differential && aiResponse.diagnosis.differential.length > 0 && (
+            
+            {typeof aiResponse === 'string' ? (
+              <ResultCard 
+                content={<div className="markdown-content" dangerouslySetInnerHTML={{ __html: aiResponse }} />} 
+              />
+            ) : (
+              <>
+                <ResultCard title="Assessment" content={<p>{aiResponse.assessment}</p>} />
+                <ResultCard
+                  title="Diagnosis"
+                  severity={aiResponse.diagnosis?.severity}
+                  redFlag={aiResponse.diagnosis?.redFlag}
+                  content={
                     <>
-                      <p><strong>Differential Diagnoses:</strong></p>
-                      <ul>
-                        {aiResponse.diagnosis.differential.map((item, index) => (
-                          <li key={index}>{item}</li>
-                        ))}
-                      </ul>
+                      <p><strong>Main Diagnosis:</strong> {aiResponse.diagnosis?.main}</p>
+                      {aiResponse.diagnosis?.differential && aiResponse.diagnosis.differential.length > 0 && (
+                        <>
+                          <p><strong>Differential Diagnoses:</strong></p>
+                          <ul>
+                            {aiResponse.diagnosis.differential.map((item, index) => (
+                              <li key={index}>{item}</li>
+                            ))}
+                          </ul>
+                        </>
+                      )}
                     </>
-                  )}
-                </>
-              }
-            />
-            <ResultCard title="Plan" content={<div dangerouslySetInnerHTML={{ __html: aiResponse.plan }} />} />
-            <ResultCard title="Treatment" content={<div dangerouslySetInnerHTML={{ __html: aiResponse.treatment }} />} />
-            <ResultCard title="Evidence Summary" content={<p>{aiResponse.evidenceSummary}</p>} />
-            <ResultCard title="ICD-10 Codes" content={<p>{aiResponse.icd10Codes.join(', ')}</p>} />
+                  }
+                />
+                <ResultCard title="Plan" content={<div dangerouslySetInnerHTML={{ __html: aiResponse.plan }} />} />
+                <ResultCard title="Treatment" content={<div dangerouslySetInnerHTML={{ __html: aiResponse.treatment }} />} />
+                <ResultCard title="Evidence Summary" content={<p>{aiResponse.evidenceSummary}</p>} />
+                <ResultCard title="ICD-10 Codes" content={<p>{aiResponse.icd10Codes?.join(', ')}</p>} />
+              </>
+            )}
+            
+            {references && references.length > 0 && (
+              <div className="citations-section">
+                <h4 className="citations-title">
+                  <img src={theme === 'light' ? referencesIconLight : referencesIconDark} alt="References" />
+                  References
+                </h4>
+                <div className="citations-list">
+                  {references.map((citation) => (
+                    <div className="citation-card" key={citation.id}>
+                      <div className="citation-header">
+                        <span className="citation-number">{citation.id}.</span>
+                        <a href={citation.url} target="_blank" rel="noopener noreferrer" className="citation-title">
+                          {citation.title}
+                        </a>
+                      </div>
+                      <div className="citation-meta">
+                        {citation.authors}
+                      </div>
+                      <div className="citation-journal-year">
+                        {citation.journal} • {citation.year}
+                      </div>
+                      {citation.tags && citation.tags.length > 0 && (
+                        <div className="citation-tags">
+                          {citation.tags.map(tag => <span className="citation-tag" key={tag}>{tag}</span>)}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <PrimaryActionButton label="Regenerate Assessment" onClick={handleGenerateAssessment} disabled={isLoading} />
           </div>
         </div>

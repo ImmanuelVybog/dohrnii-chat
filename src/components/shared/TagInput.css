@@ -9,6 +9,7 @@
   display: block;
   margin-bottom: 12px;
   color: var(--text-color-accent);
+  text-align: left;
 }
 
 .tag-input-field {
@@ -18,30 +19,36 @@
   border: 1px solid var(--border-color);
   padding: 5px;
   border-radius: 12px;
+  gap: 6px;
 }
 
 .tag {
+  white-space: nowrap;
+  background-color: var(--suggestion-button-bg);
+  border: 1px solid var(--suggestion-button-border);
+  color: var(--suggestion-button-text);
+  padding: 0.165rem 0.165rem 0.165rem 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-family: "Google Sans Flex", sans-serif;
+  font-size: 0.85rem;
+  transition: all 0.2s ease-in-out;
   display: flex;
   align-items: center;
-  background-color: #e0e0e0;
-  border-radius: 3px;
-  padding: 3px 7px;
-  margin: 2px;
-  font-size: 0.9em;
 }
 
 .tag-remove-button {
+  font-size: 1.2rem;
   background: none;
   border: none;
-  color: #888;
+  color: var(--suggestion-button-text);
   cursor: pointer;
-  margin-left: 5px;
-  font-weight: bold;
 }
 
 .tag-input {
+  font-family: "Google Sans Flex", sans-serif;
+  color: var(--text-color);
   flex-grow: 1;
-  color: var(--placeholder-color);
   background: none;
   border: none;
   outline: none;

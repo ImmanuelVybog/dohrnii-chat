@@ -1,6 +1,9 @@
 .account-menu-overlay {
   position: fixed;
-  bottom: 76px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,6 +11,10 @@
 }
 
 .account-menu-popup {
+  position: fixed;
+  bottom: 60px;
+  left: 113px;
+  transform: translateX(-50%);
   background: var(--background-color);
   border-radius: 12px;
   padding: 1rem;
@@ -51,6 +58,58 @@
   font-size: 0.85rem;
   color: var(--text-color-accent);
   text-align: left;
+}
+
+.settings-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.logout-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.settings-btn {
+  font-family: "Google Sans Flex", sans-serif;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--sidebar-text-color);
+  cursor: pointer;
+  font-size: 0.875rem;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.logout-btn {
+  font-family: "Google Sans Flex", sans-serif;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--sidebar-text-color);
+  cursor: pointer;
+  font-size: 0.875rem;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.settings-btn:hover {
+  background-color: var(--sidebar-item-hover-bg);
+  color: var(--primary-color);
+  padding: 0.5rem;
+}
+
+.logout-btn:hover {
+  background-color: var(--sidebar-item-hover-bg);
+  color: var(--primary-color);
+  padding: 0.5rem;
 }
 
 .account-menu-section {

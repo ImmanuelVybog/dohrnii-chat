@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import PrimaryActionButton from '../components/shared/PrimaryActionButton';
+import ResultCard from '../components/shared/ResultCard';
 import './VisitNotes.css';
 import { usePatientContext } from '../context/PatientContext';
 import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPatientSelector';
+import { useTheme } from '../context/ThemeContext';
+import { apiClient } from '../services/apiClient';
 
 const VisitNotes = ({ handleToggleSidebar }) => {
   const { selectedPatient, onUpdatePatient } = usePatientContext();
+  const { theme } = useTheme();
   const [noteType, setNoteType] = useState('SOAP Note');
   const [visitConversation, setVisitConversation] = useState('');
   const [icd10Codes, setIcd10Codes] = useState('');
   const [generatedNote, setGeneratedNote] = useState(null);
+  const [formattedNote, setFormattedNote] = useState(null);
+  const [structuredData, setStructuredData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [usePatientContextToggle, setUsePatientContextToggle] = useState(true);
 
   useEffect(() => {
@@ -32,49 +39,34 @@ const VisitNotes = ({ handleToggleSidebar }) => {
   }, [selectedPatient, usePatientContextToggle]);
 
 
-  const handleGenerateNote = () => {
-    if (!selectedPatient) {
-      alert('Please select a patient to generate notes for.');
-      return;
-    }
+  const handleGenerateNote = async () => {
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      let noteContent = {};
+    setError(null);
+    setGeneratedNote(null);
+    setStructuredData(null);
 
-      switch (noteType) {
-        case 'SOAP Note':
-          noteContent = {
-            subjective: `Patient reports: ${visitConversation.substring(0, 50)}...`,
-            objective: 'Vitals stable. Physical exam unremarkable.',
-            assessment: 'Patient condition stable. Continue current management.',
-            plan: 'Follow up in 2 weeks. Prescriptions refilled.',
-          };
-          break;
-        case 'Progress Note':
-          noteContent = {
-            progress: `Patient's progress since last visit: ${visitConversation.substring(0, 50)}...`,
-            findings: 'No new concerns. Tolerating medications well.',
-            plan: 'Continue monitoring. Adjust medication as needed.',
-          };
-          break;
-        case 'Discharge Summary':
-          noteContent = {
-            admissionDiagnosis: 'Example Admission Diagnosis',
-            dischargeDiagnosis: 'Example Discharge Diagnosis',
-            hospitalCourse: `Hospital course: ${visitConversation.substring(0, 50)}...`,
-            dischargeMedications: 'Medication A, Medication B',
-            followUp: 'PCP follow-up in 1 week.',
-          };
-          break;
-        default:
-          noteContent = {
-            note: `Generated note based on conversation: ${visitConversation}`,
-          };
+    const payload = {
+      userInput: visitConversation,
+      patientContext: apiClient.formatPatientContext(selectedPatient),
+      noteType,
+      icd10Codes
+    };
+
+    try {
+      const data = await apiClient.generateVisitNote(payload);
+      if (data.ok) {
+        setGeneratedNote(data.rawContent || data.content);
+        setFormattedNote(data.content);
+        setStructuredData(data.structured);
+      } else {
+        setError(data.content || 'An unexpected error occurred.');
       }
-      setGeneratedNote(noteContent);
+    } catch (err) {
+      console.error('Error generating visit note:', err);
+      setError('System encountered an issue. Please try again.');
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   const handleSaveNote = () => {
@@ -88,6 +80,7 @@ const VisitNotes = ({ handleToggleSidebar }) => {
       patientId: selectedPatient.id,
       type: noteType,
       content: generatedNote,
+      structured: structuredData,
       timestamp: new Date().toISOString(),
     };
 
@@ -107,7 +100,7 @@ const VisitNotes = ({ handleToggleSidebar }) => {
 
 
   return (
-    <div className="visit-notes-container">
+    <div className="workspaces-container">
       <div className="page-header">
         <h1>Visit Notes / Documentation</h1>
         <p>Create and manage visit notes for patient documentation</p>
@@ -151,26 +144,18 @@ const VisitNotes = ({ handleToggleSidebar }) => {
           </button>
         </div>
         <div className="form-section">
-          <h2>ICD-10 Codes (Optional)</h2>
-          <input
-            type="text"
-            value={icd10Codes}
-            onChange={(e) => setIcd10Codes(e.target.value)}
-            placeholder="Enter ICD-10 codes (e.g., I10, E11.9)"
-            className="icd10-input"
-          />
+          <div className="form-group">
+            <h2>ICD-10 Codes (Optional)</h2>
+            <input
+              type="text"
+              value={icd10Codes}
+              onChange={(e) => setIcd10Codes(e.target.value)}
+              placeholder="Enter ICD-10 codes (e.g., I10, E11.9)"
+              className="icd10-input"
+            />
+          </div>
         </div>
         <div className="visit-notes-actions">
-          {selectedPatient && (
-            <label className="patient-context-toggle">
-              <input
-                type="checkbox"
-                checked={usePatientContextToggle}
-                onChange={(e) => setUsePatientContextToggle(e.target.checked)}
-              />
-              Include Patient Context
-            </label>
-          )}
           <PrimaryActionButton
             label={loading ? 'Generating...' : 'Generate Note'}
             onClick={handleGenerateNote}
@@ -179,22 +164,85 @@ const VisitNotes = ({ handleToggleSidebar }) => {
         </div>
       </div>
 
-      {generatedNote && (
+      {error && (
+        <div className="error-message-container">
+          <p className="error-message">{error}</p>
+          <button className="retry-button" onClick={handleGenerateNote}>Retry</button>
+        </div>
+      )}
+
+      {structuredData && (
         <div className="generated-note-section">
-          <h2>Generated {noteType}</h2>
-          {Object.entries(generatedNote).map(([key, value]) => (
-            <div key={key} className="note-output-group">
-              <h3>{key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}</h3>
+          <div className="result-card-container">
+            <h2>Generated {noteType}</h2>
+            
+            {noteType === 'SOAP Note' && (
+              <>
+                <ResultCard title="Subjective" content={<p>{structuredData.subjective}</p>} />
+                <ResultCard title="Objective" content={<p>{structuredData.objective}</p>} />
+                <ResultCard title="Assessment" content={<p>{structuredData.assessment}</p>} />
+                <ResultCard 
+                  title="Plan" 
+                  content={
+                    <ul>
+                      {structuredData.plan.map((item, i) => <li key={i}>{item}</li>)}
+                    </ul>
+                  } 
+                />
+              </>
+            )}
+
+            {noteType === 'Progress Note' && (
+              <>
+                <ResultCard title="Summary" content={<p>{structuredData.summary}</p>} />
+                <ResultCard title="Vitals" content={<p>{structuredData.vitals}</p>} />
+                <ResultCard title="Assessment" content={<p>{structuredData.assessment}</p>} />
+                <ResultCard title="Plan" content={<p>{structuredData.plan}</p>} />
+              </>
+            )}
+
+            {noteType === 'Discharge Summary' && (
+              <>
+                <ResultCard title="Reason for Admission" content={<p>{structuredData.reasonForAdmission}</p>} />
+                <ResultCard title="Hospital Course" content={<p>{structuredData.hospitalCourse}</p>} />
+                <ResultCard 
+                  title="Discharge Medications" 
+                  content={
+                    <ul>
+                      {structuredData.dischargeMedications.map((item, i) => <li key={i}>{item}</li>)}
+                    </ul>
+                  } 
+                />
+                <ResultCard title="Follow-up" content={<p>{structuredData.followUp}</p>} />
+              </>
+            )}
+
+            {formattedNote && (
+              <div className="formatted-note-preview" style={{ marginTop: '2rem' }}>
+                <h2>Formatted Note Preview</h2>
+                <ResultCard 
+                  title={`${noteType} - Formatted`}
+                  content={<div className="markdown-content" dangerouslySetInnerHTML={{ __html: formattedNote }} />}
+                />
+              </div>
+            )}
+
+            <div className="raw-note-section" style={{ marginTop: '2rem' }}>
+              <h3>Editable Note Preview (Markdown)</h3>
               <textarea
-                value={value}
-                onChange={(e) => setGeneratedNote({ ...generatedNote, [key]: e.target.value })}
-                rows={Math.max(3, value.split('\n').length)}
+                value={generatedNote}
+                onChange={(e) => setGeneratedNote(e.target.value)}
+                rows={10}
                 className="editable-note-output"
+                style={{ width: '100%', marginBottom: '1rem' }}
               ></textarea>
             </div>
-          ))}
-          <PrimaryActionButton label="Copy to Clipboard" onClick={() => copyToClipboard(JSON.stringify(generatedNote, null, 2))} />
-          <PrimaryActionButton label="Save Note" onClick={handleSaveNote} disabled={!selectedPatient || !generatedNote} />
+
+            <div className="note-actions" style={{ display: 'flex', gap: '1rem' }}>
+              <PrimaryActionButton label="Copy to Clipboard" onClick={() => copyToClipboard(generatedNote)} />
+              <PrimaryActionButton label="Save Note" onClick={handleSaveNote} disabled={!selectedPatient || !generatedNote} />
+            </div>
+          </div>
         </div>
       )}
     </div>
