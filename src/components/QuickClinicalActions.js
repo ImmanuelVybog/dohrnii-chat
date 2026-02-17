@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './QuickClinicalActions.css';
-import downIcon from '../assets/images/down icon.svg';
-import upIcon from '../assets/images/up icon.svg';
+import downIconColor from '../assets/images/down icon color.svg';
+import upIconColor from '../assets/images/up icon color.svg';
 
 const QuickClinicalActions = ({ onActionClick, isChatMode, isLoading }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -62,7 +62,7 @@ const QuickClinicalActions = ({ onActionClick, isChatMode, isLoading }) => {
           >
             More
             <img 
-              src={isPopoverOpen ? upIcon : downIcon} 
+              src={isPopoverOpen ? upIconColor : downIconColor} 
               alt="toggle" 
               className={`more-arrow ${isPopoverOpen ? 'up' : 'down'}`}
             />

@@ -219,6 +219,17 @@
   --error-text: #f87171;
 }
 
+hr {
+  border: 0;
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 1rem 0;
+}
+
+.md-strong {
+  font-weight: 600;
+}
+
 .error-message-container {
   margin: 1rem 0;
   text-align: center;

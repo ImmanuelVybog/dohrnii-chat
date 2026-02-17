@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import './GlobalPatientSelector.css';
 import { getActivePatient, setActivePatient, clearActivePatient } from '../../services/patientService.js';
-import { Patient } from '../../types/patient';
 import { usePatientContext } from '../../context/PatientContext';
 import PatientSelectionModal from '../PatientSelectionModal/PatientSelectionModal';
 import Tooltip from '../shared/Tooltip';

@@ -10,41 +10,6 @@ import referencesIconDark from '../assets/images/references-icon-dark.svg';
 import { useTheme } from '../context/ThemeContext';
 import { apiClient } from '../services/apiClient';
 
-const mockGuidelines = [
-  {
-    id: '1',
-    title: 'AHA/ACC Guideline for the Management of Patients With Valvular Heart Disease',
-    source: 'American Heart Association / American College of Cardiology',
-    year: 2020,
-    summary: 'Comprehensive recommendations for the diagnosis and management of valvular heart disease.',
-    link: 'https://www.ahajournals.org/doi/10.1161/CIR.0000000000000923',
-  },
-  {
-    id: '2',
-    title: 'NICE Guideline: Diabetes in adults: management',
-    source: 'National Institute for Health and Care Excellence',
-    year: 2019,
-    summary: 'Evidence-based recommendations for the management of type 1 and type 2 diabetes in adults.',
-    link: 'https://www.nice.org.uk/guidance/ng28',
-  },
-  {
-    id: '3',
-    title: 'ATS/IDSA Clinical Practice Guidelines: Management of Community-Acquired Pneumonia',
-    source: 'American Thoracic Society / Infectious Diseases Society of America',
-    year: 2019,
-    summary: 'Guidelines for the diagnosis and treatment of community-acquired pneumonia in adults.',
-    link: 'https://www.atsjournals.org/doi/full/10.1164/rccm.201908-1523ST',
-  },
-  {
-    id: '4',
-    title: 'WHO Guidelines for the pharmacological treatment of hypertension in adults',
-    source: 'World Health Organization',
-    year: 2021,
-    summary: 'Recommendations on the use of medicines to treat hypertension in adults.',
-    link: 'https://www.who.int/publications/i/item/9789240033986',
-  },
-];
-
 const specialtyOptions = [
   { value: '', label: 'All Specialties' },
   { value: 'heart', label: 'Cardiology' },

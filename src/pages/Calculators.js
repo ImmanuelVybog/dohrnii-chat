@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { usePatientContext } from '../context/PatientContext';
 import PrimaryActionButton from '../components/shared/PrimaryActionButton';
 import ResultCard from '../components/shared/ResultCard';
-import CollapsibleSection from '../components/shared/CollapsibleSection';
 import CustomSelect from '../components/shared/CustomSelect';
 import './Calculators.css';
 import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPatientSelector';

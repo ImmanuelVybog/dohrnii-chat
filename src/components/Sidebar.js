@@ -34,7 +34,6 @@ const Sidebar = ({ questions, activeConversationId, onQuestionSelect, onOpenAcco
     const [isHovered, setIsHovered] = useState(false);
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
     const [accountButtonRect, setAccountButtonRect] = useState(null);
-    const [isUploadContextModalOpen, setIsUploadContextModalOpen] = useState(false);
     const { allPatients, refreshPatients, onUpdatePatient, activePatientId, activatePatientContextInSession, deactivatePatientContextInSession } = usePatientContext();
     const { isDarkMode } = useTheme();
     const [openPatientOptionsMenuId, setOpenPatientOptionsMenuId] = useState(null);
@@ -65,10 +64,6 @@ const Sidebar = ({ questions, activeConversationId, onQuestionSelect, onOpenAcco
         onUpdatePatient(newlyActivePatient);
         activatePatientContextInSession(patientId);
       }
-    };
-
-    const handleOpenUploadContextModal = () => {
-      setIsUploadContextModalOpen(true);
     };
 
     const handleToggleQuestionHistory = () => {

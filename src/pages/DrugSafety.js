@@ -32,7 +32,7 @@ const DrugSafety = ({ isSidebarOpen, handleToggleSidebar, isAuthenticated, user,
   const [references, setReferences] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [autoFilledFields, setAutoFilledFields] = useState({});
+  const [autoFilledFields] = useState({});
 
   const [aiResponse, setAiResponse] = useState('');
 

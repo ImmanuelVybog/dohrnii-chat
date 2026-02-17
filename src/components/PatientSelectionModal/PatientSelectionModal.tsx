@@ -70,7 +70,7 @@ const PatientSelectionModal: React.FC<PatientSelectionModalProps> = ({ isOpen, o
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen, refreshPatients]);
+  }, [isOpen, onClose, refreshPatients]);
 
 
   const sexOptions = [

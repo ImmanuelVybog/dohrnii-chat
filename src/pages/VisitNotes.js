@@ -4,12 +4,10 @@ import ResultCard from '../components/shared/ResultCard';
 import './VisitNotes.css';
 import { usePatientContext } from '../context/PatientContext';
 import GlobalPatientSelector from '../components/GlobalPatientSelector/GlobalPatientSelector';
-import { useTheme } from '../context/ThemeContext';
 import { apiClient } from '../services/apiClient';
 
 const VisitNotes = ({ handleToggleSidebar }) => {
   const { selectedPatient, onUpdatePatient } = usePatientContext();
-  const { theme } = useTheme();
   const [noteType, setNoteType] = useState('SOAP Note');
   const [visitConversation, setVisitConversation] = useState('');
   const [icd10Codes, setIcd10Codes] = useState('');
@@ -18,10 +16,9 @@ const VisitNotes = ({ handleToggleSidebar }) => {
   const [structuredData, setStructuredData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [usePatientContextToggle, setUsePatientContextToggle] = useState(true);
 
   useEffect(() => {
-    if (selectedPatient && usePatientContextToggle) {
+    if (selectedPatient && usePatientContext) {
       let patientContext = `Patient: ${selectedPatient.fullName}\n`;
       if (selectedPatient.chronicConditions && selectedPatient.chronicConditions.length > 0) {
         patientContext += `Chronic Conditions: ${selectedPatient.chronicConditions.map(c => c.name).join(', ')}\n`;
@@ -36,7 +33,7 @@ const VisitNotes = ({ handleToggleSidebar }) => {
     } else {
       setVisitConversation('');
     }
-  }, [selectedPatient, usePatientContextToggle]);
+  }, [selectedPatient, usePatientContext]);
 
 
   const handleGenerateNote = async () => {

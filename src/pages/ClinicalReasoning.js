@@ -197,39 +197,6 @@ const ClinicalReasoning = ({ openConfirmationModal, isConfirmationModalOpen, pat
     setAutoFilledFields({});
   };
 
-  // Function to construct patient context string
-  const buildPatientContext = (patient) => {
-    if (!patient) return '';
-
-    let context = `Patient Information:\n`;
-    context += `Full Name: ${patient.fullName}\n`;
-    context += `Age: ${patient.age}\n`;
-    context += `Sex: ${patient.sex}\n`;
-    if (patient.chronicConditions && patient.chronicConditions.length > 0) {
-      context += `Chronic Conditions: ${patient.chronicConditions.map(c => c.name).join(', ')}\n`;
-    }
-    if (patient.longTermMedications && patient.longTermMedications.length > 0) {
-      context += `Long-Term Medications: ${patient.longTermMedications.map(m => `${m.name} (${m.dose})`).join(', ')}\n`;
-    }
-    if (patient.allergies && patient.allergies.length > 0) {
-      context += `Allergies: ${patient.allergies.map(a => a.substance).join(', ')}\n`;
-    }
-    if (patient.manualTextContext) {
-      context += `Manual Text Context: ${patient.manualTextContext}\n`;
-    }
-    if (patient.uploadedFiles && patient.uploadedFiles.length > 0) {
-      context += `Uploaded File Context:\n`;
-      patient.uploadedFiles.forEach(file => {
-        context += `  - File: ${file.name} (${file.type})\n`;
-        if (file.extractedText) {
-          context += `    Extracted Text: ${file.extractedText.substring(0, 200)}...\n`; // Limit text for prompt
-        }
-      });
-    }
-    context += `\n`;
-    return context;
-  };
-
   const handleGenerateAssessment = async () => {
     setIsLoading(true);
     setError(null);

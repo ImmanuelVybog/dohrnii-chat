@@ -79,7 +79,7 @@ const Home = ({ openConfirmationModal, isConfirmationModalOpen, patientToConfirm
     if (conversationStarted) {
       scrollToBottom();
     }
-  }, [chatMessages.length, conversationStarted, displayedAiResponse, pendingAiMessage]);
+  }, [chatMessages.length, conversationStarted, displayedAiResponse, pendingAiMessage, addMessage]);
 
 
   const handleQuickActionClick = (message) => {
@@ -366,7 +366,7 @@ const Home = ({ openConfirmationModal, isConfirmationModalOpen, patientToConfirm
       setChatContext({ type: 'GENERAL_CHAT' });
       startNewChat(); // Clear chat messages when patient context changes
     }
-  }, [selectedPatient]);
+  }, [selectedPatient, startNewChat]);
 
   const handleViewPatient = () => {
     if (selectedPatient) {

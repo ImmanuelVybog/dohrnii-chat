@@ -28,16 +28,13 @@ const QuestionInput = ({
   const setQuestion = setCurrentQuestion;
   const textareaRef = useRef(null);
 
-  // The fixed prefix text
-  const prefix = "Ask Dohrnii ";
-
   // Questions to animate
   const suggestions = useMemo(() => [
-    "what is causing my headache?",
-    "how to reduce stress?",
-    "why am I feeling tired?",
-    "what foods improve immunity?",
-    "should I see a doctor?"
+    "Summarize this patient and highlight key red flags",
+    "Generate a focused differential diagnosis",
+    "Suggest initial investigations and next steps",
+    "Create a concise assessment and plan",
+    "Flag potential medication risks or interactions"
   ], []);
 
   const [animatedText, setAnimatedText] = useState("");
@@ -120,7 +117,7 @@ const QuestionInput = ({
             onChange={(e) => setQuestion(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={isLoading}
-            placeholder={isChatMode ? "Ask Dohrnii anything" : prefix + animatedText}
+            placeholder={isChatMode ? "Ask Dohrnii anything" : animatedText}
             className={`question-input-field ${isChatMode ? '' : 'animated-placeholder'}`}
           />
         </div>

@@ -36,6 +36,7 @@ const CustomSelect = ({ options, value, onChange, placeholder, className, 'aria-
       ref={selectRef}
       role="combobox"
       aria-expanded={isOpen}
+      aria-controls="custom-select-options"
       aria-haspopup="listbox"
       aria-labelledby={ariaLabelledBy}
       tabIndex={0}

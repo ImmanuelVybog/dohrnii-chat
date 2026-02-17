@@ -203,13 +203,13 @@ const formatMarkdown = (text) => {
     .replace(/^### (.*$)/gim, '<h4>$1</h4>')
     .replace(/^## (.*$)/gim, '<h3>$1</h3>')
     .replace(/^# (.*$)/gim, '<h2>$1</h2>')
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*\*(.*?)\*\*/g, '<span class="md-strong">$1</span>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
     .replace(/^\s*-\s+(.*$)/gim, '<ul><li>$1</li></ul>')
     .replace(/<\/ul>\s*<ul>/gim, '')
     .replace(/^\s*\d+\.\s+(.*$)/gim, '<ol><li>$1</li></ol>')
     .replace(/<\/ol>\s*<ol>/gim, '')
-    .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
+    .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
     .replace(/^\s*---+\s*$/gim, '<hr/>')
     .replace(/\n/g, '<br/>');
 
