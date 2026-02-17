@@ -305,6 +305,11 @@ const Home = ({ openConfirmationModal, isConfirmationModalOpen, patientToConfirm
     }
   };
 
+  const pendingAiMessageRef = useRef(pendingAiMessage);
+  useEffect(() => {
+    pendingAiMessageRef.current = pendingAiMessage;
+  }, [pendingAiMessage]);
+
   useEffect(() => {
     if (pendingAiMessage?.animating && displayedAiResponse.length > 0) {
       let i = 0;
@@ -338,8 +343,8 @@ const Home = ({ openConfirmationModal, isConfirmationModalOpen, patientToConfirm
         if (i >= displayedAiResponse.length) {
             clearInterval(typingInterval);
             // Finalize message
-            if (pendingAiMessage) {
-                const finalMsg = { ...pendingAiMessage, content: displayedAiResponse, animating: false };
+            if (pendingAiMessageRef.current) {
+                const finalMsg = { ...pendingAiMessageRef.current, content: displayedAiResponse, animating: false };
                 addMessage(finalMsg);
             }
             setPendingAiMessage(null);
@@ -354,7 +359,7 @@ const Home = ({ openConfirmationModal, isConfirmationModalOpen, patientToConfirm
 
       return () => clearInterval(typingInterval);
     }
-  }, [displayedAiResponse, pendingAiMessage?.animating]);
+  }, [displayedAiResponse, pendingAiMessage?.animating, addMessage]);
 
 
 

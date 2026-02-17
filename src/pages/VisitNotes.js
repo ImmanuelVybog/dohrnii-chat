@@ -18,7 +18,7 @@ const VisitNotes = ({ handleToggleSidebar }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (selectedPatient && usePatientContext) {
+    if (selectedPatient) {
       let patientContext = `Patient: ${selectedPatient.fullName}\n`;
       if (selectedPatient.chronicConditions && selectedPatient.chronicConditions.length > 0) {
         patientContext += `Chronic Conditions: ${selectedPatient.chronicConditions.map(c => c.name).join(', ')}\n`;
@@ -33,7 +33,7 @@ const VisitNotes = ({ handleToggleSidebar }) => {
     } else {
       setVisitConversation('');
     }
-  }, [selectedPatient, usePatientContext]);
+  }, [selectedPatient]);
 
 
   const handleGenerateNote = async () => {
