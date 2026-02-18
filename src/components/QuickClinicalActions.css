@@ -183,7 +183,7 @@ body.dark-mode .popover-action-item:hover {
 
 /* Responsive Design */
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
 
   .primary-actions-row {
     flex-wrap: wrap;

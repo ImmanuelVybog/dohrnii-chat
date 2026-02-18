@@ -27,3 +27,61 @@
 .main-content.patient-sidebar-open {
   margin-right: 300px; /* Same as patient sidebar width */
 }
+
+/* Mobile Header Styles */
+.mobile-header {
+  display: none; /* Hidden on desktop */
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: var(--background-color);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 900;
+}
+
+.mobile-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-logo {
+  height: 30px;
+  width: auto;
+  cursor: pointer;
+}
+
+.mobile-new-chat-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-new-chat-btn:hover {
+  background-color: var(--sidebar-item-hover-bg);
+}
+
+.mobile-new-chat-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .main-content.sidebar-open,
+  .main-content.sidebar-closed {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .mobile-header {
+    display: flex; /* Visible on mobile */
+  }
+}

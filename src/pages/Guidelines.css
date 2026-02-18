@@ -18,10 +18,10 @@
 }
 
 .search-results-section h2 {
-  color: #16ac9f;
-  margin-bottom: 20px;
+  font-size: 20px;
+  color: var(--primary-color);
+  font-weight: 600;
   text-align: center;
-  font-weight: 500;
 }
 
 .guideline-list .result-card {

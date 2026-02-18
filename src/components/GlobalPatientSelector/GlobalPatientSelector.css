@@ -31,14 +31,12 @@
 }
 
 .detach-patient-btn {
-  font-family: "Google Sans Flex", sans-serif;
+  display: flex;
   background-color: transparent;
-  border: 1px solid var(--hero-subtitle-color);
-  color: var(--hero-subtitle-color);
-  padding: 8px 15px;
+  border: none;
   border-radius: 10rem;
+  padding: 0;
   cursor: pointer;
-  font-size: 0.9em;
   transition: background-color 0.2s ease;
 }
 
@@ -88,7 +86,7 @@
 
 .patient-item.active {
   background-color: var(--selected-item-background); /* Style for active patient in list */
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .patient-item.no-patients {

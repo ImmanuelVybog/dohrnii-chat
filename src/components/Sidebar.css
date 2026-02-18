@@ -15,33 +15,51 @@
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-gutter: stable; /* Reserves space for scrollbar to prevent layout jerk */
+  /* scrollbar-gutter: stable; Removed to fix layout shift on closed sidebar */
 }
 
-.sidebar::-webkit-scrollbar {
-  width: 4px; /* Reduced width */
-}
-
-.sidebar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.2); /* Subtle white/grey thumb */
-  border-radius: 10px;
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+.sidebar.open {
+  scrollbar-gutter: stable;
 }
 
 .sidebar.closed {
   width: 60px;
 }
 
+/* Wrapper classes for Full vs Mini sidebar content */
+.sidebar-full {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.sidebar-mini {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Toggle visibility based on sidebar state */
+.sidebar.open .sidebar-full {
+  display: flex;
+}
+.sidebar.open .sidebar-mini {
+  display: none;
+}
+
+.sidebar.closed .sidebar-full {
+  display: none;
+}
+.sidebar.closed .sidebar-mini {
+  display: flex;
+}
+
 .sidebar-content {
   flex-grow: 1;
-  padding: 0px 15px 20px 15px;
+  padding: 0px 12px;
 }
 
 .sidebar-header {
@@ -51,7 +69,7 @@
   position: sticky;
   top: 0;
   background-color: var(--sidebar-background);
-  padding: 20px 15px;
+  padding: 20px 12px;
 }
 
 .app-logo {
@@ -59,15 +77,23 @@
   height: auto;
 }
 
+.sidebar-toggle-button-container {
+  display: flex;
+  justify-content: center;
+  width: 30px;
+  height: auto;
+  padding-top: 16px;
+}
+
 .sidebar-toggle-container {
   display: flex;
   justify-content: center;
-  width: 60px;
-  height: 60px;
-  padding-top: 20px;
+  align-items: center;
 }
 
 .sidebar-toggle-button {
+  width: 24px;
+  height: 36px;
   background: none;
   border: none;
   cursor: pointer;
@@ -129,11 +155,19 @@
   cursor: pointer;
   font-size: 0.875rem;
   transition: color 0.2s ease;
-  display: block;
+  display: flex;
+  align-items: center;
   text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.workspace-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  flex-shrink: 0;
 }
 
 .question-list, .workspace-list {
@@ -174,8 +208,8 @@
 
 .sidebar.closed .app-logo {
   width: 30px;
-  height: auto;
-  margin: 7px auto 0 auto;
+  height: 36px;
+  margin: 16px auto 0 auto;
   display: block;
 }
 
@@ -259,6 +293,11 @@
 .sidebar.closed .account-btn {
   justify-content: center;
   padding: 0;
+}
+
+/* Overlay Styles */
+.sidebar-overlay {
+  display: none;
 }
 
 .sidebar.closed .account-btn .account-text {
@@ -365,6 +404,7 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
+  opacity: 0;
   transition: opacity 0.3s ease-in-out;
 }
 
@@ -394,7 +434,10 @@
   padding: 0;
 }
 
-
+.sidebar-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
 
 .toggle-icon {
   font-size: 0.9em;
@@ -408,20 +451,9 @@
   padding-bottom: 22px; /* Ensure space for the last patient's delete popup */
 }
 
-.patient-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.patient-list::-webkit-scrollbar-thumb {
-  background-color: var(--border-color);
-  border-radius: 3px;
-}
-
 .patient-item {
   padding: 8px 10px;
-  margin-bottom: 0.4rem;
-  background-color: var(--background-color);
-  border: 1px solid var(--border-color);
+  margin-bottom: 2px;
   border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -491,14 +523,14 @@
 }
 
 .patient-item.active {
-  background-color: #d4edda;
-  border-color: #28a745;
-  color: #155724;
+  background-color: var(--suggestion-button-bg);
+  border-color: var(--suggestion-button-border);
+  color: var(--suggestion-button-text);
 }
 
 .patient-item.no-patients {
   font-style: italic;
-  color: #777;
+  color: var(--text-color-accent);
   text-align: center;
   padding: 10px;
 }
@@ -625,4 +657,42 @@
 
 .create-patient-modal .modal-actions button:last-child:hover {
   background-color: var(--hover-color);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 280px !important;
+    max-width: 80%;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: none;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .sidebar.closed {
+      width: 280px !important;
+      transform: translateX(-100%);
+  }
+
+  /* Force full content to be visible on mobile even if class is 'closed' */
+  /* This handles the slide-out animation where we want the full sidebar to slide out */
+  .sidebar.closed .sidebar-full {
+    display: flex !important;
+  }
+  
+  /* Hide mini sidebar on mobile always */
+  .sidebar.closed .sidebar-mini {
+    display: none !important;
+  }
+  .sidebar.open .sidebar-mini {
+    display: none !important;
+  }
+
+  .sidebar-overlay {
+    display: block;
+  }
 }

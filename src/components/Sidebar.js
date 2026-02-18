@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import AccountMenuPopup from './AccountMenuPopup';
 import './Sidebar.css';
+import Tooltip from '../components/shared/Tooltip';
 import logo from '../assets/images/Dohrnii Logo.svg';
 import logoIcon from '../assets/images/Dohrnii Logo Icon.svg';
 import newChatIcon from '../assets/images/lets-icons--chat-plus.svg';
@@ -9,7 +10,30 @@ import dropdownIconUp from '../assets/images/up icon.svg';
 import userIconLight from '../assets/images/user-icon-light.svg';
 import userIconDark from '../assets/images/user-icon-dark.svg';
 import userIconHover from '../assets/images/user-icon-hover.svg';
-import { Squash } from 'hamburger-react';
+import sidebarCloseIcon from '../assets/images/lucide_sidebar-close.svg';
+import sidebarOpenIcon from '../assets/images/lucide_sidebar-open.svg';
+
+/**Workspaces-icons */
+import clinicalReasoningIconLight from '../assets/images/Workspaces-icons/lucide_brain-light.svg';
+import clinicalReasoningIconDark from '../assets/images/Workspaces-icons/lucide_brain-dark.svg';
+import clinicalReasoningIconActive from '../assets/images/Workspaces-icons/lucide_brain-active.svg';
+import visitnoteIconLight from '../assets/images/Workspaces-icons/lucide_clipboard-list-light.svg';
+import visitnoteIconDark from '../assets/images/Workspaces-icons/lucide_clipboard-list-dark.svg';
+import visitnoteIconActive from '../assets/images/Workspaces-icons/lucide_clipboard-list-active.svg';
+import drugsafetyIconLight from '../assets/images/Workspaces-icons/lucide_pill-light.svg';
+import drugsafetyIconDark from '../assets/images/Workspaces-icons/lucide_pill-dark.svg';
+import drugsafetyIconActive from '../assets/images/Workspaces-icons/lucide_pill-active.svg';
+import guidelinesIconLight from '../assets/images/Workspaces-icons/lucide_book-open-light.svg';
+import guidelinesIconDark from '../assets/images/Workspaces-icons/lucide_book-open-dark.svg';
+import guidelinesIconActive from '../assets/images/Workspaces-icons/lucide_book-open-active.svg';
+import calculatorIconLight from '../assets/images/Workspaces-icons/lucide_calculator-light.svg';
+import calculatorIconDark from '../assets/images/Workspaces-icons/lucide_calculator-dark.svg';
+import calculatorIconActive from '../assets/images/Workspaces-icons/lucide_calculator-active.svg';
+import differentialdiagnosisIconLight from '../assets/images/Workspaces-icons/lucide_network-light.svg';
+import differentialdiagnosisIconDark from '../assets/images/Workspaces-icons/lucide_network-dark.svg';
+import differentialdiagnosisIconActive from '../assets/images/Workspaces-icons/lucide_network-active.svg';
+
+
 import { useNavigate, NavLink } from 'react-router-dom';
 import { usePatientContext } from '../context/PatientContext';
 import { setActivePatient, getActivePatient, deletePatient } from '../services/patientService';
@@ -90,10 +114,50 @@ const Sidebar = ({ questions, activeConversationId, onQuestionSelect, onOpenAcco
     setOpenPatientOptionsMenuId(null); // Close the options menu
   };
 
+  const workspaceLinks = [
+    { to: '/clinical-reasoning', label: 'Clinical Reasoning', iconLight: clinicalReasoningIconLight, iconDark: clinicalReasoningIconDark, iconActive: clinicalReasoningIconActive },
+    { to: '/visit-notes', label: 'Visit Notes', iconLight: visitnoteIconLight, iconDark: visitnoteIconDark, iconActive: visitnoteIconActive },
+    { to: '/drug-safety', label: 'Drug Safety', iconLight: drugsafetyIconLight, iconDark: drugsafetyIconDark, iconActive: drugsafetyIconActive },
+    { to: '/guidelines', label: 'Guidelines', iconLight: guidelinesIconLight, iconDark: guidelinesIconDark, iconActive: guidelinesIconActive },
+    { to: '/calculators', label: 'Calculators', iconLight: calculatorIconLight, iconDark: calculatorIconDark, iconActive: calculatorIconActive },
+    { to: '/differential-diagnosis', label: 'Differential Diagnosis', iconLight: differentialdiagnosisIconLight, iconDark: differentialdiagnosisIconDark, iconActive: differentialdiagnosisIconActive },
+  ];
+
+  const WorkspaceLinkItem = ({ to, label, iconLight, iconDark, iconActive }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    
+    return (
+      <li>
+        <NavLink 
+          to={to} 
+          className={({ isActive }) => (isActive ? 'active-link' : '')}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {({ isActive }) => (
+            <>
+              <img 
+                src={isActive || isHovered ? iconActive : (isDarkMode ? iconDark : iconLight)} 
+                alt={`${label} Icon`} 
+                className="workspace-icon" 
+              />
+              {label}
+            </>
+          )}
+        </NavLink>
+      </li>
+    );
+  };
+
 
   return (
-    <aside className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
-      {isSidebarOpen && (
+    <>
+      <div 
+        className={`sidebar-overlay ${isSidebarOpen ? 'visible' : ''}`} 
+        onClick={onToggleSidebar}
+      />
+      <aside className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
+      <div className="sidebar-full">
         <div className="sidebar-header">
           <img
             src={logo}
@@ -102,10 +166,14 @@ const Sidebar = ({ questions, activeConversationId, onQuestionSelect, onOpenAcco
             onClick={handleGoHome}
             style={{ cursor: 'pointer' }}
           />
-          <Squash toggled={isSidebarOpen} toggle={onToggleSidebar} color="#16AC9F" className="sidebar-toggle-button" />
+          <img 
+            src={sidebarCloseIcon} 
+            alt="Close Sidebar" 
+            className="sidebar-toggle-button" 
+            onClick={onToggleSidebar} 
+            style={{ cursor: 'pointer' }} 
+          />
         </div>
-      )}
-      {isSidebarOpen && (
         <div className="sidebar-content">
           <button className="new-chat-btn" onClick={onNewChat}>
               <img src={newChatIcon} alt="New Chat" className="new-chat-icon" />
@@ -115,36 +183,9 @@ const Sidebar = ({ questions, activeConversationId, onQuestionSelect, onOpenAcco
           <div className="workspaces-section">
             <h3 className="sidebar-title">Workspaces</h3>
             <ul className="workspace-list">
-              <li>
-                <NavLink to="/clinical-reasoning" className={({ isActive }) => (isActive ? 'active-link' : '')}>
-                  Clinical Reasoning
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/visit-notes" className={({ isActive }) => (isActive ? 'active-link' : '')}>
-                  Visit Notes
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/drug-safety" className={({ isActive }) => (isActive ? 'active-link' : '')}>
-                  Drug Safety
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/guidelines" className={({ isActive }) => (isActive ? 'active-link' : '')}>
-                  Guidelines
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/calculators" className={({ isActive }) => (isActive ? 'active-link' : '')}>
-                  Calculators
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/differential-diagnosis" className={({ isActive }) => (isActive ? 'active-link' : '')}>
-                  Differential Diagnosis
-                </NavLink>
-              </li>
+              {workspaceLinks.map((link) => (
+                <WorkspaceLinkItem key={link.to} {...link} />
+              ))}
             </ul>
           </div>
 
@@ -218,27 +259,37 @@ const Sidebar = ({ questions, activeConversationId, onQuestionSelect, onOpenAcco
             )}
           </div>
         </div>
-      )}
-      {!isSidebarOpen && (
+      </div>
+      <div className="sidebar-mini">
         <div className="sidebar-closed" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
           <div className="sidebar-toggle-container">
             {isHovered ? (
-              <Squash toggled={isSidebarOpen} toggle={onToggleSidebar} color="#16AC9F" className="sidebar-toggle-button" />
+              <div className="sidebar-toggle-button-container">
+                <Tooltip text="Open Sidebar" position="right">
+                  <img 
+                    src={sidebarOpenIcon} 
+                    alt="Open Sidebar" 
+                    className="sidebar-toggle-button" 
+                    onClick={onToggleSidebar} 
+                  />
+                </Tooltip>
+              </div>
             ) : (
               <img
                 src={logoIcon}
                 alt="VY LABS DOHRNII Logo"
                 className="app-logo"
                 onClick={handleGoHome}
-                style={{ cursor: 'pointer' }}
               />
             )}
           </div>
           <button className="new-chat-btn" onClick={onNewChat}>
-            <img src={newChatIcon} alt="New Chat" className="new-chat-icon" />
+            <Tooltip text="New Chat" position="right">
+              <img src={newChatIcon} alt="New Chat" className="new-chat-icon" />
+            </Tooltip>
           </button>
         </div>
-      )}
+      </div>
       <div className="sidebar-footer">
         <button
           className="account-btn"
@@ -268,6 +319,7 @@ const Sidebar = ({ questions, activeConversationId, onQuestionSelect, onOpenAcco
         buttonRect={accountButtonRect}
       />
     </aside>
+    </>
   );
 };
 

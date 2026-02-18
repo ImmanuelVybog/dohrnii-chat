@@ -1,17 +1,11 @@
 .result-card {
   background-color: var(--citation-card-bg);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   padding: 20px;
   margin-bottom: 24px;
   position: relative;
   border: 1px solid var(--citation-card-border);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.result-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .result-card-title {

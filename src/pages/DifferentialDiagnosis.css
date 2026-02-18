@@ -9,8 +9,8 @@
 }
 
 .diagnosis-results-section h2 {
+  font-size: 20px;
   color: var(--primary-color);
-  margin-bottom: 20px;
+  font-weight: 600;
   text-align: center;
-  font-weight: 500;
 }

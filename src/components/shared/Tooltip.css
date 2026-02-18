@@ -1,27 +1,105 @@
 .tooltip-container {
-  position: relative;
-  display: inline-block;
-}
-
-.tooltip-box {
-  position: absolute;
-  bottom: 125%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 24px;
-  white-space: nowrap;
-  z-index: 1000;
-  font-size: 0.875rem;
-  font-weight: 300;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  --tooltip-gap: 16px;
 }
 
 .tooltip-container:hover .tooltip-box {
   opacity: 1;
   visibility: visible;
+}
+
+.tooltip-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Base tooltip */
+.tooltip-box {
+  position: absolute;
+  background: #111;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+}
+
+
+@keyframes tooltipFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* TOP */
+.tooltip-top .tooltip-box {
+  bottom: calc(100% + var(--tooltip-gap));
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* RIGHT */
+.tooltip-right .tooltip-box {
+  left: calc(100% + var(--tooltip-gap));
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* BOTTOM */
+.tooltip-bottom .tooltip-box {
+  top: calc(100% + var(--tooltip-gap));
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* LEFT */
+.tooltip-left .tooltip-box {
+  right: calc(100% + var(--tooltip-gap));
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tooltip-portal {
+  position: fixed;
+  background: #111;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 999999;
+  pointer-events: none;
+
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+/* Position transforms only (no animation) */
+.tooltip-top {
+  transform: translate(-50%, -100%);
+}
+
+.tooltip-right {
+  transform: translate(0, -50%);
+}
+
+.tooltip-bottom {
+  transform: translate(-50%, 0);
+}
+
+.tooltip-left {
+  transform: translate(-100%, -50%);
+}
+
+/* Visible state */
+.tooltip-portal.visible {
+  opacity: 1;
 }

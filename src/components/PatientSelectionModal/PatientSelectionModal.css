@@ -114,17 +114,12 @@
 
 .patient-item {
   padding: 10px;
-  border-bottom: 1px solid var(--border-color);
   cursor: pointer;
   color: var(--text-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative; /* For positioning the options menu */
-}
-
-.patient-item:last-child {
-  border-bottom: none;
 }
 
 .patient-item:hover {

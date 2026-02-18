@@ -172,68 +172,14 @@ const VisitNotes = ({ handleToggleSidebar }) => {
         <div className="generated-note-section">
           <div className="result-card-container">
             <h2>Generated {noteType}</h2>
-            
-            {noteType === 'SOAP Note' && (
-              <>
-                <ResultCard title="Subjective" content={<p>{structuredData.subjective}</p>} />
-                <ResultCard title="Objective" content={<p>{structuredData.objective}</p>} />
-                <ResultCard title="Assessment" content={<p>{structuredData.assessment}</p>} />
-                <ResultCard 
-                  title="Plan" 
-                  content={
-                    <ul>
-                      {structuredData.plan.map((item, i) => <li key={i}>{item}</li>)}
-                    </ul>
-                  } 
-                />
-              </>
-            )}
-
-            {noteType === 'Progress Note' && (
-              <>
-                <ResultCard title="Summary" content={<p>{structuredData.summary}</p>} />
-                <ResultCard title="Vitals" content={<p>{structuredData.vitals}</p>} />
-                <ResultCard title="Assessment" content={<p>{structuredData.assessment}</p>} />
-                <ResultCard title="Plan" content={<p>{structuredData.plan}</p>} />
-              </>
-            )}
-
-            {noteType === 'Discharge Summary' && (
-              <>
-                <ResultCard title="Reason for Admission" content={<p>{structuredData.reasonForAdmission}</p>} />
-                <ResultCard title="Hospital Course" content={<p>{structuredData.hospitalCourse}</p>} />
-                <ResultCard 
-                  title="Discharge Medications" 
-                  content={
-                    <ul>
-                      {structuredData.dischargeMedications.map((item, i) => <li key={i}>{item}</li>)}
-                    </ul>
-                  } 
-                />
-                <ResultCard title="Follow-up" content={<p>{structuredData.followUp}</p>} />
-              </>
-            )}
 
             {formattedNote && (
               <div className="formatted-note-preview" style={{ marginTop: '2rem' }}>
-                <h2>Formatted Note Preview</h2>
                 <ResultCard 
-                  title={`${noteType} - Formatted`}
                   content={<div className="markdown-content" dangerouslySetInnerHTML={{ __html: formattedNote }} />}
                 />
               </div>
             )}
-
-            <div className="raw-note-section" style={{ marginTop: '2rem' }}>
-              <h3>Editable Note Preview (Markdown)</h3>
-              <textarea
-                value={generatedNote}
-                onChange={(e) => setGeneratedNote(e.target.value)}
-                rows={10}
-                className="editable-note-output"
-                style={{ width: '100%', marginBottom: '1rem' }}
-              ></textarea>
-            </div>
 
             <div className="note-actions" style={{ display: 'flex', gap: '1rem' }}>
               <PrimaryActionButton label="Copy to Clipboard" onClick={() => copyToClipboard(generatedNote)} />

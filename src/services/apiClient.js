@@ -1,6 +1,4 @@
-// apiClient.js
 // Production-grade mock backend for Dohrnii Medical Demo Platform
-// Simulates enterprise clinical decision support system with rich, realistic data
 
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -311,99 +309,92 @@ const mockData = {
       content: `### Handover Summary: Acute Chest Pain (SBAR Format)
 
 #### SITUATION
-**Patient**: 65-year-old with acute substernal chest pain
-**Chief Complaint**: "Pressure in my chest that won't go away"
+**Patient**: [Age]-year-old [Sex] with [Patient's primary concern]
+**Chief Complaint**: "[Patient's primary concern]"
 **Admission Time**: ${new Date().toLocaleTimeString()}
 **Current Location**: Emergency Department / Cardiac Care Unit
 **Code Status**: Full code
 
-**Brief History**: Patient presented 2 hours ago with acute onset substernal chest pressure (8/10) radiating to left arm, associated with diaphoresis and dyspnea. Cardiac risk factors include hypertension, hyperlipidemia, diabetes, and 40-pack-year smoking history.
+**Brief History**: Patient presents with [Patient's primary concern]. [Additional history details needed based on specific input].
 
 #### BACKGROUND
 **Past Medical History**:
-- Hypertension (10 years, suboptimally controlled)
-- Hyperlipidemia (on statin)
-- Type 2 Diabetes Mellitus (HbA1c 7.2%)
-- 40-pack-year smoking history (active)
-- No known CAD, no prior MI
+[Past Medical History]
 
 **Medications**:
-- Lisinopril 20mg daily
-- Atorvastatin 40mg nightly
-- Metformin 1000mg BID
-- Aspirin 81mg daily (noncompliant)
+[Current Medications]
 
-**Allergies**: NKDA
+**Allergies**: [Allergies]
 
-**Family History**: Father MI at 58, mother stroke at 72, brother CABG at 60
+**Family History**: [Family Hx]
 
 #### ASSESSMENT
 **Working Diagnosis**: **NSTEMI (Non-ST-Elevation Myocardial Infarction)** - High Risk
 
 **Key Findings**:
-- **ECG**: ST-segment depression 1.5mm in V4-V6 (posterior/lateral ischemia)
-- **Troponin I**: 0.08 → 0.12 ng/mL (elevated and rising, >99th percentile)
-- **Vitals**: BP 152/94, HR 96, RR 20, SpO2 97% RA
+- **ECG**: ST-segment depression in lateral leads
+- **Troponin**: Elevated and rising
+- **Vitals**: BP [BP], HR [HR], RR [RR], SpO2 [SpO2]
 - **Risk Scores**:
-  - HEART Score: 6 (High risk, 50-65% MACE)
-  - TIMI Score: 5 (High risk, 26% adverse outcome at 14 days)
-  - GRACE Score: 142 (High in-hospital mortality risk 3-5%)
+  - HEART Score: High risk
+  - TIMI Score: High risk
+  - GRACE Score: High risk
 
-**Current Status**: Chest pain resolved with nitroglycerin. Hemodynamically stable. On telemetry in CCU.
+**Current Status**: Chest pain improved. Hemodynamically stable. On telemetry.
 
 **Pending Studies**:
-- Troponin series (next draw at [time])
+- Troponin series
 - Echocardiography ordered
-- Cardiology consulted - plan for cardiac catheterization within 24h
+- Cardiology consulted - plan for cardiac catheterization
 
 **Complications/Concerns**:
 - High bleeding risk on dual antiplatelet + anticoagulation
-- Diabetes - need glycemic control during NPO
-- Active smoker - withdrawal symptoms possible
+- [Past Medical History] management
+- [Social History] considerations
 
 #### RECOMMENDATION
 **Immediate Actions**:
 1. **Continue current management**:
-   - Aspirin 81mg daily (loaded with 325mg)
-   - Ticagrelor 90mg BID (loaded with 180mg)
-   - Heparin drip per protocol (target aPTT 50-70 sec)
-   - Metoprolol 25mg q6h
-   - Atorvastatin increased to 80mg nightly
+   - Aspirin
+   - P2Y12 inhibitor
+   - Anticoagulation per protocol
+   - Beta-blocker (if hemodynamically stable)
+   - High-intensity statin
 
 2. **Monitoring**:
    - Continuous cardiac telemetry with ST-segment monitoring
    - Vitals q2h (q15min if chest pain recurs)
-   - Serial troponins at 0800, 1600, 2400
-   - Serial ECGs q8h and PRN symptoms
-   - Neuro checks q4h (bleeding risk)
+   - Serial troponins
+   - Serial ECGs
+   - Neuro checks
    - Strict I&O
 
 3. **NPO** except medications (anticipating catheterization)
 
 4. **Call MD immediately for**:
-   - Recurrent chest pain (start NTG drip, repeat ECG, notify cardiology)
-   - Hemodynamic instability (SBP <90 or >180, HR <50 or >120)
-   - Any signs of bleeding (GI, intracranial, access sites)
-   - New arrhythmias or heart block
-   - Oxygen requirement (SpO2 <90%)
+   - Recurrent chest pain
+   - Hemodynamic instability
+   - Any signs of bleeding
+   - New arrhythmias
+   - Oxygen requirement
 
-5. **Scheduled for cardiac catheterization** tomorrow AM - NPO after midnight, consent obtained
+5. **Scheduled for cardiac catheterization** - NPO after midnight, consent obtained
 
 6. **Outstanding tasks**:
-   - Transthoracic echo in AM
-   - Smoking cessation counseling
-   - Diabetes consult for glycemic management
+   - Transthoracic echo
+   - Risk factor counseling
+   - Specialist consults as indicated
    - Cardiac rehab referral at discharge
 
-**Expected Course**: If catheterization shows significant disease, likely PCI vs CABG. Anticipated LOS 3-5 days if uncomplicated.
+**Expected Course**: If catheterization shows significant disease, likely revascularization.
 
-**Questions/Concerns**: Patient anxious about procedure. Family requesting update - scheduled meeting tomorrow 10 AM.`,
+**Questions/Concerns**: Patient anxious about procedure. Family requesting update.`,
       structured: {
         format: "SBAR",
-        situation: "65yo with NSTEMI, chest pain resolved, hemodynamically stable",
-        background: "HTN, HLD, DM2, active smoker, strong FHx CAD",
-        assessment: "High-risk NSTEMI (HEART 6, TIMI 5). ST depression V4-V6, troponin rising.",
-        recommendation: "Continue DAPT + anticoagulation, serial monitoring, cardiac cath within 24h"
+        situation: "[Age]-year-old [Sex] with acute coronary syndrome, now stable",
+        background: "[Past Medical History], [Social History]",
+        assessment: "High-risk ACS. Troponin elevated. Started on ACS protocol.",
+        recommendation: "Continue dual antiplatelet therapy + anticoagulation, serial monitoring, cardiac cath within 24h"
       }
     },
     patientEducation: {
@@ -1192,7 +1183,7 @@ This interaction review helps optimize cardiovascular pharmacotherapy while mini
       content: `### Clinical Reasoning Framework: Acute Chest Pain
 
 #### Case Synthesis
-A 65-year-old patient presents with acute-onset substernal chest discomfort described as "pressure" radiating to the left arm, associated with diaphoresis. This constellation represents a high-risk acute coronary syndrome (ACS) presentation requiring immediate rule-out of life-threatening etiologies.
+A [Age]-year-old [Sex] patient presents with acute-onset substernal chest discomfort described as "pressure" radiating to the left arm, associated with diaphoresis. This constellation represents a high-risk acute coronary syndrome (ACS) presentation requiring immediate rule-out of life-threatening etiologies.
 
 #### Diagnostic Reasoning Process
 
@@ -1201,7 +1192,7 @@ The clinical presentation matches the classic description of angina pectoris:
 - **Quality**: Pressure/tightness (vs sharp/stabbing which favors non-cardiac)
 - **Location**: Substernal with radiation to left arm (high likelihood ratio for ACS)
 - **Associated symptoms**: Diaphoresis suggests sympathetic activation from myocardial ischemia
-- **Risk factors**: Age >60, hypertension, smoking history multiply pretest probability
+- **Risk factors**: Age [Age], [Past Medical History] multiply pretest probability
 
 **2. Probability Estimation**
 Using validated clinical decision tools:
@@ -1209,10 +1200,10 @@ Using validated clinical decision tools:
 - **HEART Score Components**:
   - History: 2 points (highly suspicious)
   - ECG: Pending (0-2 points)
-  - Age: 2 points (>65 years)
-  - Risk factors: 2 points (≥3 risk factors)
+  - Age: [Age] (Points assigned based on age)
+  - Risk factors: [Past Medical History]
   - Troponin: Pending (0-2 points)
-  - **Estimated Score**: 6-10 points → High risk (50-65% MACE)
+  - **Estimated Score**: High risk (50-65% MACE)
 
 **3. Critical Branch Points**
 
@@ -1300,7 +1291,7 @@ Must simultaneously consider:
           "Substernal chest pressure",
           "Radiation to left arm",
           "Diaphoresis",
-          "Age >60 with cardiac risk factors"
+          "Age [Age] with cardiac risk factors"
         ],
         criticalNextSteps: [
           "Serial hs-troponin (0, 1, 3 hours)",
@@ -1315,12 +1306,12 @@ Must simultaneously consider:
 
 #### Assessment
 
-**Chief Complaint**: 65-year-old with acute substernal chest pressure
+**Chief Complaint**: [Age]-year-old [Sex] with [Patient's primary concern]
 
-**Clinical Impression**: Acute Coronary Syndrome (ACS) - High probability based on:
-- Classic anginal presentation (substernal pressure, left arm radiation, diaphoresis)
-- Significant cardiac risk factors (hypertension, age, smoking history)
-- HEART Score 6 (High risk category, 50-65% probability of MACE at 6 weeks)
+**Clinical Impression**: Acute Coronary Syndrome (ACS) - Suspected based on:
+- Clinical presentation: [Patient's primary concern]
+- Risk factors: [Past Medical History]
+- HEART Score: High risk category (50-65% probability of MACE at 6 weeks)
 - Initial ECG shows ST depression in V4-V6 (posterior/lateral ischemia pattern)
 - Troponin I elevated at 0.08 ng/mL (>99th percentile ULN 0.04 ng/mL)
 
@@ -1331,9 +1322,9 @@ Must simultaneously consider:
 - Pulmonary embolism (moderate Wells score - will obtain D-dimer and CTPA if indicated)
 
 **Severity Assessment**: High-risk ACS
-- **TIMI Risk Score**: 5 points (High risk)
-  - Age ≥65 (1), ≥3 CAD risk factors (1), known CAD (0), aspirin use in last 7d (0), severe angina (1), ECG changes (1), elevated biomarkers (1)
-- **GRACE Score**: 142 (High risk for in-hospital mortality 3-5%)
+- **TIMI Risk Score**: High risk
+  - Age [Age], CAD risk factors, aspirin use, severe angina, ECG changes, elevated biomarkers
+- **GRACE Score**: High risk for in-hospital mortality
 - **Indication**: Early invasive strategy within 24 hours per ACC/AHA guidelines
 
 #### Plan
@@ -1470,7 +1461,7 @@ Must simultaneously consider:
         content: `### SOAP Note: Acute Chest Pain Evaluation
 
 **Date**: ${new Date().toLocaleDateString()}
-**Patient**: 65-year-old with acute coronary syndrome
+**Patient**: [Age]-year-old [Sex] with acute coronary syndrome
 **MRN**: [Medical Record Number]
 **Attending**: [Physician Name]
 
@@ -1478,41 +1469,24 @@ Must simultaneously consider:
 
 #### SUBJECTIVE
 
-**Chief Complaint**: "Pressure in my chest that won't go away"
+**Chief Complaint**: "[Patient's primary concern]"
 
 **History of Present Illness**:
-Patient is a 65-year-old male/female with history of hypertension and tobacco use who presents with acute onset of substernal chest discomfort that began approximately 2 hours prior to arrival. Patient describes the pain as a "heavy pressure" rated 8/10 in intensity, radiating to the left arm. Associated symptoms include diaphoresis, mild nausea, and shortness of breath. No vomiting, palpitations, or syncope. 
-
-Pain began at rest while watching television. Initially attributed symptoms to indigestion and took antacids without relief. Pain persistent and prompted activation of EMS. En route, received aspirin 324mg and nitroglycerin 0.4mg x1 with minimal improvement.
-
-Denies recent trauma, prolonged immobilization, leg swelling, cough, fever, or unilateral leg pain.
+Patient is a [Age]-year-old [Sex] who presents with [Patient's primary concern]. [Additional history details needed based on specific input].
 
 **Pertinent PMH**:
-- Hypertension (diagnosed 10 years ago, suboptimally controlled)
-- Hyperlipidemia (on statin therapy)
-- Type 2 diabetes mellitus (HbA1c 7.2% three months ago)
-- 40-pack-year smoking history (currently smoking)
-- No known coronary artery disease
+[Past Medical History]
 
 **Medications**:
-1. Lisinopril 20mg daily
-2. Atorvastatin 40mg nightly
-3. Metformin 1000mg BID
-4. Aspirin 81mg daily (noncompliant)
+[Current Medications]
 
-**Allergies**: No known drug allergies (NKDA)
+**Allergies**: [Allergies]
 
 **Family History**:
-- Father: MI at age 58
-- Mother: Stroke at age 72
-- Brother: CABG at age 60
+[Family History]
 
 **Social History**:
-- Tobacco: 40-pack-year, current smoker
-- Alcohol: Social drinker (2-3 beers per week)
-- Illicit drugs: Denies
-- Occupation: Retired construction worker
-- Exercise: Minimal, sedentary lifestyle
+[Social History]
 
 **Review of Systems**:
 - **Cardiovascular**: As per HPI, denies prior chest pain, palpitations, orthopnea, PND
@@ -1526,79 +1500,27 @@ Denies recent trauma, prolonged immobilization, leg swelling, cough, fever, or u
 #### OBJECTIVE
 
 **Vital Signs**:
-- Temperature: 37.1°C (98.8°F)
-- Blood Pressure: 152/94 mmHg (left arm), 148/92 mmHg (right arm)
-- Heart Rate: 96 bpm, regular
-- Respiratory Rate: 20 breaths/min
-- Oxygen Saturation: 97% on room air
-- Weight: 92 kg, Height: 175 cm, BMI: 30.0 kg/m²
+- Temperature: [Temp]°C
+- Blood Pressure: [BP] mmHg
+- Heart Rate: [HR] bpm
+- Respiratory Rate: [RR] breaths/min
+- Oxygen Saturation: [SpO2] on room air
+- Weight: [Weight], Height: [Height], BMI: [BMI] kg/m²
 
 **Physical Examination**:
 
-*General*: Alert, oriented x3, appears uncomfortable, diaphoretic, in moderate distress
-
-*HEENT*: Normocephalic, atraumatic. Pupils equal, round, reactive to light. Moist mucous membranes.
-
-*Neck*: Supple, no jugular venous distention at 30 degrees, no carotid bruits, no thyromegaly
-
-*Cardiovascular*: Regular rate and rhythm, normal S1/S2, no murmurs, rubs, or gallops appreciated. No peripheral edema. Peripheral pulses 2+ and symmetric bilaterally (radial, femoral, dorsalis pedis, posterior tibial).
-
-*Pulmonary*: Clear to auscultation bilaterally, no wheezes, rales, or rhonchi. Equal breath sounds. No increased work of breathing.
-
-*Abdomen*: Soft, non-tender, non-distended. Normoactive bowel sounds. No hepatosplenomegaly. No pulsatile masses appreciated.
-
-*Extremities*: Warm, well-perfused. No cyanosis, clubbing, or edema. No calf tenderness or asymmetry.
-
-*Neurological*: Alert and oriented x3. Cranial nerves II-XII grossly intact. Motor strength 5/5 throughout. Sensation intact. Normal gait.
-
-*Skin*: Warm, diaphoretic. No rashes or lesions.
+*General*: [General appearance]
+*HEENT*: [HEENT findings]
+*Cardiovascular*: [CV findings]
+*Pulmonary*: [Pulmonary findings]
+*Abdomen*: [Abdominal findings]
+*Extremities*: [Extremity findings]
+*Neurological*: [Neuro findings]
+*Skin*: [Skin findings]
 
 **Diagnostic Studies**:
 
-*Electrocardiogram (12-lead ECG)*:
-- Rate: 96 bpm
-- Rhythm: Normal sinus rhythm
-- Axis: Normal
-- Intervals: PR 160ms, QRS 90ms, QT 420ms (QTc 450ms)
-- **Findings**: ST-segment depression 1.5mm in leads V4-V6, biphasic T waves in V4-V5
-- **Interpretation**: Posterior/lateral ischemia pattern, concerning for ACS
-
-*Laboratory Results*:
-
-| Test | Value | Reference Range |
-|------|-------|-----------------|
-| **Cardiac Biomarkers** |
-| hs-Troponin I (initial) | 0.08 ng/mL | <0.04 ng/mL |
-| hs-Troponin I (1 hour) | 0.12 ng/mL | <0.04 ng/mL |
-| CK-MB | 12 ng/mL | <5 ng/mL |
-| BNP | 180 pg/mL | <100 pg/mL |
-| **Complete Blood Count** |
-| WBC | 9.2 K/µL | 4.5-11.0 K/µL |
-| Hemoglobin | 14.2 g/dL | 13.5-17.5 g/dL |
-| Hematocrit | 42% | 39-49% |
-| Platelets | 245 K/µL | 150-400 K/µL |
-| **Metabolic Panel** |
-| Sodium | 138 mmol/L | 136-145 mmol/L |
-| Potassium | 4.2 mmol/L | 3.5-5.0 mmol/L |
-| Chloride | 102 mmol/L | 98-107 mmol/L |
-| Bicarbonate | 24 mmol/L | 22-29 mmol/L |
-| BUN | 18 mg/dL | 7-20 mg/dL |
-| Creatinine | 1.1 mg/dL | 0.7-1.3 mg/dL |
-| eGFR | >60 mL/min/1.73m² | >60 |
-| Glucose | 142 mg/dL | 70-100 mg/dL |
-| **Lipid Panel** |
-| Total Cholesterol | 220 mg/dL | <200 mg/dL |
-| LDL | 145 mg/dL | <100 mg/dL |
-| HDL | 38 mg/dL | >40 mg/dL |
-| Triglycerides | 185 mg/dL | <150 mg/dL |
-| **Coagulation** |
-| PT | 12.8 sec | 11-13.5 sec |
-| INR | 1.0 | <1.1 |
-| aPTT | 28 sec | 25-35 sec |
-
-*Chest X-ray (Portable AP)*:
-- **Findings**: Cardiac silhouette normal size. No pulmonary edema. No pleural effusions. No pneumothorax. Mediastinum within normal limits. No acute cardiopulmonary process identified.
-- **Impression**: No acute findings
+[Relevant labs/imaging]
 
 ---
 
@@ -1609,72 +1531,15 @@ Denies recent trauma, prolonged immobilization, leg swelling, cough, fever, or u
 **1. Acute Coronary Syndrome - Non-ST-Elevation Myocardial Infarction (NSTEMI)** [Primary Problem]
 
 *Assessment*:
-- High-risk ACS based on positive biomarkers (troponin 0.08→0.12 ng/mL), ischemic ECG changes (ST depression V4-V6), and persistent symptoms
-- HEART Score: 6 (High risk - 50-65% probability MACE)
-- TIMI Score: 5 (High risk - 26% risk of death/MI/urgent revasc at 14 days)
-- GRACE Score: 142 (High risk)
-- Type 1 MI (spontaneous plaque rupture) most likely
+- [Key Findings]
+- [Risk Scores]
+- Suspected Acute Coronary Syndrome
 
 *Plan*:
-- Admit to Cardiac Care Unit for close monitoring
-- Dual antiplatelet therapy: Aspirin 325mg loading (given), then 81mg daily + Ticagrelor 180mg loading, then 90mg BID
-- Anticoagulation: Heparin drip per ACS protocol (bolus 60 units/kg, infusion 12 units/kg/hr, target aPTT 50-70 seconds)
-- Anti-ischemic therapy: Metoprolol tartrate 25mg q6h (target HR 50-60 bpm), nitroglycerin drip if recurrent chest pain
-- Serial troponins q8h x3
-- Serial ECGs q8h x24h and PRN with symptoms
-- STAT cardiology consult for early invasive strategy (cardiac catheterization within 24 hours per ACC/AHA guidelines)
-- Transthoracic echocardiography to assess LV function and wall motion abnormalities
-- Continuous cardiac telemetry with ST-segment monitoring
+- [ACS Management Plan]
 
-**2. Hypertension, Uncontrolled** [Secondary Problem]
-
-*Assessment*:
-- Presenting BP 152/94 mmHg despite current antihypertensive therapy
-- Contributes to cardiovascular risk
-
-*Plan*:
-- Continue lisinopril 20mg daily
-- Add metoprolol as above (dual benefit for BP and ACS)
-- Will reassess BP regimen after acute event stabilized
-- Home BP monitoring education prior to discharge
-
-**3. Hyperlipidemia, Inadequately Controlled** [Secondary Problem]
-
-*Assessment*:
-- LDL 145 mg/dL on atorvastatin 40mg (goal <70 mg/dL for secondary prevention post-MI)
-- Low HDL 38 mg/dL
-- Elevated triglycerides 185 mg/dL
-
-*Plan*:
-- Increase atorvastatin to 80mg daily (high-intensity statin per post-ACS guidelines)
-- Recheck lipid panel in 6 weeks
-- Lifestyle modification counseling: diet, exercise, weight loss
-
-**4. Type 2 Diabetes Mellitus** [Secondary Problem]
-
-*Assessment*:
-- Admission glucose 142 mg/dL
-- Last HbA1c 7.2% (suboptimal control)
-- Diabetes increases cardiovascular risk and worsens post-MI outcomes
-
-*Plan*:
-- Continue metformin 1000mg BID (hold if receiving contrast for catheterization, resume 48h post-contrast if renal function stable)
-- Sliding scale insulin while NPO/acute illness
-- Endocrinology consult for optimization
-- Check HbA1c
-
-**5. Tobacco Use Disorder** [Secondary Problem]
-
-*Assessment*:
-- 40-pack-year history, currently smoking
-- Major modifiable risk factor for recurrent MI
-
-*Plan*:
-- Strongly counsel on smoking cessation - single most important intervention to reduce recurrent MI risk
-- Prescribe nicotine replacement therapy (patch 21mg daily + gum/lozenge PRN)
-- Refer to inpatient smoking cessation counseling
-- Consider varenicline or bupropion at discharge
-- Follow-up with primary care for ongoing support
+**2. Other Medical Problems**
+[Secondary Assessment and Plan]
 
 **Disposition**:
 - Admit to Cardiac Care Unit
@@ -1691,11 +1556,11 @@ Denies recent trauma, prolonged immobilization, leg swelling, cough, fever, or u
 **Attending Physician Signature**: ___________________________
 **Date/Time**: ${new Date().toLocaleString()}`,
         structured: {
-          subjective: "65yo with acute substernal chest pressure x2 hours, radiating to left arm, associated with diaphoresis and dyspnea. 8/10 severity. No relief with antacids. Cardiac risk factors: HTN, HLD, DM2, tobacco use, family history.",
-          objective: "VS: BP 152/94, HR 96, RR 20, SpO2 97% RA, T 37.1°C. Physical exam remarkable for diaphoresis, otherwise unremarkable. ECG: ST depression V4-V6. Labs: hs-Troponin I 0.08→0.12 ng/mL (elevated and rising). CXR: No acute process.",
-          assessment: "1. NSTEMI (High-risk ACS) - HEART score 6, TIMI 5, GRACE 142\n2. Hypertension, uncontrolled\n3. Hyperlipidemia\n4. Type 2 diabetes mellitus\n5. Tobacco use disorder",
-          plan: "Admit CCU. DAPT: ASA 325→81mg + Ticagrelor 180→90mg BID. Heparin drip. Metoprolol 25mg q6h. Serial troponins/ECGs. STAT cardiology consult for early invasive strategy (cath <24h). TTE. Uptitrate atorvastatin to 80mg. Smoking cessation counseling. NPO for cath."
-        }
+            subjective: "[Age]-year-old [Sex] with [Patient's primary concern]. History: [Past Medical History].",
+            objective: "VS: BP [BP], HR [HR], RR [RR], SpO2 [SpO2], T [Temp]°C. Physical exam: [General appearance]. ECG: ST changes. Labs: Troponin elevated.",
+            assessment: "1. High-risk Acute Coronary Syndrome\n2. [Past Medical History]",
+            plan: "Admit CCU. Dual antiplatelet therapy. Anticoagulation. Anti-ischemics. Serial troponins/ECGs. STAT cardiology consult. NPO for cath."
+          }
       }
     }
   },
@@ -1887,7 +1752,7 @@ Denies recent trauma, prolonged immobilization, leg swelling, cough, fever, or u
         primaryDiagnosis: "Acute Ischemic Stroke (suspected)",
         urgency: "EMERGENT - Time-critical intervention",
         nihssScore: ">4 (moderate-severe)",
-        vascularTerritory: "Left MCA distribution (based on right-sided weakness and aphasia)"
+        vascularTerritory: "[Vascular Territory]"
       }
     }
   },
@@ -1943,9 +1808,9 @@ Denies recent trauma, prolonged immobilization, leg swelling, cough, fever, or u
       structured: {
         differentials: [
           {
-            condition: "Septic Shock (Pneumonia Source)",
+            condition: "[Sepsis Source]",
             probability: "High",
-            rationale: "Hypotension despite fluids, lactate >2, fever, cough, infiltrate on CXR. qSOFA 3/3.",
+            rationale: "[Sepsis Rationale]",
             workup: "Blood cultures x2, sputum culture, lactate, CBC, CMP, coags, procalcitonin. CXR. ABG. Start antibiotics within 1 hour: ceftriaxone + azithromycin. Fluid resuscitation 30 mL/kg. Vasopressors if MAP <65 after fluids."
           },
           {
@@ -1964,243 +1829,112 @@ Denies recent trauma, prolonged immobilization, leg swelling, cough, fever, or u
       content: `### Handover Summary (SBAR Format)
 
 #### SITUATION
-**Patient**: Requires additional clinical details
-**Current Status**: Unable to provide specific handover without complete clinical information
+**Patient**: [Patient Name], [Age]-year-old [Sex]
+**Chief Complaint**: [Patient's primary concern]
+**Current Status**: Admitted for [Diagnosis]
 
 #### BACKGROUND
-Please provide:
-- Age, sex, relevant medical history
-- Current medications and allergies
-- Reason for admission/consultation
+**History**: [History of Present Illness]
+**PMH**: [PMH]
+**Meds**: [Meds]
+**Allergies**: [Allergies]
 
 #### ASSESSMENT
-A comprehensive handover summary requires:
-- Working diagnosis or problem list
-- Key examination findings
-- Relevant laboratory and imaging results
-- Current clinical status and trends
+**Diagnosis**: [Diagnosis]
+**Key Findings**:
+- Vitals: BP [BP], HR [HR], RR [RR], SpO2 [SpO2], Temp [Temp]
+- Exam: [Physical Exam Findings]
+- Labs/Imaging: [Relevant labs/imaging]
 
 #### RECOMMENDATION
-To generate an effective handover summary, please include:
-- Specific clinical scenario and patient demographics
-- Current treatment plan
-- Outstanding tasks or pending results
-- Anticipated clinical course
-- Specific concerns requiring attention
-
-For optimal handover communication, please provide detailed clinical context.`,
+**Plan**:
+- [Medications prescribed]
+- [Labs ordered]
+- [Imaging ordered]
+- [Follow-up plan]`,
       structured: {
         format: "SBAR",
-        situation: "Requires clinical information",
-        background: "Insufficient data provided",
-        assessment: "Unable to assess without details",
-        recommendation: "Provide complete clinical scenario"
+        situation: "Patient admitted with [Diagnosis]",
+        background: "Relevant history and medications reviewed",
+        assessment: "Clinical status stable/unstable as per vitals",
+        recommendation: "Continue current management plan"
       }
     },
     patientEducation: {
-      content: `### Patient Education Guide
+      content: `### Patient Education Guide for [Diagnosis]
 
-#### Understanding Your Health Condition
+#### Understanding Your Condition
+You have been diagnosed with **[Diagnosis]**.
+[Education provided]
 
-To provide you with accurate, helpful health information, we need more details about:
-- Your specific diagnosis or condition
-- Your symptoms and concerns
-- Your treatment plan
-- Questions you have for your healthcare team
+#### Treatment Plan
+- **Medications**: [Medications prescribed]
+- **Follow-up**: [Follow-up plan]
 
-#### General Health Principles
+#### When to Seek Help
+Please seek medical attention if:
+- Symptoms worsen
+- New symptoms develop
+- You have concerns about your condition
 
-**Taking Your Medications**:
-- Always take medications exactly as prescribed
-- Don't stop medications without talking to your doctor
-- Keep a current list of all medications, including over-the-counter drugs and supplements
-- Use a pill organizer or set phone reminders to help you remember
-
-**When to Seek Medical Attention**:
-- Severe or worsening symptoms
-- New symptoms that concern you
-- Side effects from medications
-- Questions about your treatment plan
-
-**Healthy Lifestyle Habits**:
-- Eat a balanced diet with plenty of fruits and vegetables
-- Exercise regularly as recommended by your doctor
-- Get adequate sleep (7-8 hours per night)
-- Manage stress through relaxation techniques
-- Avoid tobacco and limit alcohol
-- Keep all follow-up appointments
-
-#### Working with Your Healthcare Team
-
-- Be honest about symptoms and concerns
-- Ask questions if you don't understand something
-- Bring a list of questions to appointments
-- Consider bringing a family member or friend for support
-- Keep track of symptoms in a journal
-
-For personalized education materials about your specific condition, please provide more clinical details so we can give you the most relevant and helpful information.`,
+#### Lifestyle Modifications
+- Take medications as prescribed
+- Maintain a healthy diet and hydration
+- Rest as needed`,
       structured: {
-        condition: "General Health Information",
+        condition: "[Diagnosis]",
         readingLevel: "General audience",
         keyTakeaways: [
           "Take medications as prescribed",
-          "Know when to seek medical attention",
-          "Maintain healthy lifestyle habits",
-          "Communicate openly with your healthcare team"
+          "Follow up as recommended",
+          "Monitor symptoms"
         ]
       }
     },
     diagnosticWorkup: {
-      content: `### Diagnostic Workup Strategy
+      content: `### Diagnostic Workup Strategy for [Diagnosis]
 
-#### General Approach to Clinical Evaluation
+#### Initial Evaluation
+- **History**: [History of Present Illness]
+- **Exam**: [Physical Exam Findings]
 
-A comprehensive diagnostic workup is tailored to the specific clinical presentation and includes:
+#### Laboratory Studies
+[Labs ordered]
 
-**1. History and Physical Examination**
-- Detailed history of present illness
-- Past medical history, medications, allergies
-- Family and social history
-- Complete physical examination
+#### Imaging
+[Imaging ordered]
 
-**2. Initial Laboratory Studies** (commonly ordered):
-- Complete Blood Count (CBC)
-- Comprehensive Metabolic Panel (CMP)
-- Urinalysis
-- Additional labs based on clinical scenario
+#### Specialized Testing
+[Procedures performed]
 
-**3. Diagnostic Imaging** (symptom-directed):
-- Chest X-ray for respiratory or cardiac symptoms
-- CT scan for specific diagnostic questions
-- Ultrasound for abdominal or soft tissue evaluation
-- MRI for detailed tissue characterization
-
-**4. Specialized Testing** (as indicated):
-- Electrocardiogram (ECG) for cardiac symptoms
-- Pulmonary function tests for respiratory conditions
-- Endoscopy for gastrointestinal symptoms
-- Tissue biopsy when malignancy suspected
-
-**5. Risk Stratification**
-- Use validated clinical decision tools when available
-- Consider differential diagnosis likelihood
-- Balance diagnostic yield against risks and costs
-
-#### Principles of Effective Workup
-
-**Targeted Approach**:
-- Start with highest-yield tests based on pretest probability
-- Avoid shotgun testing without clinical indication
-- Consider test characteristics (sensitivity, specificity)
-
-**Stepwise Investigation**:
-- Begin with non-invasive studies
-- Proceed to invasive tests only when necessary
-- Reassess after each test result
-
-**Patient-Centered Care**:
-- Discuss risks and benefits of testing
-- Consider patient preferences and values
-- Explain purpose and expected outcomes of tests
-
-For a specific diagnostic workup plan tailored to your clinical scenario, please provide:
-- Chief complaint and symptoms
-- Relevant medical history
-- Physical examination findings
-- Initial vital signs and basic labs`,
+#### Risk Stratification
+[Risk Scores]`,
       structured: {
-        immediate: ["History and physical examination", "Vital signs"],
-        initial: ["CBC", "CMP", "Urinalysis"],
-        imaging: ["Symptom-directed imaging studies"],
-        specialized: ["Disease-specific testing as indicated"]
+        immediate: ["[History of Present Illness]", "[Physical Exam Findings]"],
+        initial: ["[Labs ordered]"],
+        imaging: ["[Imaging ordered]"],
+        specialized: ["[Procedures performed]"]
       }
     },
     guidelines: {
-      content: `### Clinical Practice Guidelines
+      content: `### Clinical Practice Guidelines for [Diagnosis]
 
-#### Evidence-Based Medicine Resources
+#### Key Guidelines
+- **Primary Guideline**: [Diagnosis] Management Guidelines
+- **Recommendation**: [Medications prescribed]
 
-Clinical practice guidelines provide evidence-based recommendations for patient care. To find the most relevant guidelines for your specific clinical scenario:
-
-**Major Guideline Organizations**:
-
-**1. American Heart Association / American College of Cardiology (AHA/ACC)**
-- Website: www.heart.org and www.acc.org
-- Focus: Cardiovascular disease, prevention, and treatment
-- Guidelines: Hypertension, cholesterol, heart failure, coronary disease
-
-**2. Infectious Diseases Society of America (IDSA)**
-- Website: www.idsociety.org
-- Focus: Infectious diseases and antimicrobial stewardship
-- Guidelines: Pneumonia, UTI, sepsis, HIV, resistant organisms
-
-**3. American Diabetes Association (ADA)**
-- Website: www.diabetes.org
-- Focus: Diabetes diagnosis and management
-- Guidelines: Type 1, Type 2, gestational diabetes, complications
-
-**4. National Institute for Health and Care Excellence (NICE) - UK**
-- Website: www.nice.org.uk
-- Focus: Comprehensive clinical guidelines across specialties
-- Known for rigorous evidence review and cost-effectiveness analysis
-
-**5. U.S. Preventive Services Task Force (USPSTF)**
-- Website: www.uspreventiveservicestaskforce.org
-- Focus: Preventive services and screening recommendations
-- Provides letter grades (A, B, C, D, I) based on evidence
-
-**How to Use Clinical Guidelines**:
-
-1. **Search for Condition-Specific Guidelines**:
-   - Use organization websites above
-   - PubMed: Search "[condition] clinical practice guideline"
-   - National Guideline Clearinghouse (archived but still useful)
-
-2. **Assess Guideline Quality**:
-   - Check publication date (prefer recent guidelines)
-   - Review methodology and evidence grading
-   - Look for disclosure of conflicts of interest
-   - Consider applicability to your patient population
-
-3. **Interpret Recommendation Strength**:
-   - **Class I / Grade A**: Strong recommendation, should be performed
-   - **Class IIa / Grade B**: Reasonable to perform, generally recommended
-   - **Class IIb / Grade C**: May be considered, uncertain benefit
-   - **Class III / Grade D**: Not recommended, may be harmful
-
-4. **Apply to Individual Patients**:
-   - Guidelines provide general recommendations
-   - Individualize based on patient factors, preferences, comorbidities
-   - Use clinical judgment and shared decision-making
-
-**Accessing Full Guidelines**:
-- Most major organizations provide free online access
-- Mobile apps available (ACC Guideline Clinical App, others)
-- Many journals publish guidelines open-access
-
-For specific guideline recommendations related to your clinical question, please provide:
-- The specific condition or clinical scenario
-- Patient demographics and relevant history
-- Your specific clinical question
-
-This will allow retrieval of the most pertinent, up-to-date guideline recommendations.`,
+#### Evidence-Based Resources
+- UpToDate: [Diagnosis]
+- PubMed: Recent trials on [Diagnosis]`,
       structured: {
         results: [
           {
             id: "resource-1",
-            title: "AHA/ACC Clinical Practice Guidelines",
-            source: "American Heart Association / American College of Cardiology",
-            year: "Various (regularly updated)",
-            url: "https://www.acc.org/guidelines",
-            summary: "Comprehensive cardiovascular disease prevention and treatment guidelines"
-          },
-          {
-            id: "resource-2",
-            title: "NICE Clinical Guidelines",
-            source: "National Institute for Health and Care Excellence",
-            year: "Various (regularly updated)",
-            url: "https://www.nice.org.uk/guidance",
-            summary: "Evidence-based recommendations covering wide range of conditions"
+            title: "Management Guidelines for [Diagnosis]",
+            source: "Clinical Guidelines",
+            year: new Date().getFullYear().toString(),
+            url: "https://pubmed.ncbi.nlm.nih.gov",
+            summary: "Evidence-based management recommendations"
           }
         ]
       }
@@ -2383,57 +2117,54 @@ Treatment recommendations should follow current clinical practice guidelines, wi
     },
     clinicalReasoning: {
       content: `
+### Clinical Reasoning: General Medical Assessment
 
 **Case Snapshot**
-- Patient: Ramesh K., 54M  
-- Presenting Symptoms: Intermittent chest discomfort, exertional dyspnea (2 weeks)  
-- Relevant History: Type 2 Diabetes (8y), Hypertension  
-- Vitals: BP 148/92 mmHg, HR 96 bpm  
-- Current Meds: Metformin 500 mg BD, Amlodipine 5 mg OD  
+- Patient: [Patient Name], [Age]-year-old [Sex]
+- Presenting Symptoms: [Patient's primary concern]
+- Relevant History: [Past Medical History]
+- Vitals: BP [BP], HR [HR], RR [RR], Temp [Temp], SpO2 [SpO2]
+- Current Meds: [Current Medications]
 
 ---
 
 ### 1. Key Findings Identified
-- Chest discomfort triggered by exertion  
-- Cardiovascular risk factors present  
-- No red-flag neurological deficits  
-- No fever or infection indicators  
+- Presenting with [Patient's primary concern]
+- History of [Past Medical History]
+- Vitals: [BP], [HR]
 
 ---
 
-### 2. Problem Representation (AI Summary)
-Middle-aged male with multiple cardiovascular risk factors presenting with exertional chest discomfort and dyspnea, concerning for possible ischemic etiology.
+### 2. Problem Representation
+[Age]-year-old [Sex] with history of [Past Medical History] presenting with [Patient's primary concern], requiring evaluation for potential underlying etiology.
 
 ---
 
 ### 3. Differential Diagnosis (Ranked)
-1. Stable Angina  
-2. Acute Coronary Syndrome (Low–Moderate Probability)  
-3. Gastroesophageal Reflux Disease  
-4. Musculoskeletal Chest Pain  
+1. Broad differential based on [Patient's primary concern]
+2. Consider infectious vs inflammatory vs metabolic vs structural causes
+3. Requires further history and physical exam to narrow
 
 ---
 
-### 4. Diagnostic Strategy (Simulated AI Plan)
-- ECG  
-- High-sensitivity Troponin  
-- Lipid Profile  
-- 2D Echocardiogram (if ECG abnormal)  
+### 4. Diagnostic Strategy
+- Detailed History and Physical Exam
+- Basic Labs (CBC, CMP)
+- Focused imaging based on localization
 
 ---
 
-### 5. Management Considerations (Demo Mode)
-- Flagged for cardiology referral  
-- Lifestyle risk counselling suggested  
-- Medication review recommended  
-- Monitoring plan generated  
+### 5. Management Considerations
+- Symptom management
+- Address underlying cause
+- Monitor for red flags
 
 ---
 
 ### 6. AI Confidence & Safety Layer
-- Confidence Score: 0.72  
-- Risk Level: Moderate  
-- AI Limitations: Incomplete lab data`,
+- Confidence Score: Moderate
+- Risk Level: Variable
+- AI Limitations: Dependent on specific clinical details`,
       structured: {
         approach: "Systematic clinical problem-solving",
         keyPrinciples: [
@@ -2482,6 +2213,281 @@ For optimal clinical decision support, please provide additional clinical detail
           followUp: ["Monitor treatment response", "Reassess as needed", "Coordinate care"]
         }
       }
+    },
+    visitNotes: {
+      soap: {
+        content: `### SOAP Note: General Clinical Encounter
+
+**Date**: ${new Date().toLocaleDateString()}
+**Patient**: [Patient Name]
+**MRN**: [Medical Record Number]
+**Attending**: [Physician Name]
+
+---
+
+#### SUBJECTIVE
+
+**Chief Complaint**: "Patient's primary concern"
+
+**History of Present Illness**:
+Patient presents for evaluation of [symptoms/condition].
+[Additional history details needed based on specific input]
+
+**Pertinent PMH**:
+- [Past Medical History]
+
+**Medications**:
+- [Current Medications]
+
+**Allergies**: [Allergies]
+
+**Review of Systems**:
+- **General**: [Constitutional symptoms]
+- **Cardiovascular**: [CV symptoms]
+- **Respiratory**: [Resp symptoms]
+- **Gastrointestinal**: [GI symptoms]
+- **Neurological**: [Neuro symptoms]
+
+---
+
+#### OBJECTIVE
+
+**Vital Signs**:
+- Temperature: [Temp]
+- Blood Pressure: [BP]
+- Heart Rate: [HR]
+- Respiratory Rate: [RR]
+- Oxygen Saturation: [SpO2]
+
+**Physical Examination**:
+*General*: [General appearance]
+*HEENT*: [HEENT findings]
+*Cardiovascular*: [CV findings]
+*Pulmonary*: [Pulmonary findings]
+*Abdomen*: [Abdominal findings]
+*Extremities*: [Extremity findings]
+*Neurological*: [Neuro findings]
+*Skin*: [Skin findings]
+
+**Diagnostic Studies**:
+[Relevant labs/imaging]
+
+---
+
+#### ASSESSMENT
+
+**Working Diagnosis**: [Diagnosis]
+
+**Differential Diagnosis**:
+1. [Differential 1]
+2. [Differential 2]
+3. [Differential 3]
+
+---
+
+#### PLAN
+
+**Diagnostics**:
+- [Labs ordered]
+- [Imaging ordered]
+
+**Treatment**:
+- [Medications prescribed]
+- [Procedures performed]
+
+**Patient Education**:
+- [Education provided]
+
+**Follow-up**:
+- [Follow-up plan]`,
+        structured: {
+          subjective: "Patient presents for evaluation. History of present illness and review of systems as documented above.",
+          objective: "Vital signs and physical examination findings as documented above.",
+          assessment: "Working diagnosis and differential diagnosis as documented above.",
+          plan: [
+            "Diagnostic workup as indicated",
+            "Pharmacologic management as indicated",
+            "Patient education and counseling",
+            "Follow-up as clinically appropriate"
+          ]
+        }
+      },
+      admission: {
+        content: `### Admission Note
+
+**Date**: ${new Date().toLocaleDateString()}
+**Patient**: [Patient Name]
+**Admitting Diagnosis**: [Diagnosis]
+
+---
+
+#### HPI
+[History of Present Illness]
+
+#### Past Medical History
+[PMH]
+
+#### Medications
+[Meds]
+
+#### Allergies
+[Allergies]
+
+#### Social History
+[Social Hx]
+
+#### Family History
+[Family Hx]
+
+#### Review of Systems
+[ROS]
+
+---
+
+#### Physical Exam
+[Physical Exam Findings]
+
+#### Labs/Imaging
+[Results]
+
+---
+
+#### Assessment & Plan
+[A/P]`,
+        structured: {
+          type: "Admission Note",
+          diagnosis: "Admitting Diagnosis",
+          plan: "Admission Plan"
+        }
+      },
+      discharge: {
+        content: `### Discharge Summary
+
+**Date**: ${new Date().toLocaleDateString()}
+**Patient**: [Patient Name]
+**Discharge Diagnosis**: [Diagnosis]
+
+---
+
+#### Hospital Course
+[Summary of hospital stay]
+
+#### Procedures
+[Procedures performed]
+
+#### Discharge Medications
+[List of meds]
+
+#### Follow-up
+[Follow-up appointments]
+
+#### Discharge Instructions
+[Instructions]`,
+        structured: {
+          reasonForAdmission: "Reason for admission as documented.",
+          hospitalCourse: "Summary of hospital course, key events, and clinical progression.",
+          dischargeMedications: [
+            "Medication 1",
+            "Medication 2"
+          ],
+          followUp: "Follow-up instructions and appointments."
+        }
+      },
+      consult: {
+        content: `### Consultation Note
+
+**Date**: ${new Date().toLocaleDateString()}
+**Patient**: [Patient Name]
+**Reason for Consult**: [Reason]
+
+---
+
+#### HPI
+[History of Present Illness]
+
+#### Assessment
+[Assessment]
+
+#### Recommendations
+[Recommendations]`,
+        structured: {
+          type: "Consultation Note",
+          reason: "Reason for Consult",
+          recommendations: "Recommendations"
+        }
+      },
+      procedure: {
+        content: `### Procedure Note
+
+**Date**: ${new Date().toLocaleDateString()}
+**Patient**: [Patient Name]
+**Procedure**: [Procedure Name]
+
+---
+
+#### Indications
+[Indications]
+
+#### Description of Procedure
+[Details]
+
+#### Complications
+[Complications]
+
+#### Post-Procedure Plan
+[Plan]`,
+        structured: {
+          type: "Procedure Note",
+          procedure: "Procedure Name",
+          plan: "Post-Procedure Plan"
+        }
+      },
+      progress: {
+        content: `### Progress Note
+
+**Date**: ${new Date().toLocaleDateString()}
+**Patient**: [Patient Name]
+
+---
+
+#### Interval History
+[Updates since last note]
+
+#### Exam
+[Current exam findings]
+
+#### Assessment/Plan
+[Updated A/P]`,
+        structured: {
+          summary: "Interval history and updates since last evaluation.",
+          vitals: "Current vital signs as documented.",
+          assessment: "Current assessment and clinical status.",
+          plan: "Updated management plan and next steps."
+        }
+      },
+      transfer: {
+        content: `### Transfer Summary
+
+**Date**: ${new Date().toLocaleDateString()}
+**Patient**: [Patient Name]
+**Transfer To**: [Destination]
+
+---
+
+#### Reason for Transfer
+[Reason]
+
+#### Current Status
+[Status]
+
+#### Transfer Orders
+[Orders]`,
+        structured: {
+          type: "Transfer Summary",
+          reason: "Reason for Transfer",
+          plan: "Transfer Plan"
+        }
+      }
     }
   }
 };
@@ -2493,6 +2499,287 @@ For optimal clinical decision support, please provide additional clinical detail
 // ============================================================================
 // RESPONSE GENERATION ENGINE
 // ============================================================================
+
+// Helper: Generate dynamic clinical reasoning content based on input and patient data
+const generateDynamicClinicalReasoning = (input, patient) => {
+  const {
+    fullName = "Unknown Patient",
+    age = "?",
+    sex = "?",
+    chronicConditions = [],
+    longTermMedications = [],
+    allergies = [],
+    vitals = {}
+  } = patient || {};
+
+  const conditions = chronicConditions.map(c => c.name || c).join(", ") || "None documented";
+  const meds = longTermMedications.map(m => `${m.name || m}${m.dose ? ` (${m.dose})` : ""}`).join(", ") || "None documented";
+  const allergyList = allergies.map(a => a.substance || a.name || a).join(", ") || "None documented";
+  const inputStr = extractInputString(input);
+  
+  // Extract likely symptoms from input (naive approach: use whole input or first line)
+  const presentingSymptoms = inputStr.length > 100 ? inputStr.substring(0, 100) + "..." : inputStr;
+  
+  // Mock vitals if not provided
+  const bp = vitals.bp || "120/80";
+  const hr = vitals.hr || "72";
+  const rr = vitals.rr || "16";
+  const temp = vitals.temp || "37.0°C";
+  const spo2 = vitals.spo2 || "98%";
+  const weight = vitals.weight || "70 kg";
+  const height = vitals.height || "170 cm";
+  const bmi = vitals.bmi || "24.2";
+
+  return `
+**Case Snapshot**
+- Patient: ${fullName}, ${age}${sex ? `, ${sex}` : ""}
+- Presenting Symptoms: ${presentingSymptoms}
+- Relevant History: ${conditions}
+- Vitals: BP ${bp} mmHg, HR ${hr} bpm, RR ${rr}, Temp ${temp}, SpO2 ${spo2}, Wt ${weight}, Ht ${height}, BMI ${bmi}
+- Current Meds: ${meds}
+- Allergies: ${allergyList}
+
+---
+
+### 1. Key Findings Identified
+- Patient presents with: ${presentingSymptoms}
+- History notable for: ${conditions}
+- No immediate red-flag neurological deficits noted in initial assessment
+- No fever or infection indicators reported
+
+---
+
+### 2. Problem Representation (AI Summary)
+${age}-year-old ${sex} with history of ${conditions} presenting with ${presentingSymptoms}, requiring evaluation for potential underlying etiology.
+
+---
+
+### 3. Differential Diagnosis (Ranked)
+1. Primary symptom-related etiology (High Probability)
+2. Secondary systemic cause (Moderate Probability)
+3. Medication side effect (Low Probability)
+4. Idiopathic/Functional (Diagnosis of exclusion)
+
+---
+
+### 4. Diagnostic Strategy (Simulated AI Plan)
+- Detailed history and physical examination
+- Targeted laboratory testing based on clinical presentation
+- Imaging studies if indicated by specific findings
+- Review of systems to identify associated symptoms
+
+---
+
+### 5. Management Considerations (Demo Mode)
+- Symptom management and relief
+- Addressing underlying cause
+- Medication review and adjustment
+- Patient education and follow-up planning
+
+---
+
+### 6. AI Confidence & Safety Layer
+- Confidence Score: 0.75
+- Risk Level: Low-Moderate
+- AI Limitations: Assessment based on limited initial input`;
+};
+
+// Helper: Replace placeholders in mock content with real patient/input data
+const processDynamicPlaceholders = (content, patient, input) => {
+  if (!content || typeof content !== 'string') return content;
+  
+  const {
+    fullName = "Unknown Patient",
+    age = "?",
+    sex = "?",
+    chronicConditions = [],
+    longTermMedications = [],
+    allergies = [],
+    vitals = {}
+  } = patient || {};
+
+  const conditions = chronicConditions.map(c => c.name || c).join(", ") || "None documented";
+  const meds = longTermMedications.map(m => `${m.name || m}${m.dose ? ` (${m.dose})` : ""}`).join(", ") || "None documented";
+  const allergyList = allergies.map(a => a.substance || a.name || a).join(", ") || "None documented";
+  const inputStr = extractInputString(input);
+  const presentingSymptoms = inputStr.length > 100 ? inputStr.substring(0, 100) + "..." : inputStr;
+  
+  // Extract or default vitals
+  const bp = vitals.bp || "120/80";
+  const hr = vitals.hr || "72";
+  const rr = vitals.rr || "16";
+  const temp = vitals.temp || "37.0";
+  const spo2 = vitals.spo2 || "98%";
+  const weight = vitals.weight || "70";
+  const height = vitals.height || "170";
+  const bmi = vitals.bmi || "24.2";
+
+  // Detect scenario for context-aware placeholders
+  const scenario = detectScenario(input);
+  
+  // Context-aware defaults
+  let diagnosis = "Working diagnosis pending evaluation";
+  let differential1 = "Differential diagnosis to be considered";
+  let labs = "Routine admission labs";
+  let imaging = "Imaging as clinically indicated";
+  let planMeds = "Medications as indicated";
+  let procedures = "None";
+  let neuroFindings = "Non-focal";
+  let cvFindings = "Regular rate and rhythm";
+  let pulmFindings = "Clear to auscultation";
+  let abdFindings = "Soft, non-tender";
+  let heentFindings = "Normocephalic, atraumatic";
+
+  switch (scenario) {
+    case "acute-stroke":
+      diagnosis = "Acute Ischemic Stroke (Suspected)";
+      differential1 = "Intracerebral Hemorrhage";
+      labs = "CBC, CMP, Coags, Troponin, Lipid Panel";
+      imaging = "CT Head Non-Contrast (STAT), CTA Head/Neck, CT Perfusion";
+      planMeds = "Alteplase (if eligible), Aspirin, Statin";
+      neuroFindings = "Focal deficits present consistent with vascular territory";
+      break;
+    case "sepsis":
+      diagnosis = "Sepsis / Septic Shock";
+      differential1 = "Hypovolemic Shock";
+      labs = "CBC, CMP, Lactate, Blood Cultures x2, UA/Culture";
+      imaging = "CXR, CT Abdomen/Pelvis (source dependent)";
+      planMeds = "Broad-spectrum antibiotics (Vanc/Zosyn), IV Fluids, Vasopressors";
+      cvFindings = "Tachycardic, warm extremities (early) or cool (late)";
+      break;
+    case "pneumonia":
+      diagnosis = "Community-Acquired Pneumonia";
+      differential1 = "Acute Bronchitis";
+      labs = "CBC, BMP, Procalcitonin, Sputum Culture";
+      imaging = "Chest X-Ray (PA/Lateral)";
+      planMeds = "Ceftriaxone + Azithromycin";
+      pulmFindings = "Rhonchi/Crackles, dullness to percussion";
+      break;
+    case "acute-chest-pain":
+      diagnosis = "Acute Coronary Syndrome (NSTEMI/Unstable Angina)";
+      differential1 = "Aortic Dissection";
+      labs = "Troponin x3, CBC, CMP, Coags";
+      imaging = "CXR, Echocardiogram";
+      planMeds = "Aspirin, Nitroglycerin, Heparin, Beta-blocker";
+      cvFindings = "Murmur may be present, S3/S4 if heart failure";
+      break;
+    case "copd-exacerbation":
+      diagnosis = "COPD Exacerbation";
+      differential1 = "Pneumonia";
+      labs = "ABG, CBC, BMP";
+      imaging = "Chest X-Ray";
+      planMeds = "Nebulizers (Albuterol/Ipratropium), Steroids, Antibiotics";
+      pulmFindings = "Diffuse wheezing, prolonged expiration";
+      break;
+    default:
+      // Use standard defaults
+      break;
+  }
+
+  let newContent = content;
+  
+  // Replace standard placeholders
+  newContent = newContent.replace(/\[Patient Name\]/g, fullName);
+  newContent = newContent.replace(/\[Age\]/g, age);
+  newContent = newContent.replace(/\[Sex\]/g, sex);
+  
+  // Replace Vital Sign Placeholders
+  newContent = newContent.replace(/\[BP\]/g, bp);
+  newContent = newContent.replace(/\[HR\]/g, hr);
+  newContent = newContent.replace(/\[RR\]/g, rr);
+  newContent = newContent.replace(/\[Temp\]/g, temp);
+  newContent = newContent.replace(/\[SpO2\]/g, spo2);
+  newContent = newContent.replace(/\[Weight\]/g, weight);
+  newContent = newContent.replace(/\[Height\]/g, height);
+  newContent = newContent.replace(/\[BMI\]/g, bmi);
+
+  // Use a consistent fake MRN or generate one
+  newContent = newContent.replace(/\[Medical Record Number\]/g, "MRN-" + Math.floor(10000 + Math.random() * 90000));
+  newContent = newContent.replace(/\[Physician Name\]/g, "Dr. AI Assistant");
+  // Only replace date if it's a placeholder, though mock data uses ${new Date()}
+  // But if the mock data uses hardcoded strings with placeholders:
+  newContent = newContent.replace(/\[Date\]/g, new Date().toLocaleDateString());
+  
+  // Replace clinical placeholders
+  newContent = newContent.replace(/\[Patient's primary concern\]/g, presentingSymptoms);
+  newContent = newContent.replace(/\[symptoms\/condition\]/g, presentingSymptoms);
+  newContent = newContent.replace(/\[Additional history details needed based on specific input\]/g, inputStr);
+  newContent = newContent.replace(/\[Past Medical History\]/g, conditions);
+  newContent = newContent.replace(/\[Current Medications\]/g, meds);
+  newContent = newContent.replace(/\[Allergies\]/g, allergyList);
+  newContent = newContent.replace(/\[PMH\]/g, conditions);
+  newContent = newContent.replace(/\[Meds\]/g, meds);
+  newContent = newContent.replace(/\[Social Hx\]/g, "Social history not provided");
+  newContent = newContent.replace(/\[Family Hx\]/g, "Family history not provided");
+  newContent = newContent.replace(/\[ROS\]/g, "Review of systems consistent with presenting complaint");
+  // Construct comprehensive physical exam
+  const comprehensiveExam = [
+    `General: No acute distress`,
+    `HEENT: ${heentFindings}`,
+    `CV: ${cvFindings}`,
+    `Pulm: ${pulmFindings}`,
+    `Abd: ${abdFindings}`,
+    `Neuro: ${neuroFindings}`
+  ].join("\\n");
+  
+  newContent = newContent.replace(/\[Physical Exam Findings\]/g, comprehensiveExam);
+  newContent = newContent.replace(/\[General appearance\]/g, "No acute distress");
+  newContent = newContent.replace(/\[HEENT findings\]/g, heentFindings);
+  newContent = newContent.replace(/\[CV findings\]/g, cvFindings);
+  newContent = newContent.replace(/\[Pulmonary findings\]/g, pulmFindings);
+  newContent = newContent.replace(/\[Abdominal findings\]/g, abdFindings);
+  newContent = newContent.replace(/\[Extremity findings\]/g, "No edema");
+  newContent = newContent.replace(/\[Neuro findings\]/g, neuroFindings);
+  newContent = newContent.replace(/\[Skin findings\]/g, "Intact");
+  
+  const relevantWorkup = [
+    `Labs: ${labs}`,
+    `Imaging: ${imaging}`
+  ].join("\\n");
+  newContent = newContent.replace(/\[Relevant labs\/imaging\]/g, relevantWorkup);
+  
+  newContent = newContent.replace(/\[Key Findings\]/g, `Clinical presentation suggestive of ${diagnosis}`);
+  newContent = newContent.replace(/\[Risk Scores\]/g, "Risk stratification pending complete data");
+  newContent = newContent.replace(/\[ACS Management Plan\]/g, "Admit to CCU. Initiate ACS protocol (DAPT, anticoagulation, anti-ischemics). Serial troponins/ECGs. Cardiology consult.");
+
+  // Generate secondary plan based on conditions
+  const secondaryPlan = chronicConditions.length > 0 
+    ? chronicConditions.map(c => `**${c.name || c}**\n- Continue current management\n- Monitor for exacerbation`).join("\n\n")
+    : "No additional chronic conditions requiring active management.";
+  newContent = newContent.replace(/\[Secondary Assessment and Plan\]/g, secondaryPlan);
+  
+  // Specific scenarios
+  newContent = newContent.replace(/\[Vascular Territory\]/g, "Vascular territory consistent with presenting symptoms");
+  newContent = newContent.replace(/\[Sepsis Source\]/g, "Sepsis Syndrome");
+  newContent = newContent.replace(/\[Sepsis Rationale\]/g, "Meets clinical criteria for sepsis/septic shock based on vitals and presentation");
+
+  // General placeholders
+  newContent = newContent.replace(/\[Diagnosis\]/g, diagnosis);
+  newContent = newContent.replace(/\[Differential \d\]/g, differential1);
+  newContent = newContent.replace(/\[Labs ordered\]/g, labs);
+  newContent = newContent.replace(/\[Imaging ordered\]/g, imaging);
+  newContent = newContent.replace(/\[Medications prescribed\]/g, planMeds);
+  newContent = newContent.replace(/\[Procedures performed\]/g, procedures);
+  newContent = newContent.replace(/\[Education provided\]/g, `Discussed ${diagnosis} and plan with patient`);
+  newContent = newContent.replace(/\[Follow-up plan\]/g, "Follow up with primary care in 1-2 weeks");
+  newContent = newContent.replace(/\[Follow-up appointments\]/g, "Follow up with primary care in 1-2 weeks");
+  newContent = newContent.replace(/\[History of Present Illness\]/g, `Patient presents with ${presentingSymptoms}. ${inputStr}`);
+  newContent = newContent.replace(/\[Results\]/g, "Pending");
+  newContent = newContent.replace(/\[A\/P\]/g, `Assessment: ${diagnosis}. Plan: ${planMeds}.`);
+  newContent = newContent.replace(/\[List of meds\]/g, planMeds);
+  newContent = newContent.replace(/\[Instructions\]/g, `Discussed ${diagnosis} and plan with patient`);
+  newContent = newContent.replace(/\[Summary of hospital stay\]/g, `Patient admitted for ${diagnosis}. Condition improved with treatment.`);
+  
+  // Replace other placeholders with generic text if they remain
+  newContent = newContent.replace(/\[.*?\]/g, (match) => {
+    // Keep some placeholders if they look like instructions, otherwise replace
+    if (match.toLowerCase().includes("symptoms")) return presentingSymptoms;
+    if (match.toLowerCase().includes("history")) return inputStr;
+    return "Not documented";
+  });
+  
+  return newContent;
+};
 
 const generateResponse = (input, type, patient, options = {}) => {
   const scenario = detectScenario(input);
@@ -2507,6 +2794,8 @@ const generateResponse = (input, type, patient, options = {}) => {
       const normalizedType = noteType.toLowerCase().replace(" note", "").replace(" summary", "").trim();
       if (scenarioData.visitNotes && scenarioData.visitNotes[normalizedType]) {
         data = scenarioData.visitNotes[normalizedType];
+      } else if (mockData["general-medical"].visitNotes && mockData["general-medical"].visitNotes[normalizedType]) {
+        data = mockData["general-medical"].visitNotes[normalizedType];
       }
     }
   }
@@ -2523,7 +2812,37 @@ const generateResponse = (input, type, patient, options = {}) => {
     };
   }
   
-  const contentWithContext = withPatientContext(data.content, patient);
+  // DYNAMIC CONTENT GENERATION
+  let finalContent = data.content;
+  
+  // 1. Override Clinical Reasoning for general-medical or if it contains placeholder text
+  if (type === "clinicalReasoning" && (scenario === "general-medical" || finalContent.includes("Ramesh K."))) {
+    finalContent = generateDynamicClinicalReasoning(input, patient);
+  }
+  
+  // 2. Process placeholders for ALL content types
+  // This handles [Patient Name], [Medical Record Number], etc.
+  finalContent = processDynamicPlaceholders(finalContent, patient, input);
+  
+  // Process structured data if it exists
+  let structured = data.structured;
+  if (structured) {
+    // Deep clone to avoid mutating original mock data
+    structured = JSON.parse(JSON.stringify(structured));
+    
+    const processObject = (obj) => {
+      for (const key in obj) {
+        if (typeof obj[key] === 'string') {
+          obj[key] = processDynamicPlaceholders(obj[key], patient, input);
+        } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+          processObject(obj[key]);
+        }
+      }
+    };
+    processObject(structured);
+  }
+  
+  const contentWithContext = withPatientContext(finalContent, patient);
   
   let rawContent = "";
   if (typeof contentWithContext === 'string') {
@@ -2539,7 +2858,7 @@ const generateResponse = (input, type, patient, options = {}) => {
     ok: true,
     content: formatMarkdown(rawContent),
     rawContent: rawContent,
-    structured: data.structured,
+    structured: structured,
     references: references
   };
 };

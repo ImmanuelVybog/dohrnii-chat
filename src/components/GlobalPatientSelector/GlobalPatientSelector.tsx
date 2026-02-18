@@ -5,6 +5,7 @@ import { usePatientContext } from '../../context/PatientContext';
 import PatientSelectionModal from '../PatientSelectionModal/PatientSelectionModal';
 import Tooltip from '../shared/Tooltip';
 import plusIcon from '../../assets/images/plus-icon.svg';
+import closeIcon from '../../assets/images/close-icon.svg';
 
 interface GlobalPatientSelectorProps {
   isSidebarButton?: boolean;
@@ -78,10 +79,11 @@ const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = ({ isSidebar
             <span>
               Patient: {selectedPatient.fullName} · {selectedPatient.age}{selectedPatient.sex?.charAt(0) || ''}
             </span>
+            <button className="detach-patient-btn" onClick={handleDetachPatient}>
+              <img src={closeIcon} alt="Detach Patient" className="close-icon" />
+            </button>
           </button>
-          <button className="detach-patient-btn" onClick={handleDetachPatient}>
-            Detach patient
-          </button>
+          
         </div>
       ) : (
         <>

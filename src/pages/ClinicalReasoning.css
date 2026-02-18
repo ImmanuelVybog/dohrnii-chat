@@ -81,10 +81,10 @@
 }
 
 .ai-response-section h2 {
-  font-size: 18px;
-  color: var(--text-color);
+  font-size: 20px;
+  color: var(--primary-color);
   font-weight: 600;
-  text-align: left;
+  text-align: center;
 }
 
 .result-card-container {
@@ -107,7 +107,7 @@
 .two-column {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 0.5rem;
 }
 
 .scenario-cards {
@@ -123,7 +123,7 @@
   color: var(--text-color);
   border: 1px solid var(--border-color);
   padding: 8px 15px;
-  border-radius: 20px; /* Make it more chip-like */
+  border-radius: 20px;
   cursor: pointer;
   font-size: 14px;
   transition: all 0.2s ease-in-out;
@@ -131,8 +131,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 8px; /* Spacing between chips */
-  margin-bottom: 8px; /* Spacing for wrapping */
 }
 
 .scenario-card:hover {
