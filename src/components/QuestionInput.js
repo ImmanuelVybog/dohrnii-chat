@@ -2,6 +2,9 @@ import { useEffect, useState, useMemo, useRef } from 'react';
 import './QuestionInput.css';
 import GlobalPatientSelector from './GlobalPatientSelector/GlobalPatientSelector';
 import stopIcon from '../assets/images/Stop-rounded.svg';
+import sendIcon from '../assets/images/send icon.svg';
+
+
 
 const QuestionInput = ({ 
   onQuestionSubmit,
@@ -145,7 +148,9 @@ const QuestionInput = ({
               </span>
             ) : (
               <span className="button-content send">
-                Ask Dohrnii
+                <span className="send-icon-symbol">
+                  <img src={sendIcon} alt="Send" />
+                </span>
               </span>
             )}
           </button>

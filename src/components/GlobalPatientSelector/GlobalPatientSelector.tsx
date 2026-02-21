@@ -6,6 +6,7 @@ import PatientSelectionModal from '../PatientSelectionModal/PatientSelectionModa
 import Tooltip from '../shared/Tooltip';
 import plusIcon from '../../assets/images/plus-icon.svg';
 import closeIcon from '../../assets/images/close-icon.svg';
+import patientIcon from '../../assets/images/patient-btn-icon.svg';
 
 interface GlobalPatientSelectorProps {
   isSidebarButton?: boolean;
@@ -75,27 +76,31 @@ const GlobalPatientSelector: React.FC<GlobalPatientSelectorProps> = ({ isSidebar
     <div className="global-patient-selector">
       {selectedPatient && isPatientContextActiveInSession ? (
         <div className="active-patient-container">
-          <button className="active-patient-display">
-            <span>
+          <div className={`active-patient-display ${isSidebarButton ? 'sidebar-display' : ''}`}>
+            <span className="patient-info-full">
               Patient: {selectedPatient.fullName} · {selectedPatient.age}{selectedPatient.sex?.charAt(0) || ''}
             </span>
-            <button className="detach-patient-btn" onClick={handleDetachPatient}>
+            <span className="patient-info-short">
+              {selectedPatient.fullName ? selectedPatient.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase().substring(0, 2) : ''}
+            </span>
+            <button type="button" className="detach-patient-btn" onClick={handleDetachPatient}>
               <img src={closeIcon} alt="Detach Patient" className="close-icon" />
             </button>
-          </button>
+          </div>
           
         </div>
       ) : (
         <>
           {isSidebarButton ? (
-            <button className="sidebar-create-patient-button" onClick={handleOpenPatientSelectionModal}>
+            <button type="button" className="sidebar-create-patient-button" onClick={handleOpenPatientSelectionModal}>
               <img src={plusIcon} alt="Create Patient" className="plus-icon" />
               Create Patient
             </button>
           ) : (
           <Tooltip text="Link a patient profile to get personalized clinical recommendations">
-            <button className={isSidebarButton ? "sidebar-create-patient-button" : "use-patient-context-cta"} onClick={handleOpenPatientSelectionModal}>
-              Use patient context
+            <button type="button" className={isSidebarButton ? "sidebar-create-patient-button" : "use-patient-context-cta"} onClick={handleOpenPatientSelectionModal}>
+              <span className="cta-text">Use patient context</span>
+              <img src={patientIcon} alt="Use patient context" className="cta-icon" />
             </button>
           </Tooltip>
           )}

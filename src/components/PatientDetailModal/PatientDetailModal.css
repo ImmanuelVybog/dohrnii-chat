@@ -118,6 +118,6 @@
 
 @media (max-width: 768px) {
   .patient-selection-modal {
-    width: 70%;
+    width: 100%;
   }
 }

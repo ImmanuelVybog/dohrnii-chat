@@ -122,6 +122,9 @@
   cursor: pointer;
   font-size: 0.9em;
   transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .use-patient-context-cta:hover {
@@ -241,4 +244,50 @@
 
 .create-patient-modal .modal-actions button:last-child:hover {
   background-color: var(--hover-color);
+}
+
+/* Responsive styles */
+.patient-info-short,
+.cta-icon {
+  display: none;
+}
+
+.cta-text {
+  display: inline;
+}
+
+@media (max-width: 768px) {
+  .cta-text {
+    display: none;
+  }
+
+  .cta-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+
+  .use-patient-context-cta {
+    padding: 0;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+  }
+  
+  .active-patient-display {
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .active-patient-display:not(.sidebar-display) .patient-info-full {
+    display: none;
+  }
+  
+  .active-patient-display:not(.sidebar-display) .patient-info-short {
+    display: inline-block;
+    font-weight: 600;
+  }
+  
 }

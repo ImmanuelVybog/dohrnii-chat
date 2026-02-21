@@ -431,6 +431,18 @@
   background: linear-gradient(to left, transparent, rgba(0,0,0,0.15));
 }
 
+[data-theme='dark']
+.divider::before,
+.divider::after {
+  content: "";
+  background: linear-gradient(to right, transparent, rgba(219, 219, 219, 0.15));
+}
+
+.divider::after {
+  background: linear-gradient(to left, transparent, rgba(193, 193, 193, 0.15));
+}
+
+
 
 .use-context-checkbox {
   display: flex;
@@ -542,4 +554,31 @@
   font-size: 12px;
   margin-top: 4px;
   text-align: left;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .patient-selection-modal {
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    border-radius: 1rem 1rem 0 0;
+    transform: translateY(100%);
+  }
+
+  .patient-selection-modal.open {
+    transform: translateY(0);
+    animation: slideUpAccount 0.3s ease-out forwards;
+  }
+}
+
+@keyframes slideUpAccount {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }

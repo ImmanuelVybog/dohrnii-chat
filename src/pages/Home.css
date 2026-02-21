@@ -650,6 +650,7 @@ body {
 /* Responsive adjustments */
 
 @media (max-width: 768px) {
+
   .hero-title {
     font-size: 2rem;
   }
@@ -679,6 +680,10 @@ body {
 
   .explore-cards {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .explore-card {
+    flex-direction: column;
   }
 }
 
